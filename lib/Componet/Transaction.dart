@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 
@@ -17,22 +17,18 @@ class TranactionCard extends StatelessWidget {
   final String Category;
   const TranactionCard({
     super.key,
-    // required this.boxShadowColor,
     required this.transationName,
     required this.transactionTag,
     required this.transactionDescription,
     required this.transactionTags,
     required this.iconsName,
     required this.Category,
-    // required this.tagColor,
   });
 
   @override
   Widget build(BuildContext context) {
     var toFromName = 'XYZ';
     var Amount = "Rs 00000";
-    var isToPay = true;
-    var istoReceived = false;
 
     Color tagColor = Category == incomeT || Category == toReceiveT
         ? kColorIncome
@@ -119,7 +115,7 @@ class TranactionCard extends StatelessWidget {
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        child: Text("TO/FROM-${toFromName}",
+                        child: Text("TO/FROM-$toFromName",
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: ksubTextStyle.copyWith(
@@ -203,7 +199,9 @@ class TranactionCard extends StatelessWidget {
               ),
               Visibility(
                 // ignore: dead_code
-                visible: (isToPay || istoReceived) ? true : false,
+                visible: (Category == toReceiveT || Category == toPayT)
+                    ? true
+                    : false,
                 child: Column(
                   children: [
                     Divider(
@@ -234,7 +232,7 @@ class TranactionCard extends StatelessWidget {
                               ),
                               color: Colors.green.shade400)
                         },
-                        onPressed: () => {},
+                        onPressed: () => {print("Pressed")},
                         state: ButtonState.idle),
                   ],
                 ),

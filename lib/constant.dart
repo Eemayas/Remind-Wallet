@@ -15,7 +15,8 @@ const Color kMainBoxBorderColor = Color.fromARGB(168, 105, 240, 175);
 const Color kBoxShadowMainBoxBolor = Color.fromARGB(168, 105, 240, 175);
 
 TextStyle kwhiteTextStyle = GoogleFonts.quicksand(
-  textStyle: const TextStyle(letterSpacing: 1, color: Color(0xffF2F2F2)),
+  textStyle:
+      const TextStyle(letterSpacing: 1, fontSize: 15, color: Color(0xffF2F2F2)),
 );
 
 TextStyle ksubTextStyle = GoogleFonts.quicksand(

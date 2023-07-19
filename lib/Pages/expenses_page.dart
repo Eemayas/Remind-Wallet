@@ -2,14 +2,15 @@
 
 import 'package:flutter/material.dart';
 
-import '../API/AmountList.dart';
-import '../API/TransactionList.dart';
-import '../Componet/BalanceCard.dart';
+import '../API/amount_list.dart';
+import '../API/transaction_list.dart';
+import '../Componet/balance_card.dart';
+import '../Componet/transaction.dart';
 import '../constant.dart';
 
-class ToReceivePage extends StatelessWidget {
-  static String id = "ToReceive page";
-  const ToReceivePage({super.key});
+class ExpensePage extends StatelessWidget {
+  static String id = "Expense page";
+  const ExpensePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +19,14 @@ class ToReceivePage extends StatelessWidget {
         onPressed: () {
           // FAB button pressed
         },
-        backgroundColor: kColorIncome,
+        backgroundColor: kColorExpenses,
         foregroundColor: Colors.white,
         child: Icon(Icons.add),
       ),
       appBar: AppBar(
         backgroundColor: kBackgroundColorAppBar,
         title: Text(
-          "All To Receive",
+          "All Expenses",
           style: kwhiteTextStyle,
         ),
         actions: [
@@ -43,8 +44,8 @@ class ToReceivePage extends StatelessWidget {
               Column(
                 children: [
                   BalanceCard(
-                    cardName: "TOTAL TO RECEIVE",
-                    cardBalanceAmt: amountsList["toReceive"].toString(),
+                    cardName: "TOTAL EXPENSES",
+                    cardBalanceAmt: amountsList["totalExpenses"].toString(),
                   ),
                 ],
               ),
@@ -58,8 +59,17 @@ class ToReceivePage extends StatelessWidget {
                 "Recent Transactions",
                 style: kwhiteTextStyle.copyWith(fontSize: 20),
               ),
-              for (int i = 0; i < recentTransactionsLists.length; i++)
-                recentTransactionsLists[i]
+              for (int i = 0; i < TransactionList.length; i++)
+                if (TransactionList[i]["Category"] == expensesT)
+                  TranactionCard(
+                    Category: TransactionList[i]["Category"],
+                    transationName: TransactionList[i]["transationName"],
+                    transactionTag: TransactionList[i]["transactionTag"],
+                    transactionDescription: TransactionList[i]
+                        ["transactionDescription"],
+                    transactionTags: TransactionList[i]["transactionTags"],
+                    iconsName: TransactionList[i]["iconsName"],
+                  ),
             ],
           ),
         )),

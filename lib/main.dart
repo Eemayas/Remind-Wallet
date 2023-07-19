@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:expenses_tracker/Pages/expensesPage.dart';
-import 'package:expenses_tracker/Pages/incomePage.dart';
-import 'package:expenses_tracker/Pages/toPayPage.dart';
-import 'package:expenses_tracker/Pages/toReceivePage.dart';
+import 'package:expenses_tracker/Pages/expenses_page.dart';
+import 'package:expenses_tracker/Pages/income_page.dart';
+import 'package:expenses_tracker/Pages/to_pay_page.dart';
+import 'package:expenses_tracker/Pages/to_receive_page.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:flutter/material.dart';

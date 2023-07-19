@@ -2,14 +2,15 @@
 
 import 'package:flutter/material.dart';
 
-import '../API/AmountList.dart';
-import '../API/TransactionList.dart';
-import '../Componet/BalanceCard.dart';
+import '../API/amount_list.dart';
+import '../API/transaction_list.dart';
+import '../Componet/balance_card.dart';
+import '../Componet/transaction.dart';
 import '../constant.dart';
 
-class IncomePage extends StatelessWidget {
-  static String id = "Income page";
-  const IncomePage({super.key});
+class ToReceivePage extends StatelessWidget {
+  static String id = "ToReceive page";
+  const ToReceivePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class IncomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: kBackgroundColorAppBar,
         title: Text(
-          "All Income",
+          "All To Receive",
           style: kwhiteTextStyle,
         ),
         actions: [
@@ -43,8 +44,8 @@ class IncomePage extends StatelessWidget {
               Column(
                 children: [
                   BalanceCard(
-                    cardName: "TOTAL INCOME",
-                    cardBalanceAmt: amountsList["totalIncome"].toString(),
+                    cardName: "TOTAL TO RECEIVE",
+                    cardBalanceAmt: amountsList["toReceive"].toString(),
                   ),
                 ],
               ),
@@ -58,8 +59,17 @@ class IncomePage extends StatelessWidget {
                 "Recent Transactions",
                 style: kwhiteTextStyle.copyWith(fontSize: 20),
               ),
-              for (int i = 0; i < recentTransactionsLists.length; i++)
-                recentTransactionsLists[i]
+              for (int i = 0; i < TransactionList.length; i++)
+                if (TransactionList[i]["Category"] == toReceiveT)
+                  TranactionCard(
+                    Category: TransactionList[i]["Category"],
+                    transationName: TransactionList[i]["transationName"],
+                    transactionTag: TransactionList[i]["transactionTag"],
+                    transactionDescription: TransactionList[i]
+                        ["transactionDescription"],
+                    transactionTags: TransactionList[i]["transactionTags"],
+                    iconsName: TransactionList[i]["iconsName"],
+                  ),
             ],
           ),
         )),

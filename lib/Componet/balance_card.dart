@@ -44,7 +44,7 @@ class BalanceCard extends StatelessWidget {
               ),
               Text(cardBalanceAmt,
                   style: kwhiteTextStyle.copyWith(
-                      fontSize: 25, fontWeight: FontWeight.w300)),
+                      fontSize: 20, fontWeight: FontWeight.bold)),
             ],
           ),
         ),

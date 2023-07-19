@@ -1,16 +1,18 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, must_be_immutable
 
-import 'package:expenses_tracker/Componet/BalanceCard.dart';
-import 'package:expenses_tracker/Pages/expensesPage.dart';
-import 'package:expenses_tracker/Pages/incomePage.dart';
-import 'package:expenses_tracker/Pages/toPayPage.dart';
-import 'package:expenses_tracker/Pages/toReceivePage.dart';
+import 'package:expenses_tracker/Componet/balance_card.dart';
+import 'package:expenses_tracker/Pages/expenses_page.dart';
+import 'package:expenses_tracker/Pages/income_page.dart';
+import 'package:expenses_tracker/Pages/to_pay_page.dart';
+import 'package:expenses_tracker/Pages/to_receive_page.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:flutter/material.dart';
 
-import '../API/Account.dart';
-import '../API/AmountList.dart';
-import '../API/TransactionList.dart';
+import '../API/account_api.dart';
+import '../API/amount_list.dart';
+import '../API/transaction_list.dart';
+import '../Componet/account_card.dart';
+import '../Componet/transaction.dart';
 
 class Dashboard extends StatefulWidget {
   static String id = "DashBoard page";
@@ -57,7 +59,7 @@ class _DashboardState extends State<Dashboard> {
                 height: 30,
               ),
 
-              //Amount Details Section
+              //? Amount Details Section
               Column(
                 children: [
                   BalanceCard(
@@ -141,7 +143,7 @@ class _DashboardState extends State<Dashboard> {
                 style: kwhiteTextStyle.copyWith(fontSize: 20),
               ),
 
-              //Account Section
+              //* Account Section
               SizedBox(
                 height: 20,
               ),
@@ -149,10 +151,19 @@ class _DashboardState extends State<Dashboard> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    for (int i = 0; i < Accounts.length; i++)
+                    for (int i = 0; i < AccountsList.length; i++)
                       Row(
                         children: [
-                          Accounts[i],
+                          AccountCard(
+                            accountName: AccountsList[i]["accountName"],
+                            amount: AccountsList[i]["amount"],
+                            borderColor: AccountsList[i]["borderColor"],
+                            boxShadowColor: AccountsList[i]["boxShadowColor"],
+                            cardDetail: AccountsList[i]["cardDetail"],
+                            color: AccountsList[i]["color"],
+                            iconBgColor: AccountsList[i]["iconBgColor"],
+                            icons: AccountsList[i]["icons"],
+                          ),
                           SizedBox(
                             width: 20,
                           ),
@@ -166,96 +177,24 @@ class _DashboardState extends State<Dashboard> {
                 height: 30,
               ),
 
-              //Recent Transaction Section
+              //* Recent Transaction Section
               Text(
                 "Recent Transactions",
                 style: kwhiteTextStyle.copyWith(fontSize: 20),
               ),
-              for (int i = 0; i < recentTransactionsLists.length; i++)
-                recentTransactionsLists[i]
+              for (int i = 0; i < TransactionList.length; i++)
+                TranactionCard(
+                  Category: TransactionList[i]["Category"],
+                  transationName: TransactionList[i]["transationName"],
+                  transactionTag: TransactionList[i]["transactionTag"],
+                  transactionDescription: TransactionList[i]
+                      ["transactionDescription"],
+                  transactionTags: TransactionList[i]["transactionTags"],
+                  iconsName: TransactionList[i]["iconsName"],
+                ),
             ],
           ),
         )),
-      ),
-    );
-  }
-}
-
-class AccountCard extends StatelessWidget {
-  final String cardDetail;
-  final String amount;
-  final Color color;
-  final Icon icons;
-  final Color borderColor;
-  final Color boxShadowColor;
-  final Color iconBgColor;
-  final String accountName;
-
-  const AccountCard(
-      {super.key,
-      required this.cardDetail,
-      required this.amount,
-      required this.color,
-      required this.icons,
-      required this.borderColor,
-      required this.boxShadowColor,
-      required this.iconBgColor,
-      required this.accountName});
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Container(
-        decoration: BoxDecoration(
-          color: color,
-          border: Border.all(
-            color: borderColor,
-            width: 2.0,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: boxShadowColor,
-              offset: Offset(6, 6),
-              blurRadius: 3,
-            ),
-          ],
-          borderRadius: BorderRadius.circular(30),
-        ),
-        width: 150,
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 110,
-                    child: Text(accountName,
-                        softWrap: false,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: kwhiteTextStyle.copyWith(
-                            fontSize: 25, fontWeight: FontWeight.w300)),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Text("CURRENT BALANCE",
-                  style: ksubTextStyle.copyWith(
-                      fontSize: 12, fontWeight: FontWeight.w300)),
-              SizedBox(
-                height: 10,
-              ),
-              Text('Rs $amount ',
-                  style: kwhiteTextStyle.copyWith(
-                      fontSize: 25, fontWeight: FontWeight.w300)),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -332,8 +271,8 @@ class Cards extends StatelessWidget {
                   height: 10,
                 ),
                 Text('Rs $amount ',
-                    style: kwhiteTextStyle.copyWith(
-                        fontSize: 25, fontWeight: FontWeight.w300)),
+                    style:
+                        kwhiteTextStyle.copyWith(fontWeight: FontWeight.bold)),
               ],
             ),
           ),
