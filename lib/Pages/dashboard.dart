@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, must_be_immutable
 
 import 'package:expenses_tracker/Componet/balance_card.dart';
+import 'package:expenses_tracker/Pages/add_transaction.dart';
 import 'package:expenses_tracker/Pages/expenses_page.dart';
 import 'package:expenses_tracker/Pages/income_page.dart';
 import 'package:expenses_tracker/Pages/to_pay_page.dart';
@@ -28,7 +29,7 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // FAB button pressed
+          Navigator.pushNamed(context, AddTransaction.id);
         },
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
@@ -128,7 +129,6 @@ class _DashboardState extends State<Dashboard> {
                         iconBgColor: Color(0x33FF0000),
                         nextPage: ToPayPage.id,
                       ),
-                      // Cards(),
                     ],
                   ),
                 ],

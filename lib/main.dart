@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:expenses_tracker/Pages/add_transaction.dart';
 import 'package:expenses_tracker/Pages/expenses_page.dart';
 import 'package:expenses_tracker/Pages/income_page.dart';
 import 'package:expenses_tracker/Pages/to_pay_page.dart';
@@ -22,19 +23,21 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
+          brightness: Brightness.dark,
           scaffoldBackgroundColor: kBackgroundColor,
           textTheme: TextTheme(
             bodyLarge: TextStyle(
               color: Colors.white,
             ),
           )),
-      initialRoute: Dashboard.id,
+      initialRoute: AddTransaction.id,
       routes: {
         Dashboard.id: (context) => const Dashboard(),
         IncomePage.id: (context) => const IncomePage(),
         ExpensePage.id: (context) => const ExpensePage(),
         ToPayPage.id: (context) => const ToPayPage(),
         ToReceivePage.id: (context) => const ToReceivePage(),
+        AddTransaction.id: (context) => AddTransaction(),
       },
       // home: const dashBoard()
     );

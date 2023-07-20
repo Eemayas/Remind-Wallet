@@ -8,8 +8,8 @@ const Color kBackgroundColorCard = Color.fromARGB(255, 43, 41, 50);
 const Color kBoxShadowIncome = Color(0x7F008000);
 const Color kBoxShadowExpenses = Color(0x7FFF0000);
 
-const Color kColorExpenses = Color.fromARGB(255, 255, 0, 0);
-const Color kColorIncome = Color.fromARGB(255, 0, 250, 9);
+const Color kColorExpenses = Colors.red;
+const Color kColorIncome = Colors.green;
 
 const Color kMainBoxBorderColor = Color.fromARGB(168, 105, 240, 175);
 const Color kBoxShadowMainBoxBolor = Color.fromARGB(168, 105, 240, 175);

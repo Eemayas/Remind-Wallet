@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_fonts: ^4.0.4
   progress_state_button: ^1.0.4
+  dropdown_button2: ^2.1.4
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

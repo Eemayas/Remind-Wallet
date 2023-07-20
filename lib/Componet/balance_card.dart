@@ -42,7 +42,7 @@ class BalanceCard extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
-              Text(cardBalanceAmt,
+              Text('RS $cardBalanceAmt',
                   style: kwhiteTextStyle.copyWith(
                       fontSize: 20, fontWeight: FontWeight.bold)),
             ],
