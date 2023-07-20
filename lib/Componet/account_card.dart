@@ -1,41 +1,29 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 import '../constant.dart';
 
 class AccountCard extends StatelessWidget {
-  final String cardDetail;
   final String amount;
-  final Color color;
-  final Icon icons;
-  final Color borderColor;
-  final Color boxShadowColor;
-  final Color iconBgColor;
   final String accountName;
 
   const AccountCard(
-      {super.key,
-      required this.cardDetail,
-      required this.amount,
-      required this.color,
-      required this.icons,
-      required this.borderColor,
-      required this.boxShadowColor,
-      required this.iconBgColor,
-      required this.accountName});
+      {super.key, required this.amount, required this.accountName});
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
       child: Container(
         decoration: BoxDecoration(
-          color: color,
+          color: kBackgroundColorCard,
           border: Border.all(
-            color: borderColor,
+            color: kMainBoxBorderColor,
             width: 2.0,
           ),
           boxShadow: [
             BoxShadow(
-              color: boxShadowColor,
+              color: kBoxShadowMainBoxBolor,
               offset: Offset(6, 6),
               blurRadius: 3,
             ),

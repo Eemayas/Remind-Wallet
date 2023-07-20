@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:expenses_tracker/Pages/add_transaction.dart';
+import 'package:expenses_tracker/Pages/edit_transaction.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +12,7 @@ class TranasctionDetailPage extends StatelessWidget {
   final String transactionDate;
   final String transactionPerson;
   final String transactionNote;
+  final String Account;
   static String id = "Transaction Detail Page";
   const TranasctionDetailPage({
     super.key,
@@ -21,6 +23,7 @@ class TranasctionDetailPage extends StatelessWidget {
     required this.transactionDate,
     required this.transactionPerson,
     required this.transactionNote,
+    required this.Account,
   });
 
   @override
@@ -36,7 +39,17 @@ class TranasctionDetailPage extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.pushNamed(context, AddTransaction.id);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => EditTransaction(
+                      transactionTitle: transactionTitle,
+                      amount: amount,
+                      transactionType: transactionType,
+                      transactionTag: transactionTag,
+                      transactionDate: transactionDate,
+                      transactionPerson: transactionPerson,
+                      transactionNote: transactionNote)));
         },
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
@@ -88,6 +101,11 @@ class TranasctionDetailPage extends StatelessWidget {
                 iconsData: Icons.date_range_outlined,
               ),
               DetailField(
+                title: 'Accounts',
+                data: Account,
+                iconsData: Icons.account_balance_outlined,
+              ),
+              DetailField(
                 title: 'To/From',
                 data: transactionPerson,
                 iconsData: Icons.person_2_outlined,
@@ -98,6 +116,9 @@ class TranasctionDetailPage extends StatelessWidget {
                 iconsData: Icons.fact_check_outlined,
                 isNote: true,
               ),
+              SizedBox(
+                height: 40,
+              )
             ],
           ),
         ),
@@ -141,7 +162,7 @@ class DetailField extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.6,
                 child: Text(data,
                     softWrap: false,
-                    maxLines: isNote ? 4 : 1,
+                    maxLines: isNote ? 100 : 1,
                     overflow: TextOverflow.ellipsis,
                     style: kwhiteTextStyle.copyWith(fontSize: 20)),
               ),

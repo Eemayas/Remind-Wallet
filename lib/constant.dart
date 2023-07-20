@@ -40,7 +40,9 @@ List TagList = [
   'Savings',
   'Miscellaneous',
 ];
+List Accountlist = ["Cash", "Esewa", "Khalti"];
 const String incomeT = "Income";
 const String expensesT = "Expenses";
 const String toReceiveT = "to Receive";
 const String toPayT = "To Pay";
+const String AccountT = "From Account";

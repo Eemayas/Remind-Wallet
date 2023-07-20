@@ -1,26 +1,38 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, non_constant_identifier_names, avoid_print
 
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:expenses_tracker/API/transaction_list.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 
-import '../API/database.dart';
 import '../Componet/date_Input_field.dart';
 import '../Componet/dropdown_button.dart';
 import '../Componet/input_filed.dart';
 import '../constant.dart';
 
-class AddTransaction extends StatefulWidget {
+class EditTransaction extends StatefulWidget {
   static String id = "Add Transaction page";
+  final String transactionTitle;
+  final String amount;
+  final String transactionType;
+  final String transactionTag;
+  final String transactionDate;
+  final String transactionPerson;
+  final String transactionNote;
+  const EditTransaction(
+      {super.key,
+      required this.transactionTitle,
+      required this.amount,
+      required this.transactionType,
+      required this.transactionTag,
+      required this.transactionDate,
+      required this.transactionPerson,
+      required this.transactionNote});
 
   @override
-  State<AddTransaction> createState() => _AddTransactionState();
+  State<EditTransaction> createState() => _EditTransactionState();
 }
 
-class _AddTransactionState extends State<AddTransaction> {
+class _EditTransactionState extends State<EditTransaction> {
   final titleController = TextEditingController();
   final amtController = TextEditingController();
   final toFromController = TextEditingController();
@@ -28,24 +40,6 @@ class _AddTransactionState extends State<AddTransaction> {
   final tranasctionTypeController = TextEditingController();
   final tagController = TextEditingController();
   final dateController = TextEditingController();
-  final accountController = TextEditingController();
-  _addTransaction() {
-    print(
-        "${titleController.text}  ${amtController.text}  ${tranasctionTypeController.text}  ${tagController.text}  ${dateController.text}  ${toFromController.text}  ${noteController.text}  ");
-    Database db = Database();
-    db.addTransactionDb(
-      amount: int.tryParse(amtController.text),
-      transactionDate: dateController.text,
-      transactionNote: noteController.text,
-      transactionPerson: toFromController.text,
-      transactionTag: tagController.text,
-      transactionTitle: titleController.text,
-      transactionType: tranasctionTypeController.text,
-      account: accountController.text,
-    );
-    print("addedddddd");
-    Navigator.pop(context, "here i am");
-  }
 
   @override
   void initState() {
@@ -57,10 +51,16 @@ class _AddTransactionState extends State<AddTransaction> {
     tranasctionTypeController.addListener(() => setState(() {}));
     tagController.addListener(() => setState(() {}));
     dateController.addListener(() => setState(() {}));
-    accountController.addListener(() => setState(() {}));
+
+    titleController.text = widget.transactionTitle;
+    amtController.text = widget.amount;
+    tranasctionTypeController.text = widget.transactionType;
+    tagController.text = widget.transactionTag;
+    dateController.text = widget.transactionDate;
+    toFromController.text = widget.transactionPerson;
+    noteController.text = widget.transactionNote;
   }
 
-  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -73,7 +73,7 @@ class _AddTransactionState extends State<AddTransaction> {
         appBar: AppBar(
           backgroundColor: kBackgroundColorAppBar,
           title: Text(
-            "Add Transaction",
+            "Edit Transaction",
             style: kwhiteTextStyle,
           ),
           actions: [
@@ -84,13 +84,11 @@ class _AddTransactionState extends State<AddTransaction> {
           child: SafeArea(
               child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Form(
-              key: _formKey,
+            child: GestureDetector(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   InputField(
-                      isrequired: true,
                       hintText: "",
                       Controllerss: titleController,
                       keyboardType: TextInputType.text,
@@ -100,7 +98,6 @@ class _AddTransactionState extends State<AddTransaction> {
                     height: 20,
                   ),
                   InputField(
-                    isrequired: true,
                     Controllerss: amtController,
                     keyboardType: TextInputType.number,
                     labelText: "Amount",
@@ -111,7 +108,6 @@ class _AddTransactionState extends State<AddTransaction> {
                     height: 20,
                   ),
                   DropDownButton(
-                    isrequired: true,
                     iconsName: Icons.category_outlined,
                     lists: TransactionTypelist,
                     Controllerss: tranasctionTypeController,
@@ -128,16 +124,6 @@ class _AddTransactionState extends State<AddTransaction> {
                     hintText:
                         " Food/Transportation/Housing/Utilities/Healthcare/Education/Entertainment/Clothing/Personal Care/Gifts/Savings/Miscellaneous",
                     labelText: "Tag",
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  DropDownButton(
-                    iconsName: Icons.account_balance_outlined,
-                    lists: Accountlist,
-                    Controllerss: accountController,
-                    hintText: "Cash/Esewa/Khalti",
-                    labelText: "Account",
                   ),
                   SizedBox(
                     height: 20,
@@ -176,11 +162,11 @@ class _AddTransactionState extends State<AddTransaction> {
                   ProgressButton.icon(
                       textStyle: kwhiteTextStyle,
                       height: 40.00,
-                      maxWidth: 200.00,
+                      // maxWidth: 200.00,
                       iconedButtons: {
                         ButtonState.idle: IconedButton(
-                          text: "Add Transaction",
-                          icon: Icon(Icons.add, color: Colors.white),
+                          text: "Done",
+                          icon: Icon(Icons.done, color: Colors.white),
                           color: Colors.deepPurple.shade500,
                         ),
                         ButtonState.loading: IconedButton(
@@ -198,67 +184,9 @@ class _AddTransactionState extends State<AddTransaction> {
                             color: Colors.green.shade400)
                       },
                       onPressed: () => {
-                            FocusScope.of(context).requestFocus(FocusNode()),
-                            if (titleController.text.isEmpty)
-                              {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      backgroundColor: kBackgroundColorCard,
-                                      content: Row(
-                                        children: [
-                                          Icon(Icons.error, color: Colors.red),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            'Plese Fill the title',
-                                            style: kwhiteTextStyle.copyWith(
-                                                color: Colors.red),
-                                          ),
-                                        ],
-                                      )),
-                                )
-                              }
-                            else if (amtController.text.isEmpty)
-                              {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      backgroundColor: kBackgroundColorCard,
-                                      content: Row(
-                                        children: [
-                                          Icon(Icons.error, color: Colors.red),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            'Plese Fill the amount',
-                                            style: kwhiteTextStyle,
-                                          ),
-                                        ],
-                                      )),
-                                )
-                              }
-                            else if (tranasctionTypeController.text.isEmpty)
-                              {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      backgroundColor: kBackgroundColorCard,
-                                      content: Row(
-                                        children: [
-                                          Icon(Icons.error, color: Colors.red),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            'Plese choose one Tranasction type',
-                                            style: kwhiteTextStyle,
-                                          ),
-                                        ],
-                                      )),
-                                )
-                              }
-                            else
-                              {_addTransaction()},
+                            print(
+                                "${titleController.text}  ${amtController.text}  ${tranasctionTypeController.text}  ${tagController.text}  ${dateController.text}  ${toFromController.text}  ${noteController.text}  "),
+                            FocusScope.of(context).requestFocus(FocusNode())
                           },
                       state: ButtonState.idle),
                 ],
@@ -268,14 +196,5 @@ class _AddTransactionState extends State<AddTransaction> {
         ),
       ),
     );
-  }
-}
-
-class SnackMsg extends StatelessWidget {
-  const SnackMsg({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }

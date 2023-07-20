@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, must_be_immutable
 
+import 'package:expenses_tracker/API/database.dart';
 import 'package:expenses_tracker/Componet/balance_card.dart';
+import 'package:expenses_tracker/Pages/add_account.dart';
 import 'package:expenses_tracker/Pages/add_transaction.dart';
 import 'package:expenses_tracker/Pages/expenses_page.dart';
 import 'package:expenses_tracker/Pages/income_page.dart';
@@ -8,9 +10,11 @@ import 'package:expenses_tracker/Pages/to_pay_page.dart';
 import 'package:expenses_tracker/Pages/to_receive_page.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 import '../API/account_api.dart';
 import '../API/amount_list.dart';
+import '../API/database.dart';
 import '../API/transaction_list.dart';
 import '../Componet/account_card.dart';
 import '../Componet/transaction.dart';
@@ -24,12 +28,37 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  final _expenses_tracker = Hive.box("expenses_tracker");
+  @override
+  void initState() {
+    db.getTransactionDB();
+    db.getAmountDB();
+    db.getAccountDB();
+    // db.deleteAmountDB();
+    // db.deleteTransaction();
+    // db.deleteAccountDB();
+    super.initState();
+  }
+
+  Database db = Database();
+  var Changed = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, AddTransaction.id);
+        onPressed: () async {
+          // db.updateTransactionDb();
+          // db.updateAccountDb();
+          // db.updateAmountDb();
+
+          final result = await Navigator.pushNamed(context, AddTransaction.id);
+          print(result);
+          if (result != null) {
+            db.getAccountDB();
+            db.getAmountDB();
+            db.getTransactionDB();
+            setState(() {});
+          }
         },
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
@@ -65,7 +94,7 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   BalanceCard(
                     cardName: "CURRENT BALANCE",
-                    cardBalanceAmt: amountsList["currentBalance"].toString(),
+                    cardBalanceAmt: db.amountsList["currentBalance"].toString(),
                   ),
                   SizedBox(
                     height: 10,
@@ -75,7 +104,7 @@ class _DashboardState extends State<Dashboard> {
                     children: [
                       Cards(
                         cardName: "TOTAL INCOME",
-                        amount: amountsList["totalIncome"].toString(),
+                        amount: db.amountsList["totalIncome"].toString(),
                         boxShadowColor: kBoxShadowIncome,
                         color: kBackgroundColorCard,
                         icons: Icon(
@@ -89,7 +118,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       Cards(
                         cardName: "TOTAL EXPENSES",
-                        amount: amountsList["totalExpenses"].toString(),
+                        amount: db.amountsList["totalExpenses"].toString(),
                         boxShadowColor: kBoxShadowExpenses,
                         color: kBackgroundColorCard,
                         icons: Icon(Icons.arrow_upward, color: kColorExpenses),
@@ -107,7 +136,7 @@ class _DashboardState extends State<Dashboard> {
                     children: [
                       Cards(
                         cardName: "TO RECEIVE",
-                        amount: amountsList["toReceive"].toString(),
+                        amount: db.amountsList["toReceive"].toString(),
                         boxShadowColor: kBoxShadowIncome,
                         color: kBackgroundColorCard,
                         icons: Icon(
@@ -121,7 +150,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       Cards(
                         cardName: "TO PAY",
-                        amount: amountsList["toPay"].toString(),
+                        amount: db.amountsList["toPay"].toString(),
                         boxShadowColor: kBoxShadowExpenses,
                         color: kBackgroundColorCard,
                         icons: Icon(Icons.arrow_upward, color: kColorExpenses),
@@ -151,24 +180,54 @@ class _DashboardState extends State<Dashboard> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    for (int i = 0; i < AccountsList.length; i++)
+                    for (int i = 0; i < db.AccountsList.length; i++)
                       Row(
                         children: [
                           AccountCard(
-                            accountName: AccountsList[i]["accountName"],
-                            amount: AccountsList[i]["amount"],
-                            borderColor: AccountsList[i]["borderColor"],
-                            boxShadowColor: AccountsList[i]["boxShadowColor"],
-                            cardDetail: AccountsList[i]["cardDetail"],
-                            color: AccountsList[i]["color"],
-                            iconBgColor: AccountsList[i]["iconBgColor"],
-                            icons: AccountsList[i]["icons"],
+                            accountName: db.AccountsList[i]["accountName"],
+                            amount: db.AccountsList[i]["amount"].toString(),
                           ),
                           SizedBox(
                             width: 20,
                           ),
                         ],
                       ),
+                    InkWell(
+                      onTap: () async {
+                        final result =
+                            await Navigator.pushNamed(context, AddAccount.id);
+                        print(result);
+                        if (result != null) {
+                          db.getAccountDB();
+                          db.getAmountDB();
+                          db.getTransactionDB();
+                          setState(() {});
+                        }
+                      },
+                      child: Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: kMainBoxBorderColor,
+                            width: 2.0,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: kBoxShadowMainBoxBolor,
+                              offset: Offset(6, 6),
+                              blurRadius: 3,
+                            ),
+                          ],
+                          color: kBackgroundColorCard,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -182,20 +241,31 @@ class _DashboardState extends State<Dashboard> {
                 "Recent Transactions",
                 style: kwhiteTextStyle.copyWith(fontSize: 20),
               ),
-              for (int i = 0; i < TransactionList.length; i++)
-                TranactionCard(
-                  transactionDate: TransactionList[i]["transactionDate"],
-                  transactionNote: TransactionList[i]["transactionNote"],
-                  Amount: TransactionList[i]["Amount"],
-                  toFromName: TransactionList[i]["toFromName"],
-                  Category: TransactionList[i]["Category"],
-                  transationName: TransactionList[i]["transationName"],
-                  transactionTag: TransactionList[i]["transactionTag"],
-                  transactionDescription: TransactionList[i]
-                      ["transactionDescription"],
-                  transactionTags: TransactionList[i]["transactionTags"],
-                  iconsName: TransactionList[i]["iconsName"],
-                ),
+              for (int i = db.TransactionList.length - 1; i >= 0; i--)
+                if (db.TransactionList[i]["transactionDate"] != null &&
+                    db.TransactionList[i]["transactionNote"] != null &&
+                    db.TransactionList[i]["Amount"].toString() != "0" &&
+                    db.TransactionList[i]["transactionDescription"] != null &&
+                    db.TransactionList[i]["toFromName"] != null &&
+                    db.TransactionList[i]["Category"] != null &&
+                    db.TransactionList[i]["transationName"] != null &&
+                    db.TransactionList[i]["transactionTag"] != null &&
+                    db.TransactionList[i]["transactionTags"] != null)
+                  TranactionCard(
+                    transactionDate: db.TransactionList[i]["transactionDate"],
+                    Amount: db.TransactionList[i]["Amount"].toString(),
+                    toFromName: db.TransactionList[i]["toFromName"],
+                    Category: db.TransactionList[i]["Category"],
+                    transationName: db.TransactionList[i]["transationName"],
+                    transactionTag: db.TransactionList[i]["transactionTag"],
+                    transactionDescription: db.TransactionList[i]
+                        ["transactionDescription"],
+                    transactionTags: db.TransactionList[i]["transactionTags"],
+                    iconsName: db.TransactionList[i]["iconsName"] == "shooping"
+                        ? Icons.shopping_cart_outlined
+                        : Icons.abc,
+                    Account: db.TransactionList[i]["account"] ?? "Cash",
+                  ),
             ],
           ),
         )),

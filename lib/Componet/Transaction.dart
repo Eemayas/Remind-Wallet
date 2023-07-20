@@ -13,12 +13,13 @@ class TranactionCard extends StatelessWidget {
   final String transationName;
   final String transactionTag;
   final String transactionDescription;
-  final List transactionTags;
+  final String transactionTags;
   final IconData iconsName;
   final String Category;
   final String toFromName;
   final String Amount;
-  final String transactionNote;
+  final String Account;
+
   final String transactionDate;
   const TranactionCard({
     super.key,
@@ -30,8 +31,8 @@ class TranactionCard extends StatelessWidget {
     required this.Category,
     required this.toFromName,
     required this.Amount,
-    required this.transactionNote,
     required this.transactionDate,
+    this.Account = "Cash",
   });
 
   @override
@@ -42,7 +43,6 @@ class TranactionCard extends StatelessWidget {
     Color boxShadowColor = Category == incomeT || Category == toReceiveT
         ? kBoxShadowIncome
         : kBoxShadowExpenses;
-    var transactionDate = "00/00/0000";
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -55,7 +55,8 @@ class TranactionCard extends StatelessWidget {
                     transactionTag: transactionTag,
                     transactionPerson: toFromName,
                     transactionDate: transactionDate,
-                    transactionNote: transactionNote,
+                    transactionNote: transactionDescription,
+                    Account: Account,
                   )),
         );
       },
@@ -184,34 +185,54 @@ class TranactionCard extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                for (int i = 0; i < transactionTags.length; i++)
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 5),
-                                    child: Container(
-                                      height: 25,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: tagColor),
-                                      child: SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        child: Center(
-                                          child: Text(transactionTags[i],
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: kwhiteTextStyle.copyWith(
-                                                  color:
-                                                      tagColor == kColorIncome
-                                                          ? Colors.black
-                                                          : Colors.white,
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w300)),
-                                        ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: Container(
+                                    height: 25,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: tagColor),
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                      child: Center(
+                                        child: Text(Category,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: kwhiteTextStyle.copyWith(
+                                                color: tagColor == kColorIncome
+                                                    ? Colors.black
+                                                    : Colors.white,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w300)),
                                       ),
                                     ),
                                   ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: Container(
+                                    height: 25,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: tagColor),
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.3,
+                                      child: Center(
+                                        child: Text(transactionTags,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: kwhiteTextStyle.copyWith(
+                                                color: tagColor == kColorIncome
+                                                    ? Colors.black
+                                                    : Colors.white,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w300)),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),

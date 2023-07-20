@@ -9,23 +9,36 @@ class InputField extends StatelessWidget {
     required this.labelText,
     required this.prefixIcon,
     required this.hintText,
+    this.isrequired = false,
   });
   final String hintText;
   final TextEditingController Controllerss;
   final TextInputType keyboardType;
   final String labelText;
   final IconData prefixIcon;
+  final bool isrequired;
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: Controllerss,
+      validator: (value) {
+        // if (isrequired) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter some text';
+        }
+        return null;
+        // }
+      },
       cursorColor: Colors.white,
       style: kwhiteTextStyle,
       keyboardType: keyboardType,
       decoration: InputDecoration(
         labelStyle: kwhiteTextStyle,
         filled: true,
+        // errorText: Controllerss.text.isEmpty && isrequired
+        //     ? "This cannot be empty"
+        //     : null,
         hintStyle: ksubTextStyle,
         fillColor: kBackgroundColorCard,
         labelText: labelText,

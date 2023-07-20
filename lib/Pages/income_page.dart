@@ -63,7 +63,6 @@ class IncomePage extends StatelessWidget {
                 if (TransactionList[i]["Category"] == incomeT)
                   TranactionCard(
                     transactionDate: TransactionList[i]["transactionDate"],
-                    transactionNote: TransactionList[i]["transactionNote"],
                     Category: TransactionList[i]["Category"],
                     transationName: TransactionList[i]["transationName"],
                     transactionTag: TransactionList[i]["transactionTag"],

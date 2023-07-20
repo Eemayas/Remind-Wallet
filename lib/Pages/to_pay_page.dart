@@ -72,7 +72,6 @@ class ToPayPage extends StatelessWidget {
                     Amount: TransactionList[i]["Amount"],
                     toFromName: TransactionList[i]["toFromName"],
                     transactionDate: TransactionList[i]["transactionDate"],
-                    transactionNote: TransactionList[i]["transactionNote"],
                   ),
             ],
           ),

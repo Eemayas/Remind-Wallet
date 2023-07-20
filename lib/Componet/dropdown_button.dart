@@ -9,12 +9,14 @@ class DropDownButton extends StatelessWidget {
   final String labelText;
   final IconData iconsName;
   final List lists;
+  final bool isrequired;
   const DropDownButton(
       {super.key,
       required this.Controllerss,
       required this.hintText,
       required this.labelText,
       required this.iconsName,
+      this.isrequired = false,
       required this.lists});
 
   @override
@@ -28,6 +30,7 @@ class DropDownButton extends StatelessWidget {
         filled: true,
         fillColor: kBackgroundColorCard,
         labelText: labelText,
+        // errorText: isrequired && selectedValue == null ? "Select one" : null,
         prefixIcon: Icon(iconsName),
         prefixIconColor: Colors.white,
         hintText: hintText,
@@ -46,7 +49,7 @@ class DropDownButton extends StatelessWidget {
               ))
           .toList(),
       validator: (value) {
-        if (value == null) {
+        if (value == null || value.isEmpty) {
           return 'Please select one.';
         }
         return null;
