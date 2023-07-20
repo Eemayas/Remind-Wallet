@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -23,6 +25,21 @@ TextStyle ksubTextStyle = GoogleFonts.quicksand(
   textStyle: const TextStyle(letterSpacing: 1, color: Color(0xffBDBDBD)),
 );
 
+List TransactionTypelist = [incomeT, expensesT, toReceiveT, toPayT];
+List TagList = [
+  'Food',
+  'Transportation',
+  'Housing',
+  'Utilities',
+  'Healthcare',
+  'Education',
+  'Entertainment',
+  'Clothing',
+  'Personal Care',
+  'Gifts',
+  'Savings',
+  'Miscellaneous',
+];
 const String incomeT = "Income";
 const String expensesT = "Expenses";
 const String toReceiveT = "to Receive";

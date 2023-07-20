@@ -5,6 +5,7 @@ import 'package:expenses_tracker/Pages/expenses_page.dart';
 import 'package:expenses_tracker/Pages/income_page.dart';
 import 'package:expenses_tracker/Pages/to_pay_page.dart';
 import 'package:expenses_tracker/Pages/to_receive_page.dart';
+import 'package:expenses_tracker/Pages/transaction_detail_page.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,8 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
             ),
           )),
-      initialRoute: AddTransaction.id,
+      initialRoute: Dashboard.id,
+      //TranasctionDetailPage.id, // //AddTransaction.id,
       routes: {
         Dashboard.id: (context) => const Dashboard(),
         IncomePage.id: (context) => const IncomePage(),
@@ -38,6 +40,7 @@ class MyApp extends StatelessWidget {
         ToPayPage.id: (context) => const ToPayPage(),
         ToReceivePage.id: (context) => const ToReceivePage(),
         AddTransaction.id: (context) => AddTransaction(),
+        // TranasctionDetailPage.id: (context) => TranasctionDetailPage(),
       },
       // home: const dashBoard()
     );

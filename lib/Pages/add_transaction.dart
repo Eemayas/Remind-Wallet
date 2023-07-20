@@ -1,9 +1,11 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, non_constant_identifier_names
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, non_constant_identifier_names, avoid_print
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:expenses_tracker/API/transaction_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:progress_state_button/iconed_button.dart';
+import 'package:progress_state_button/progress_button.dart';
 
 import '../Componet/date_Input_field.dart';
 import '../Componet/dropdown_button.dart';
@@ -38,21 +40,6 @@ class _AddTransactionState extends State<AddTransaction> {
     dateController.addListener(() => setState(() {}));
   }
 
-  List TransactionTypelist = [incomeT, expensesT, toReceiveT, toPayT];
-  List TagList = [
-    'Food',
-    'Transportation',
-    'Housing',
-    'Utilities',
-    'Healthcare',
-    'Education',
-    'Entertainment',
-    'Clothing',
-    'Personal Care',
-    'Gifts',
-    'Savings',
-    'Miscellaneous',
-  ];
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -78,7 +65,7 @@ class _AddTransactionState extends State<AddTransaction> {
             padding: const EdgeInsets.all(20.0),
             child: GestureDetector(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   InputField(
                       hintText: "",
@@ -151,7 +138,36 @@ class _AddTransactionState extends State<AddTransaction> {
                   SizedBox(
                     height: 20,
                   ),
-                  // HomePage()
+                  ProgressButton.icon(
+                      textStyle: kwhiteTextStyle,
+                      height: 40.00,
+                      maxWidth: 200.00,
+                      iconedButtons: {
+                        ButtonState.idle: IconedButton(
+                          text: "Add Transaction",
+                          icon: Icon(Icons.add, color: Colors.white),
+                          color: Colors.deepPurple.shade500,
+                        ),
+                        ButtonState.loading: IconedButton(
+                            text: "Loading", color: Colors.deepPurple.shade700),
+                        ButtonState.fail: IconedButton(
+                            text: "Failed",
+                            icon: Icon(Icons.cancel, color: Colors.white),
+                            color: Colors.red.shade300),
+                        ButtonState.success: IconedButton(
+                            text: "Success",
+                            icon: Icon(
+                              Icons.check_circle,
+                              color: Colors.white,
+                            ),
+                            color: Colors.green.shade400)
+                      },
+                      onPressed: () => {
+                            print(
+                                "${titleController.text}  ${amtController.text}  ${tranasctionTypeController.text}  ${tagController.text}  ${dateController.text}  ${toFromController.text}  ${noteController.text}  "),
+                            FocusScope.of(context).requestFocus(FocusNode())
+                          },
+                      state: ButtonState.idle),
                 ],
               ),
             ),

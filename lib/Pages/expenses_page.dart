@@ -62,6 +62,8 @@ class ExpensePage extends StatelessWidget {
               for (int i = 0; i < TransactionList.length; i++)
                 if (TransactionList[i]["Category"] == expensesT)
                   TranactionCard(
+                    transactionDate: TransactionList[i]["transactionDate"],
+                    transactionNote: TransactionList[i]["transactionNote"],
                     Category: TransactionList[i]["Category"],
                     transationName: TransactionList[i]["transationName"],
                     transactionTag: TransactionList[i]["transactionTag"],
@@ -69,6 +71,8 @@ class ExpensePage extends StatelessWidget {
                         ["transactionDescription"],
                     transactionTags: TransactionList[i]["transactionTags"],
                     iconsName: TransactionList[i]["iconsName"],
+                    Amount: TransactionList[i]["Amount"],
+                    toFromName: TransactionList[i]["toFromName"],
                   ),
             ],
           ),

@@ -184,6 +184,10 @@ class _DashboardState extends State<Dashboard> {
               ),
               for (int i = 0; i < TransactionList.length; i++)
                 TranactionCard(
+                  transactionDate: TransactionList[i]["transactionDate"],
+                  transactionNote: TransactionList[i]["transactionNote"],
+                  Amount: TransactionList[i]["Amount"],
+                  toFromName: TransactionList[i]["toFromName"],
                   Category: TransactionList[i]["Category"],
                   transationName: TransactionList[i]["transationName"],
                   transactionTag: TransactionList[i]["transactionTag"],
