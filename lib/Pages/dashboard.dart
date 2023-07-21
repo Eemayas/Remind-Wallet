@@ -251,6 +251,7 @@ class _DashboardState extends State<Dashboard> {
                     db.TransactionList[i]["transationName"] != null &&
                     db.TransactionList[i]["transactionTag"] != null &&
                     db.TransactionList[i]["transactionTags"] != null)
+                  // Text(db.TransactionList[i][0]["createdDate"] ?? "")
                   TranactionCard(
                     createdDate: db.TransactionList[i]["createdDate"] ?? "",
                     transactionDate: db.TransactionList[i]["transactionDate"],

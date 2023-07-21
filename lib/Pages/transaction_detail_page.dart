@@ -5,7 +5,7 @@ import 'package:expenses_tracker/Pages/edit_transaction.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:flutter/material.dart';
 
-class TranasctionDetailPage extends StatelessWidget {
+class TranasctionDetailPage extends StatefulWidget {
   final String transactionTitle;
   final String amount;
   final String transactionType;
@@ -30,31 +30,57 @@ class TranasctionDetailPage extends StatelessWidget {
   });
 
   @override
+  State<TranasctionDetailPage> createState() => _TranasctionDetailPageState();
+}
+
+class _TranasctionDetailPageState extends State<TranasctionDetailPage> {
+  @override
+  void initState() {
+    Database db = Database();
+    db.getTransactionDB();
+    final index = db.TransactionList.indexWhere(
+        (element) => element["createdDate"] == widget.createdDate);
+    print(index);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // var transactionTitle = "Transactions Title";
-    // var amount = '00,000';
-    // var transactionType = incomeT;
-    // var transactionTag = " TagList ";
-    // var transactionDate = "YYYY-MM-DD";
-    // var transactionPerson = "Person Name";
-    // var transactionNote =
-    //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar elit in eros consequat, vitae porta tellus lobortis. Nulla laoreet id orci ac aliquam.";
+    Database db = Database();
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => EditTransaction(
-                      Account: Account,
-                      createdDate: createdDate,
-                      transactionTitle: transactionTitle,
-                      amount: amount,
-                      transactionType: transactionType,
-                      transactionTag: transactionTag,
-                      transactionDate: transactionDate,
-                      transactionPerson: transactionPerson,
-                      transactionNote: transactionNote)));
+                      Account: widget.Account,
+                      createdDate: widget.createdDate,
+                      transactionTitle: widget.transactionTitle,
+                      amount: widget.amount,
+                      transactionType: widget.transactionType,
+                      transactionTag: widget.transactionTag,
+                      transactionDate: widget.transactionDate,
+                      transactionPerson: widget.transactionPerson,
+                      transactionNote: widget.transactionNote)));
+          // Account: widget.Account,
+          // createdDate: widget.createdDate,
+          // transactionTitle: widget.transactionTitle,
+          // amount: widget.amount,
+          // transactionType: widget.transactionType,
+          // transactionTag: widget.transactionTag,
+          // transactionDate: widget.transactionDate,
+          // transactionPerson: widget.transactionPerson,
+          // transactionNote: widget.transactionNote)));
+          // print("result" + result);
+          // if (result != null) {
+          db.getAccountDB();
+          db.getAmountDB();
+          db.getTransactionDB();
+          setState(() {
+            print("reset");
+          });
+          // }
         },
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
@@ -83,41 +109,41 @@ class TranasctionDetailPage extends StatelessWidget {
               DetailField(
                 iconsData: Icons.title,
                 title: 'Title',
-                data: transactionTitle,
+                data: widget.transactionTitle,
               ),
               DetailField(
                 iconsData: Icons.money,
                 title: 'Amount',
-                data: "RS $amount",
+                data: "RS ${widget.amount}",
               ),
               DetailField(
                 title: 'Transactions type',
-                data: transactionType,
+                data: widget.transactionType,
                 iconsData: Icons.category_outlined,
               ),
               DetailField(
                 title: 'Tag',
-                data: transactionTag,
+                data: widget.transactionTag,
                 iconsData: Icons.tag_rounded,
               ),
               DetailField(
                 title: 'Date',
-                data: transactionDate,
+                data: widget.transactionDate,
                 iconsData: Icons.date_range_outlined,
               ),
               DetailField(
                 title: 'Accounts',
-                data: Account,
+                data: widget.Account,
                 iconsData: Icons.account_balance_outlined,
               ),
               DetailField(
                 title: 'To/From',
-                data: transactionPerson,
+                data: widget.transactionPerson,
                 iconsData: Icons.person_2_outlined,
               ),
               DetailField(
                 title: 'Note',
-                data: transactionNote,
+                data: widget.transactionNote,
                 iconsData: Icons.fact_check_outlined,
                 isNote: true,
               ),

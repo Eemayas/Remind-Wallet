@@ -166,6 +166,64 @@ class Database {
     final index = TransactionList.indexWhere(
         (element) => element["createdDate"] == createdDate);
     print(index);
+    Map updatedTransactionLists = {
+      "createdDate": createdDate ?? "",
+      "Category": updated_transactionType ?? "",
+      "transationName": updated_transactionTitle ?? "",
+      "transactionTag": updated_transactionTag ?? "",
+      "transactionDescription": updated_transactionNote ?? "",
+      "transactionTags": updated_transactionTag ?? "",
+      "iconsName": updated_transactionTag ?? "",
+      "toFromName": updated_transactionPerson ?? "",
+      "Amount": updated_amount ?? 0,
+      "transactionDate": updated_transactionDate ?? "",
+      "transactionNote": updated_transactionNote ?? "",
+      "account": updated_account ?? "",
+    };
+
+    if (index != -1) {
+      if (TransactionList[index]["Amount"] != updated_amount) {
+        int? prevAmount = int.tryParse(TransactionList[index]["Amount"]);
+        getAmountDB();
+        int Amount = int.tryParse(updated_amount)! - prevAmount!;
+        switch (updated_transactionType) {
+          case incomeT:
+            amountsList['totalIncome'] = updated_amount == null
+                ? amountsList['totalIncome']
+                : amountsList['totalIncome'] + Amount;
+            amountsList['currentBalance'] = updated_amount == null
+                ? amountsList['currentBalance']
+                : amountsList['currentBalance'] + Amount;
+
+            break;
+
+          case expensesT:
+            amountsList['totalExpenses'] = updated_amount == null
+                ? amountsList['totalExpenses']
+                : amountsList['totalExpenses'] + Amount;
+            print(amountsList['currentBalance']);
+            amountsList['currentBalance'] = updated_amount == null
+                ? amountsList['currentBalance']
+                : amountsList['currentBalance'] - Amount;
+            print(amountsList['currentBalance']);
+            break;
+
+          case toPayT:
+            amountsList['toPay'] == null
+                ? amountsList['toPay']
+                : amountsList['toPay'] + Amount;
+            break;
+          case toReceiveT:
+            amountsList['toReceive'] == null
+                ? amountsList['toReceivee']
+                : amountsList['toReceivee'] + Amount;
+            break;
+        }
+        _account.put("AmountList", amountsList);
+      }
+    }
+    TransactionList[index] = updatedTransactionLists;
+    _account.put("Transaction", TransactionList);
   }
 }
 

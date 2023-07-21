@@ -76,17 +76,6 @@ class _EditTransactionState extends State<EditTransaction> {
     // tagController.text = widget.transactionTag;
     return GestureDetector(
       onTap: () => {
-        db.editTransaction(
-          updated_transactionTitle: titleController.text,
-          updated_amount: amtController.text,
-          updated_transactionType: tranasctionTypeController.text,
-          updated_transactionTag: tagController.text,
-          updated_transactionDate: dateController.text,
-          updated_transactionPerson: toFromController.text,
-          updated_transactionNote: noteController.text,
-          updated_account: accountController.text,
-          createdDate: widget.createdDate,
-        ),
         print(
             "${titleController.text}  ${amtController.text} ${toFromController.text}  ${noteController.text}  ${tranasctionTypeController.text}  ${tagController.text}  ${dateController.text}"),
         FocusScope.of(context).requestFocus(FocusNode())
@@ -111,6 +100,7 @@ class _EditTransactionState extends State<EditTransaction> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   InputField(
+                      isrequired: true,
                       hintText: "",
                       Controllerss: titleController,
                       keyboardType: TextInputType.text,
@@ -120,6 +110,7 @@ class _EditTransactionState extends State<EditTransaction> {
                     height: 20,
                   ),
                   InputField(
+                    isrequired: true,
                     Controllerss: amtController,
                     keyboardType: TextInputType.number,
                     labelText: "Amount",
@@ -130,6 +121,7 @@ class _EditTransactionState extends State<EditTransaction> {
                     height: 20,
                   ),
                   DropDownButton(
+                    isrequired: true,
                     iconsName: Icons.category_outlined,
                     lists: TransactionTypelist,
                     Controllerss: tranasctionTypeController,
@@ -194,11 +186,11 @@ class _EditTransactionState extends State<EditTransaction> {
                   ProgressButton.icon(
                       textStyle: kwhiteTextStyle,
                       height: 40.00,
-                      // maxWidth: 200.00,
+                      maxWidth: 200.00,
                       iconedButtons: {
                         ButtonState.idle: IconedButton(
-                          text: "Done",
-                          icon: Icon(Icons.done, color: Colors.white),
+                          text: "Edit Transaction",
+                          icon: Icon(Icons.add, color: Colors.white),
                           color: Colors.deepPurple.shade500,
                         ),
                         ButtonState.loading: IconedButton(
@@ -216,9 +208,84 @@ class _EditTransactionState extends State<EditTransaction> {
                             color: Colors.green.shade400)
                       },
                       onPressed: () => {
-                            print(
-                                "${titleController.text}  ${amtController.text}  ${tranasctionTypeController.text}  ${tagController.text}  ${dateController.text}  ${toFromController.text}  ${noteController.text}  "),
-                            FocusScope.of(context).requestFocus(FocusNode())
+                            FocusScope.of(context).requestFocus(FocusNode()),
+                            if (titleController.text.isEmpty)
+                              {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      backgroundColor: kBackgroundColorCard,
+                                      content: Row(
+                                        children: [
+                                          Icon(Icons.error, color: Colors.red),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            'Plese Fill the title',
+                                            style: kwhiteTextStyle.copyWith(
+                                                color: Colors.red),
+                                          ),
+                                        ],
+                                      )),
+                                )
+                              }
+                            else if (amtController.text.isEmpty)
+                              {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      backgroundColor: kBackgroundColorCard,
+                                      content: Row(
+                                        children: [
+                                          Icon(Icons.error, color: Colors.red),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            'Plese Fill the amount',
+                                            style: kwhiteTextStyle,
+                                          ),
+                                        ],
+                                      )),
+                                )
+                              }
+                            else if (tranasctionTypeController.text.isEmpty)
+                              {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      backgroundColor: kBackgroundColorCard,
+                                      content: Row(
+                                        children: [
+                                          Icon(Icons.error, color: Colors.red),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            'Plese choose one Tranasction type',
+                                            style: kwhiteTextStyle,
+                                          ),
+                                        ],
+                                      )),
+                                )
+                              }
+                            else
+                              {
+                                db.editTransaction(
+                                  updated_transactionTitle:
+                                      titleController.text,
+                                  updated_amount: amtController.text,
+                                  updated_transactionType:
+                                      tranasctionTypeController.text,
+                                  updated_transactionTag: tagController.text,
+                                  updated_transactionDate: dateController.text,
+                                  updated_transactionPerson:
+                                      toFromController.text,
+                                  updated_transactionNote: noteController.text,
+                                  updated_account: accountController.text,
+                                  createdDate: widget.createdDate,
+                                ),
+                                Navigator.pop(context, "here i am"),
+                                Navigator.pop(context, "here i am"),
+                              },
                           },
                       state: ButtonState.idle),
                 ],
