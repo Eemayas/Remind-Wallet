@@ -34,19 +34,19 @@ class TranasctionDetailPage extends StatefulWidget {
 }
 
 class _TranasctionDetailPageState extends State<TranasctionDetailPage> {
+  // int index = 0;
   @override
   void initState() {
-    Database db = Database();
-    db.getTransactionDB();
-    final index = db.TransactionList.indexWhere(
-        (element) => element["createdDate"] == widget.createdDate);
-    print(index);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     Database db = Database();
+    db.getTransactionDB();
+    final index = db.TransactionList.indexWhere(
+        (element) => element["createdDate"] == widget.createdDate);
+    print(index);
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
@@ -54,15 +54,21 @@ class _TranasctionDetailPageState extends State<TranasctionDetailPage> {
               context,
               MaterialPageRoute(
                   builder: (context) => EditTransaction(
-                      Account: widget.Account,
-                      createdDate: widget.createdDate,
-                      transactionTitle: widget.transactionTitle,
-                      amount: widget.amount,
-                      transactionType: widget.transactionType,
-                      transactionTag: widget.transactionTag,
-                      transactionDate: widget.transactionDate,
-                      transactionPerson: widget.transactionPerson,
-                      transactionNote: widget.transactionNote)));
+                        Account: db.TransactionList[index]["account"],
+                        createdDate: db.TransactionList[index]["createdDate"],
+                        transactionTitle: db.TransactionList[index]
+                            ["transationName"],
+                        amount: db.TransactionList[index]["Amount"].toString(),
+                        transactionType: db.TransactionList[index]["Category"],
+                        transactionTag: db.TransactionList[index]
+                            ["transactionTag"],
+                        transactionDate: db.TransactionList[index]
+                            ["transactionDate"],
+                        transactionPerson: db.TransactionList[index]
+                            ["toFromName"],
+                        transactionNote: db.TransactionList[index]
+                            ["transactionNote"],
+                      )));
           // Account: widget.Account,
           // createdDate: widget.createdDate,
           // transactionTitle: widget.transactionTitle,
@@ -109,41 +115,49 @@ class _TranasctionDetailPageState extends State<TranasctionDetailPage> {
               DetailField(
                 iconsData: Icons.title,
                 title: 'Title',
-                data: widget.transactionTitle,
+                data: db.TransactionList[index]["transationName"],
+                // data: widget.transactionTitle,
               ),
               DetailField(
                 iconsData: Icons.money,
                 title: 'Amount',
-                data: "RS ${widget.amount}",
+                data: "RS ${db.TransactionList[index]["Amount"]}",
+                // data: "RS ${widget.amount}",
               ),
               DetailField(
                 title: 'Transactions type',
-                data: widget.transactionType,
+                data: db.TransactionList[index]["Category"],
+                // data: widget.transactionType,
                 iconsData: Icons.category_outlined,
               ),
               DetailField(
                 title: 'Tag',
-                data: widget.transactionTag,
+                data: db.TransactionList[index]["transactionTag"],
+                // data: widget.transactionTag,
                 iconsData: Icons.tag_rounded,
               ),
               DetailField(
                 title: 'Date',
-                data: widget.transactionDate,
+                data: db.TransactionList[index]["transactionDate"],
+                // data: widget.transactionDate,
                 iconsData: Icons.date_range_outlined,
               ),
               DetailField(
                 title: 'Accounts',
-                data: widget.Account,
+                data: db.TransactionList[index]["account"],
+                // data: widget.Account,
                 iconsData: Icons.account_balance_outlined,
               ),
               DetailField(
                 title: 'To/From',
-                data: widget.transactionPerson,
+                data: db.TransactionList[index]["toFromName"],
+                // data: widget.transactionPerson,
                 iconsData: Icons.person_2_outlined,
               ),
               DetailField(
                 title: 'Note',
-                data: widget.transactionNote,
+                data: db.TransactionList[index]["transactionNote"],
+                // data: widget.transactionNote,
                 iconsData: Icons.fact_check_outlined,
                 isNote: true,
               ),

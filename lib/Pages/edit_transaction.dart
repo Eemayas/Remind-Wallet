@@ -284,7 +284,7 @@ class _EditTransactionState extends State<EditTransaction> {
                                   createdDate: widget.createdDate,
                                 ),
                                 Navigator.pop(context, "here i am"),
-                                Navigator.pop(context, "here i am"),
+                                // Navigator.pop(context, "here i am"),
                               },
                           },
                       state: ButtonState.idle),
