@@ -19,6 +19,7 @@ class TranactionCard extends StatelessWidget {
   final String toFromName;
   final String Amount;
   final String Account;
+  final String createdDate;
 
   final String transactionDate;
   const TranactionCard({
@@ -33,6 +34,7 @@ class TranactionCard extends StatelessWidget {
     required this.Amount,
     required this.transactionDate,
     this.Account = "Cash",
+    required this.createdDate,
   });
 
   @override
@@ -49,6 +51,7 @@ class TranactionCard extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) => TranasctionDetailPage(
+                    createdDate: createdDate,
                     transactionTitle: transationName,
                     amount: Amount,
                     transactionType: Category,

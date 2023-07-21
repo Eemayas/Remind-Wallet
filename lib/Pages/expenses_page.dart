@@ -59,20 +59,20 @@ class ExpensePage extends StatelessWidget {
                 "Recent Transactions",
                 style: kwhiteTextStyle.copyWith(fontSize: 20),
               ),
-              for (int i = 0; i < TransactionList.length; i++)
-                if (TransactionList[i]["Category"] == expensesT)
-                  TranactionCard(
-                    transactionDate: TransactionList[i]["transactionDate"],
-                    Category: TransactionList[i]["Category"],
-                    transationName: TransactionList[i]["transationName"],
-                    transactionTag: TransactionList[i]["transactionTag"],
-                    transactionDescription: TransactionList[i]
-                        ["transactionDescription"],
-                    transactionTags: TransactionList[i]["transactionTags"],
-                    iconsName: TransactionList[i]["iconsName"],
-                    Amount: TransactionList[i]["Amount"],
-                    toFromName: TransactionList[i]["toFromName"],
-                  ),
+              // for (int i = 0; i < db.TransactionList.length; i++)
+              //   if (TransactionList[i]["Category"] == expensesT)
+              //     TranactionCard(
+              //       transactionDate: TransactionList[i]["transactionDate"],
+              //       Category: TransactionList[i]["Category"],
+              //       transationName: TransactionList[i]["transationName"],
+              //       transactionTag: TransactionList[i]["transactionTag"],
+              //       transactionDescription: TransactionList[i]
+              //           ["transactionDescription"],
+              //       transactionTags: TransactionList[i]["transactionTags"],
+              //       iconsName: TransactionList[i]["iconsName"],
+              //       Amount: TransactionList[i]["Amount"],
+              //       toFromName: TransactionList[i]["toFromName"],createdDate: db.TransactionList[i]["createdDate"],
+              //     ),
             ],
           ),
         )),

@@ -20,6 +20,7 @@ class DateInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Controllerss.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
     return TextField(
       controller: Controllerss,
       cursorColor: Colors.white,

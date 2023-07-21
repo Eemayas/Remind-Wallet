@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import 'package:expenses_tracker/API/database.dart';
 import 'package:expenses_tracker/Pages/add_transaction.dart';
 import 'package:expenses_tracker/Pages/edit_transaction.dart';
 import 'package:expenses_tracker/constant.dart';
@@ -13,6 +14,7 @@ class TranasctionDetailPage extends StatelessWidget {
   final String transactionPerson;
   final String transactionNote;
   final String Account;
+  final String createdDate;
   static String id = "Transaction Detail Page";
   const TranasctionDetailPage({
     super.key,
@@ -24,6 +26,7 @@ class TranasctionDetailPage extends StatelessWidget {
     required this.transactionPerson,
     required this.transactionNote,
     required this.Account,
+    required this.createdDate,
   });
 
   @override
@@ -43,6 +46,8 @@ class TranasctionDetailPage extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => EditTransaction(
+                      Account: Account,
+                      createdDate: createdDate,
                       transactionTitle: transactionTitle,
                       amount: amount,
                       transactionType: transactionType,

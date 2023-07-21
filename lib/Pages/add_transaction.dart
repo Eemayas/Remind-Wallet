@@ -34,6 +34,7 @@ class _AddTransactionState extends State<AddTransaction> {
         "${titleController.text}  ${amtController.text}  ${tranasctionTypeController.text}  ${tagController.text}  ${dateController.text}  ${toFromController.text}  ${noteController.text}  ");
     Database db = Database();
     db.addTransactionDb(
+      createdDate: DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now()),
       amount: int.tryParse(amtController.text),
       transactionDate: dateController.text,
       transactionNote: noteController.text,
@@ -56,7 +57,7 @@ class _AddTransactionState extends State<AddTransaction> {
     noteController.addListener(() => setState(() {}));
     tranasctionTypeController.addListener(() => setState(() {}));
     tagController.addListener(() => setState(() {}));
-    dateController.addListener(() => setState(() {}));
+    // dateController.addListener(() => setState(() {}));
     accountController.addListener(() => setState(() {}));
   }
 

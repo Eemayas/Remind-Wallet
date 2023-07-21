@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 
+import '../API/database.dart';
 import '../Componet/date_Input_field.dart';
 import '../Componet/dropdown_button.dart';
 import '../Componet/input_filed.dart';
@@ -18,6 +19,8 @@ class EditTransaction extends StatefulWidget {
   final String transactionDate;
   final String transactionPerson;
   final String transactionNote;
+  final String Account;
+  final String createdDate;
   const EditTransaction(
       {super.key,
       required this.transactionTitle,
@@ -26,7 +29,9 @@ class EditTransaction extends StatefulWidget {
       required this.transactionTag,
       required this.transactionDate,
       required this.transactionPerson,
-      required this.transactionNote});
+      required this.transactionNote,
+      required this.Account,
+      required this.createdDate});
 
   @override
   State<EditTransaction> createState() => _EditTransactionState();
@@ -40,6 +45,7 @@ class _EditTransactionState extends State<EditTransaction> {
   final tranasctionTypeController = TextEditingController();
   final tagController = TextEditingController();
   final dateController = TextEditingController();
+  final accountController = TextEditingController();
 
   @override
   void initState() {
@@ -49,22 +55,38 @@ class _EditTransactionState extends State<EditTransaction> {
     toFromController.addListener(() => setState(() {}));
     noteController.addListener(() => setState(() {}));
     tranasctionTypeController.addListener(() => setState(() {}));
-    tagController.addListener(() => setState(() {}));
-    dateController.addListener(() => setState(() {}));
+    // tagController.addListener(() => setState(() {}));
+    // dateController.addListener(() => setState(() {}));
+    accountController.addListener(() => setState(() {}));
 
     titleController.text = widget.transactionTitle;
     amtController.text = widget.amount;
     tranasctionTypeController.text = widget.transactionType;
-    tagController.text = widget.transactionTag;
-    dateController.text = widget.transactionDate;
+    // tagController.text = widget.transactionTag;
+    // dateController.text = widget.transactionDate;
     toFromController.text = widget.transactionPerson;
     noteController.text = widget.transactionNote;
+    // Database db = Database();
   }
 
   @override
   Widget build(BuildContext context) {
+    Database db = Database();
+    dateController.text = widget.transactionDate;
+    // tagController.text = widget.transactionTag;
     return GestureDetector(
       onTap: () => {
+        db.editTransaction(
+          updated_transactionTitle: titleController.text,
+          updated_amount: amtController.text,
+          updated_transactionType: tranasctionTypeController.text,
+          updated_transactionTag: tagController.text,
+          updated_transactionDate: dateController.text,
+          updated_transactionPerson: toFromController.text,
+          updated_transactionNote: noteController.text,
+          updated_account: accountController.text,
+          createdDate: widget.createdDate,
+        ),
         print(
             "${titleController.text}  ${amtController.text} ${toFromController.text}  ${noteController.text}  ${tranasctionTypeController.text}  ${tagController.text}  ${dateController.text}"),
         FocusScope.of(context).requestFocus(FocusNode())
@@ -124,6 +146,16 @@ class _EditTransactionState extends State<EditTransaction> {
                     hintText:
                         " Food/Transportation/Housing/Utilities/Healthcare/Education/Entertainment/Clothing/Personal Care/Gifts/Savings/Miscellaneous",
                     labelText: "Tag",
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  DropDownButton(
+                    iconsName: Icons.account_balance_outlined,
+                    lists: Accountlist,
+                    Controllerss: accountController,
+                    hintText: "Cash/Esewa/Khalti",
+                    labelText: "Account",
                   ),
                   SizedBox(
                     height: 20,

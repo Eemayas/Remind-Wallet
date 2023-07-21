@@ -59,20 +59,20 @@ class ToReceivePage extends StatelessWidget {
                 "Recent Transactions",
                 style: kwhiteTextStyle.copyWith(fontSize: 20),
               ),
-              for (int i = 0; i < TransactionList.length; i++)
-                if (TransactionList[i]["Category"] == toReceiveT)
-                  TranactionCard(
-                    Category: TransactionList[i]["Category"],
-                    transationName: TransactionList[i]["transationName"],
-                    transactionTag: TransactionList[i]["transactionTag"],
-                    transactionDescription: TransactionList[i]
-                        ["transactionDescription"],
-                    transactionTags: TransactionList[i]["transactionTags"],
-                    iconsName: TransactionList[i]["iconsName"],
-                    Amount: TransactionList[i]["Amount"],
-                    toFromName: TransactionList[i]["toFromName"],
-                    transactionDate: TransactionList[i]["transactionDate"],
-                  ),
+              // for (int i = 0; i < TransactionList.length; i++)
+              //   if (TransactionList[i]["Category"] == toReceiveT)
+              //     TranactionCard(
+              //       Category: TransactionList[i]["Category"],
+              //       transationName: TransactionList[i]["transationName"],
+              //       transactionTag: TransactionList[i]["transactionTag"],
+              //       transactionDescription: TransactionList[i]
+              //           ["transactionDescription"],
+              //       transactionTags: TransactionList[i]["transactionTags"],
+              //       iconsName: TransactionList[i]["iconsName"],
+              //       Amount: TransactionList[i]["Amount"],
+              //       toFromName: TransactionList[i]["toFromName"],
+              //       transactionDate: TransactionList[i]["transactionDate"],
+              //     ),
             ],
           ),
         )),

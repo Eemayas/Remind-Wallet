@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, avoid_print
+// ignore_for_file: non_constant_identifier_names, avoid_print, unused_local_variable
 
 import 'dart:ffi';
 
@@ -85,6 +85,7 @@ class Database {
 
   void addTransactionDb(
       {transactionTitle,
+      createdDate,
       amount,
       transactionType,
       transactionTag,
@@ -94,6 +95,7 @@ class Database {
       account}) {
     List inputedTransactionLists = [
       {
+        "createdDate": createdDate ?? "",
         "Category": transactionType ?? "",
         "transationName": transactionTitle ?? "",
         "transactionTag": transactionTag ?? "",
@@ -147,6 +149,23 @@ class Database {
     }
     _account.put("AmountList", amountsList);
     print("updated transaction");
+  }
+
+  editTransaction({
+    updated_transactionTitle,
+    updated_amount,
+    updated_transactionType,
+    updated_transactionTag,
+    updated_transactionDate,
+    updated_transactionPerson,
+    updated_transactionNote,
+    updated_account,
+    createdDate,
+  }) {
+    getTransactionDB();
+    final index = TransactionList.indexWhere(
+        (element) => element["createdDate"] == createdDate);
+    print(index);
   }
 }
 
