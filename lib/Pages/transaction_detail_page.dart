@@ -36,16 +36,10 @@ class TranasctionDetailPage extends StatefulWidget {
 class _TranasctionDetailPageState extends State<TranasctionDetailPage> {
   // int index = 0;
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     Database db = Database();
     db.getTransactionDB();
-    final index = db.TransactionList.indexWhere(
-        (element) => element["createdDate"] == widget.createdDate);
+    final index = db.TransactionList.indexWhere((element) => element[transactionCreatedDateD] == widget.createdDate);
     print(index);
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
@@ -54,20 +48,15 @@ class _TranasctionDetailPageState extends State<TranasctionDetailPage> {
               context,
               MaterialPageRoute(
                   builder: (context) => EditTransaction(
-                        Account: db.TransactionList[index]["account"],
-                        createdDate: db.TransactionList[index]["createdDate"],
-                        transactionTitle: db.TransactionList[index]
-                            ["transationName"],
-                        amount: db.TransactionList[index]["Amount"].toString(),
-                        transactionType: db.TransactionList[index]["Category"],
-                        transactionTag: db.TransactionList[index]
-                            ["transactionTag"],
-                        transactionDate: db.TransactionList[index]
-                            ["transactionDate"],
-                        transactionPerson: db.TransactionList[index]
-                            ["toFromName"],
-                        transactionNote: db.TransactionList[index]
-                            ["transactionNote"],
+                        transactionTitle: db.TransactionList[index][transationNameD],
+                        amount: db.TransactionList[index][transactionAmountD].toString(),
+                        transactionType: db.TransactionList[index][transactionTypeD],
+                        transactionTag: db.TransactionList[index][transactionTagD],
+                        transactionDate: db.TransactionList[index][transactionDateD],
+                        Account: db.TransactionList[index][transactionAccountD],
+                        transactionPerson: db.TransactionList[index][transactionPersonD],
+                        transactionNote: db.TransactionList[index][transactionDescriptionD],
+                        createdDate: db.TransactionList[index][transactionCreatedDateD],
                       )));
           // Account: widget.Account,
           // createdDate: widget.createdDate,
@@ -115,48 +104,48 @@ class _TranasctionDetailPageState extends State<TranasctionDetailPage> {
               DetailField(
                 iconsData: Icons.title,
                 title: 'Title',
-                data: db.TransactionList[index]["transationName"],
+                data: db.TransactionList[index][transationNameD],
                 // data: widget.transactionTitle,
               ),
               DetailField(
                 iconsData: Icons.money,
                 title: 'Amount',
-                data: "RS ${db.TransactionList[index]["Amount"]}",
+                data: "RS ${db.TransactionList[index][transactionAmountD]}",
                 // data: "RS ${widget.amount}",
               ),
               DetailField(
                 title: 'Transactions type',
-                data: db.TransactionList[index]["Category"],
+                data: db.TransactionList[index][transactionTypeD],
                 // data: widget.transactionType,
                 iconsData: Icons.category_outlined,
               ),
               DetailField(
                 title: 'Tag',
-                data: db.TransactionList[index]["transactionTag"],
+                data: db.TransactionList[index][transactionTagD],
                 // data: widget.transactionTag,
                 iconsData: Icons.tag_rounded,
               ),
               DetailField(
                 title: 'Date',
-                data: db.TransactionList[index]["transactionDate"],
+                data: db.TransactionList[index][transactionDateD],
                 // data: widget.transactionDate,
                 iconsData: Icons.date_range_outlined,
               ),
               DetailField(
                 title: 'Accounts',
-                data: db.TransactionList[index]["account"],
+                data: db.TransactionList[index][transactionAccountD],
                 // data: widget.Account,
                 iconsData: Icons.account_balance_outlined,
               ),
               DetailField(
                 title: 'To/From',
-                data: db.TransactionList[index]["toFromName"],
+                data: db.TransactionList[index][transactionPersonD],
                 // data: widget.transactionPerson,
                 iconsData: Icons.person_2_outlined,
               ),
               DetailField(
                 title: 'Note',
-                data: db.TransactionList[index]["transactionNote"],
+                data: db.TransactionList[index][transactionDescriptionD],
                 // data: widget.transactionNote,
                 iconsData: Icons.fact_check_outlined,
                 isNote: true,
@@ -198,18 +187,14 @@ class DetailField extends StatelessWidget {
           children: [
             Text(
               "${title}:",
-              style: kwhiteTextStyle.copyWith(
-                  decoration: TextDecoration.underline),
+              style: kwhiteTextStyle.copyWith(decoration: TextDecoration.underline),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10, bottom: 30),
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.6,
                 child: Text(data,
-                    softWrap: false,
-                    maxLines: isNote ? 100 : 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: kwhiteTextStyle.copyWith(fontSize: 20)),
+                    softWrap: false, maxLines: isNote ? 100 : 1, overflow: TextOverflow.ellipsis, style: kwhiteTextStyle.copyWith(fontSize: 20)),
               ),
             ),
           ],

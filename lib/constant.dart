@@ -62,3 +62,10 @@ const String transactionAmountD = "transactionAmountD";
 const String transactionDateD = "transactionDateD";
 const String transactionCreatedDateD = "transactionCreatedDateD";
 const String transactionIconD = "transactionIconD";
+
+const String accountNameD = "accountNameD";
+const String accountCurrentBalanceD = "accountCurrentBalanceD";
+
+const String transactionDatabase = "Transaction";
+const String accountDatabase = "Account";
+const String amountListDatabase = "AmountList";

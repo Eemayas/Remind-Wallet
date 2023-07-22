@@ -180,8 +180,8 @@ class _DashboardState extends State<Dashboard> {
                       Row(
                         children: [
                           AccountCard(
-                            accountName: db.AccountsList[i]["accountName"],
-                            amount: db.AccountsList[i]["amount"].toString(),
+                            accountName: db.AccountsList[i][accountNameD],
+                            amount: db.AccountsList[i][accountCurrentBalanceD].toString(),
                           ),
                           SizedBox(
                             width: 20,
@@ -237,26 +237,26 @@ class _DashboardState extends State<Dashboard> {
                 style: kwhiteTextStyle.copyWith(fontSize: 20),
               ),
               for (int i = db.TransactionList.length - 1; i >= 0; i--)
-                if (db.TransactionList[i]["transactionDate"] != null &&
-                    db.TransactionList[i]["transactionNote"] != null &&
-                    db.TransactionList[i]["Amount"].toString() != "0" &&
-                    db.TransactionList[i]["transactionDescription"] != null &&
-                    db.TransactionList[i]["toFromName"] != null &&
-                    db.TransactionList[i]["Category"] != null &&
-                    db.TransactionList[i]["transationName"] != null &&
-                    db.TransactionList[i]["transactionTag"] != null &&
-                    db.TransactionList[i]["transactionTags"] != null)
+                if (db.TransactionList[i][transationNameD] != null &&
+                    db.TransactionList[i][transactionAmountD].toString() != null &&
+                    db.TransactionList[i][transactionTypeD] != "0" &&
+                    db.TransactionList[i][transactionTagD] != null &&
+                    db.TransactionList[i][transactionDateD] != null &&
+                    db.TransactionList[i][transactionAccountD] != null &&
+                    db.TransactionList[i][transactionPersonD] != null &&
+                    db.TransactionList[i][transactionCreatedDateD] != null &&
+                    db.TransactionList[i][transactionDescriptionD] != null)
                   TranactionCard(
-                    transationName: db.TransactionList[i]["transationName"],
-                    transactionAmount: db.TransactionList[i]["Amount"].toString(),
-                    transactionType: db.TransactionList[i]["Category"],
-                    transactionTag: db.TransactionList[i]["transactionTag"],
-                    transactionCreatedDate: db.TransactionList[i]["createdDate"] ?? "",
-                    transactionDate: db.TransactionList[i]["transactionDate"],
-                    transactionAccount: db.TransactionList[i]["transactionTags"],
-                    transactionPerson: db.TransactionList[i]["toFromName"],
-                    transactionDescription: db.TransactionList[i]["transactionDescription"],
-                    iconsName: db.TransactionList[i]["iconsName"] == "shooping" ? Icons.shopping_cart_outlined : Icons.abc,
+                    transationName: db.TransactionList[i][transationNameD],
+                    transactionAmount: db.TransactionList[i][transactionAmountD].toString(),
+                    transactionType: db.TransactionList[i][transactionTypeD],
+                    transactionTag: db.TransactionList[i][transactionTagD],
+                    transactionDate: db.TransactionList[i][transactionDateD],
+                    transactionAccount: db.TransactionList[i][transactionAccountD],
+                    transactionPerson: db.TransactionList[i][transactionPersonD],
+                    transactionDescription: db.TransactionList[i][transactionDescriptionD],
+                    iconsName: db.TransactionList[i][transactionIconD] == "shooping" ? Icons.shopping_cart_outlined : Icons.abc,
+                    transactionCreatedDate: db.TransactionList[i][transactionCreatedDateD] ?? "",
                     // Account: db.TransactionList[i]["account"] ?? "Cash",
                   ),
             ],
