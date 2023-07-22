@@ -13,13 +13,13 @@ class TranactionCard extends StatelessWidget {
   final String transationName;
   final String transactionTag;
   final String transactionDescription;
-  final String transactionTags;
+  final String transactionAccount;
   final IconData iconsName;
-  final String Category;
-  final String toFromName;
-  final String Amount;
-  final String Account;
-  final String createdDate;
+  final String transactionType;
+  final String transactionPerson;
+  final String transactionAmount;
+  // final String Account;
+  final String transactionCreatedDate;
 
   final String transactionDate;
   const TranactionCard({
@@ -27,39 +27,40 @@ class TranactionCard extends StatelessWidget {
     required this.transationName,
     required this.transactionTag,
     required this.transactionDescription,
-    required this.transactionTags,
+    required this.transactionAccount,
     required this.iconsName,
-    required this.Category,
-    required this.toFromName,
-    required this.Amount,
+    required this.transactionType,
+    required this.transactionPerson,
+    required this.transactionAmount,
     required this.transactionDate,
-    this.Account = "Cash",
-    required this.createdDate,
+    required this.transactionCreatedDate, // this.Account = "Cash",
   });
 
   @override
   Widget build(BuildContext context) {
-    Color tagColor = Category == incomeT || Category == toReceiveT
-        ? kColorIncome
-        : kColorExpenses;
-    Color boxShadowColor = Category == incomeT || Category == toReceiveT
-        ? kBoxShadowIncome
-        : kBoxShadowExpenses;
+    Color cardMainColor =
+        transactionType == incomeT || transactionType == toReceiveT
+            ? kColorIncome
+            : kColorExpenses;
+    Color boxShadowColor =
+        transactionType == incomeT || transactionType == toReceiveT
+            ? kBoxShadowIncome
+            : kBoxShadowExpenses;
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => TranasctionDetailPage(
-                    createdDate: createdDate,
+                    createdDate: transactionCreatedDate,
                     transactionTitle: transationName,
-                    amount: Amount,
-                    transactionType: Category,
+                    amount: transactionAmount,
+                    transactionType: transactionType,
                     transactionTag: transactionTag,
-                    transactionPerson: toFromName,
+                    transactionPerson: transactionPerson,
                     transactionDate: transactionDate,
                     transactionNote: transactionDescription,
-                    Account: Account,
+                    transactionAccount: transactionAccount,
                   )),
         );
       },
@@ -125,14 +126,14 @@ class TranactionCard extends StatelessWidget {
                               ),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.3,
-                                child: Text(Amount,
+                                child: Text(transactionAmount,
                                     textDirection: TextDirection.rtl,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: kwhiteTextStyle.copyWith(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w300,
-                                        color: tagColor)),
+                                        color: cardMainColor)),
                               ),
                             ],
                           ),
@@ -142,7 +143,7 @@ class TranactionCard extends StatelessWidget {
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.4,
-                          child: Text("TO/FROM-$toFromName",
+                          child: Text("TO/FROM-$transactionPerson",
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: ksubTextStyle.copyWith(
@@ -194,16 +195,17 @@ class TranactionCard extends StatelessWidget {
                                     height: 25,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
-                                        color: tagColor),
+                                        color: cardMainColor),
                                     child: SizedBox(
                                       width: MediaQuery.of(context).size.width *
                                           0.3,
                                       child: Center(
-                                        child: Text(Category,
+                                        child: Text(transactionType,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: kwhiteTextStyle.copyWith(
-                                                color: tagColor == kColorIncome
+                                                color: cardMainColor ==
+                                                        kColorIncome
                                                     ? Colors.black
                                                     : Colors.white,
                                                 fontSize: 15,
@@ -218,16 +220,17 @@ class TranactionCard extends StatelessWidget {
                                     height: 25,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
-                                        color: tagColor),
+                                        color: cardMainColor),
                                     child: SizedBox(
                                       width: MediaQuery.of(context).size.width *
                                           0.3,
                                       child: Center(
-                                        child: Text(transactionTags,
+                                        child: Text(transactionAccount,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: kwhiteTextStyle.copyWith(
-                                                color: tagColor == kColorIncome
+                                                color: cardMainColor ==
+                                                        kColorIncome
                                                     ? Colors.black
                                                     : Colors.white,
                                                 fontSize: 15,
@@ -249,7 +252,8 @@ class TranactionCard extends StatelessWidget {
                 ),
                 Visibility(
                   // ignore: dead_code
-                  visible: (Category == toReceiveT || Category == toPayT)
+                  visible: (transactionType == toReceiveT ||
+                          transactionType == toPayT)
                       ? true
                       : false,
                   child: Column(

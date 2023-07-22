@@ -13,7 +13,7 @@ class TranasctionDetailPage extends StatefulWidget {
   final String transactionDate;
   final String transactionPerson;
   final String transactionNote;
-  final String Account;
+  final String transactionAccount;
   final String createdDate;
   static String id = "Transaction Detail Page";
   const TranasctionDetailPage({
@@ -25,7 +25,7 @@ class TranasctionDetailPage extends StatefulWidget {
     required this.transactionDate,
     required this.transactionPerson,
     required this.transactionNote,
-    required this.Account,
+    required this.transactionAccount,
     required this.createdDate,
   });
 

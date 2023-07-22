@@ -82,9 +82,7 @@ class _DashboardState extends State<Dashboard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("Hi,", style: kwhiteTextStyle.copyWith(fontSize: 20)),
-              Text("Prashant Manandhar,",
-                  style: kwhiteTextStyle.copyWith(
-                      fontSize: 30, fontWeight: FontWeight.bold)),
+              Text("Prashant Manandhar,", style: kwhiteTextStyle.copyWith(fontSize: 30, fontWeight: FontWeight.bold)),
               SizedBox(
                 height: 30,
               ),
@@ -112,8 +110,7 @@ class _DashboardState extends State<Dashboard> {
                           color: kColorIncome,
                         ),
                         nextPage: IncomePage.id,
-                        borderColor: Colors
-                            .transparent, //Color.fromARGB(168, 105, 240, 175),
+                        borderColor: Colors.transparent, //Color.fromARGB(168, 105, 240, 175),
                         iconBgColor: Color(0x33008000),
                       ),
                       Cards(
@@ -143,8 +140,7 @@ class _DashboardState extends State<Dashboard> {
                           Icons.arrow_downward,
                           color: kColorIncome,
                         ),
-                        borderColor: Colors
-                            .transparent, //Color.fromARGB(168, 105, 240, 175),
+                        borderColor: Colors.transparent, //Color.fromARGB(168, 105, 240, 175),
                         iconBgColor: Color(0x33008000),
                         nextPage: ToReceivePage.id,
                       ),
@@ -194,8 +190,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     InkWell(
                       onTap: () async {
-                        final result =
-                            await Navigator.pushNamed(context, AddAccount.id);
+                        final result = await Navigator.pushNamed(context, AddAccount.id);
                         print(result);
                         if (result != null) {
                           db.getAccountDB();
@@ -251,22 +246,18 @@ class _DashboardState extends State<Dashboard> {
                     db.TransactionList[i]["transationName"] != null &&
                     db.TransactionList[i]["transactionTag"] != null &&
                     db.TransactionList[i]["transactionTags"] != null)
-                  // Text(db.TransactionList[i][0]["createdDate"] ?? "")
                   TranactionCard(
-                    createdDate: db.TransactionList[i]["createdDate"] ?? "",
-                    transactionDate: db.TransactionList[i]["transactionDate"],
-                    Amount: db.TransactionList[i]["Amount"].toString(),
-                    toFromName: db.TransactionList[i]["toFromName"],
-                    Category: db.TransactionList[i]["Category"],
                     transationName: db.TransactionList[i]["transationName"],
+                    transactionAmount: db.TransactionList[i]["Amount"].toString(),
+                    transactionType: db.TransactionList[i]["Category"],
                     transactionTag: db.TransactionList[i]["transactionTag"],
-                    transactionDescription: db.TransactionList[i]
-                        ["transactionDescription"],
-                    transactionTags: db.TransactionList[i]["transactionTags"],
-                    iconsName: db.TransactionList[i]["iconsName"] == "shooping"
-                        ? Icons.shopping_cart_outlined
-                        : Icons.abc,
-                    Account: db.TransactionList[i]["account"] ?? "Cash",
+                    transactionCreatedDate: db.TransactionList[i]["createdDate"] ?? "",
+                    transactionDate: db.TransactionList[i]["transactionDate"],
+                    transactionAccount: db.TransactionList[i]["transactionTags"],
+                    transactionPerson: db.TransactionList[i]["toFromName"],
+                    transactionDescription: db.TransactionList[i]["transactionDescription"],
+                    iconsName: db.TransactionList[i]["iconsName"] == "shooping" ? Icons.shopping_cart_outlined : Icons.abc,
+                    // Account: db.TransactionList[i]["account"] ?? "Cash",
                   ),
             ],
           ),
@@ -340,15 +331,11 @@ class Cards extends StatelessWidget {
                 SizedBox(
                   height: 30,
                 ),
-                Text(cardName,
-                    style: ksubTextStyle.copyWith(
-                        fontSize: 12, fontWeight: FontWeight.w300)),
+                Text(cardName, style: ksubTextStyle.copyWith(fontSize: 12, fontWeight: FontWeight.w300)),
                 SizedBox(
                   height: 10,
                 ),
-                Text('Rs $amount ',
-                    style:
-                        kwhiteTextStyle.copyWith(fontWeight: FontWeight.bold)),
+                Text('Rs $amount ', style: kwhiteTextStyle.copyWith(fontWeight: FontWeight.bold)),
               ],
             ),
           ),

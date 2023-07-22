@@ -23,11 +23,11 @@ class Database {
   void getAmountDB() {
     amountsList = _account.get("AmountList") ??
         {
-          "currentBalance": 00000,
-          "totalIncome": 00000,
-          "totalExpenses": 00000,
-          "toReceive": 00000,
-          "toPay": 00000,
+          currentBalanceD: 00000,
+          totalIncomeD: 00000,
+          totalExpensesD: 00000,
+          toReceiveD: 00000,
+          toPayD: 00000,
         };
   }
 
@@ -59,9 +59,7 @@ class Database {
     AccountsList = AccountsList + inputAccount;
     _account.put("Account", AccountsList);
     getAmountDB();
-    amountsList['currentBalance'] = amount == null
-        ? amountsList['currentBalance']
-        : amountsList['currentBalance'] + amount;
+    amountsList['currentBalance'] = amount == null ? amountsList['currentBalance'] : amountsList['currentBalance'] + amount;
     _account.put("AmountList", amountsList);
     List inputedTransactionLists = [
       {
@@ -84,29 +82,21 @@ class Database {
   }
 
   void addTransactionDb(
-      {transactionTitle,
-      createdDate,
-      amount,
-      transactionType,
-      transactionTag,
-      transactionDate,
-      transactionPerson,
-      transactionNote,
-      account}) {
+      {transactionTitle, createdDate, amount, transactionType, transactionTag, transactionDate, transactionPerson, transactionNote, account}) {
     List inputedTransactionLists = [
       {
-        "createdDate": createdDate ?? "",
-        "Category": transactionType ?? "",
-        "transationName": transactionTitle ?? "",
-        "transactionTag": transactionTag ?? "",
-        "transactionDescription": transactionNote ?? "",
-        "transactionTags": transactionTag ?? "",
-        "iconsName": transactionTag ?? "",
-        "toFromName": transactionPerson ?? "",
-        "Amount": amount ?? 0,
-        "transactionDate": transactionDate ?? "",
-        "transactionNote": transactionNote ?? "",
-        "account": account ?? "",
+        transactionTitle: transactionTitle ?? "",
+        transactionAmountD: amount ?? 0,
+        transactionTypeD: transactionType ?? "",
+        transactionTagD: transactionTag ?? "",
+        transactionDateD: transactionDate ?? "",
+        transactionAccountD: account ?? "",
+        transactionPersonD: transactionPerson ?? "",
+        transactionTagD: transactionTag ?? "",
+        transactionDescriptionD: transactionNote ?? "",
+        transactionCreatedDateD: createdDate ?? "",
+        // "transactionTags": transactionTag ?? "",
+        // "transactionNote": transactionNote ?? "",
       },
     ];
     getTransactionDB();
@@ -116,35 +106,23 @@ class Database {
     int Amount = amount;
     switch (transactionType) {
       case incomeT:
-        amountsList['totalIncome'] = amount == null
-            ? amountsList['totalIncome']
-            : amountsList['totalIncome'] + Amount;
-        amountsList['currentBalance'] = amount == null
-            ? amountsList['currentBalance']
-            : amountsList['currentBalance'] + Amount;
+        amountsList['totalIncome'] = amount == null ? amountsList['totalIncome'] : amountsList['totalIncome'] + Amount;
+        amountsList['currentBalance'] = amount == null ? amountsList['currentBalance'] : amountsList['currentBalance'] + Amount;
 
         break;
 
       case expensesT:
-        amountsList['totalExpenses'] = amount == null
-            ? amountsList['totalExpenses']
-            : amountsList['totalExpenses'] + Amount;
+        amountsList['totalExpenses'] = amount == null ? amountsList['totalExpenses'] : amountsList['totalExpenses'] + Amount;
         print(amountsList['currentBalance']);
-        amountsList['currentBalance'] = amount == null
-            ? amountsList['currentBalance']
-            : amountsList['currentBalance'] - Amount;
+        amountsList['currentBalance'] = amount == null ? amountsList['currentBalance'] : amountsList['currentBalance'] - Amount;
         print(amountsList['currentBalance']);
         break;
 
       case toPayT:
-        amountsList['toPay'] == null
-            ? amountsList['toPay']
-            : amountsList['toPay'] + Amount;
+        amountsList['toPay'] == null ? amountsList['toPay'] : amountsList['toPay'] + Amount;
         break;
       case toReceiveT:
-        amountsList['toReceive'] == null
-            ? amountsList['toReceivee']
-            : amountsList['toReceivee'] + Amount;
+        amountsList['toReceive'] == null ? amountsList['toReceivee'] : amountsList['toReceivee'] + Amount;
         break;
     }
     _account.put("AmountList", amountsList);
@@ -163,22 +141,21 @@ class Database {
     createdDate,
   }) {
     getTransactionDB();
-    final index = TransactionList.indexWhere(
-        (element) => element["createdDate"] == createdDate);
+    final index = TransactionList.indexWhere((element) => element["createdDate"] == createdDate);
     print(index);
     Map updatedTransactionLists = {
-      "createdDate": createdDate ?? "",
-      "Category": updated_transactionType ?? "",
       "transationName": updated_transactionTitle ?? "",
+      "Amount": int.tryParse(updated_amount) ?? 0,
+      "Category": updated_transactionType ?? "",
       "transactionTag": updated_transactionTag ?? "",
+      "account": updated_account ?? "",
+      "toFromName": updated_transactionPerson ?? "",
+      "createdDate": createdDate ?? "",
       "transactionDescription": updated_transactionNote ?? "",
       "transactionTags": updated_transactionTag ?? "",
       "iconsName": updated_transactionTag ?? "",
-      "toFromName": updated_transactionPerson ?? "",
-      "Amount": int.tryParse(updated_amount) ?? 0,
       "transactionDate": updated_transactionDate ?? "",
       "transactionNote": updated_transactionNote ?? "",
-      "account": updated_account ?? "",
     };
 
     if (index != -1) {
@@ -188,35 +165,23 @@ class Database {
         int Amount = int.tryParse(updated_amount)! - prevAmount!;
         switch (updated_transactionType) {
           case incomeT:
-            amountsList['totalIncome'] = updated_amount == null
-                ? amountsList['totalIncome']
-                : amountsList['totalIncome'] + Amount;
-            amountsList['currentBalance'] = updated_amount == null
-                ? amountsList['currentBalance']
-                : amountsList['currentBalance'] + Amount;
+            amountsList['totalIncome'] = updated_amount == null ? amountsList['totalIncome'] : amountsList['totalIncome'] + Amount;
+            amountsList['currentBalance'] = updated_amount == null ? amountsList['currentBalance'] : amountsList['currentBalance'] + Amount;
 
             break;
 
           case expensesT:
-            amountsList['totalExpenses'] = updated_amount == null
-                ? amountsList['totalExpenses']
-                : amountsList['totalExpenses'] + Amount;
+            amountsList['totalExpenses'] = updated_amount == null ? amountsList['totalExpenses'] : amountsList['totalExpenses'] + Amount;
             print(amountsList['currentBalance']);
-            amountsList['currentBalance'] = updated_amount == null
-                ? amountsList['currentBalance']
-                : amountsList['currentBalance'] - Amount;
+            amountsList['currentBalance'] = updated_amount == null ? amountsList['currentBalance'] : amountsList['currentBalance'] - Amount;
             print(amountsList['currentBalance']);
             break;
 
           case toPayT:
-            amountsList['toPay'] == null
-                ? amountsList['toPay']
-                : amountsList['toPay'] + Amount;
+            amountsList['toPay'] == null ? amountsList['toPay'] : amountsList['toPay'] + Amount;
             break;
           case toReceiveT:
-            amountsList['toReceive'] == null
-                ? amountsList['toReceivee']
-                : amountsList['toReceivee'] + Amount;
+            amountsList['toReceive'] == null ? amountsList['toReceivee'] : amountsList['toReceivee'] + Amount;
             break;
         }
         _account.put("AmountList", amountsList);
