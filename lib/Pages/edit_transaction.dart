@@ -3,11 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
+import 'package:provider/provider.dart';
 
 import '../API/database.dart';
 import '../Componet/date_Input_field.dart';
 import '../Componet/dropdown_button.dart';
 import '../Componet/input_filed.dart';
+import '../Provider/provider.dart';
 import '../constant.dart';
 
 class EditTransaction extends StatefulWidget {
@@ -190,15 +192,11 @@ class _EditTransactionState extends State<EditTransaction> {
                       iconedButtons: {
                         ButtonState.idle: IconedButton(
                           text: "Edit Transaction",
-                          icon: Icon(Icons.add, color: Colors.white),
+                          icon: Icon(Icons.edit, color: Colors.white),
                           color: Colors.deepPurple.shade500,
                         ),
-                        ButtonState.loading: IconedButton(
-                            text: "Loading", color: Colors.deepPurple.shade700),
-                        ButtonState.fail: IconedButton(
-                            text: "Failed",
-                            icon: Icon(Icons.cancel, color: Colors.white),
-                            color: Colors.red.shade300),
+                        ButtonState.loading: IconedButton(text: "Loading", color: Colors.deepPurple.shade700),
+                        ButtonState.fail: IconedButton(text: "Failed", icon: Icon(Icons.cancel, color: Colors.white), color: Colors.red.shade300),
                         ButtonState.success: IconedButton(
                             text: "Success",
                             icon: Icon(
@@ -222,8 +220,7 @@ class _EditTransactionState extends State<EditTransaction> {
                                           ),
                                           Text(
                                             'Plese Fill the title',
-                                            style: kwhiteTextStyle.copyWith(
-                                                color: Colors.red),
+                                            style: kwhiteTextStyle.copyWith(color: Colors.red),
                                           ),
                                         ],
                                       )),
@@ -270,19 +267,17 @@ class _EditTransactionState extends State<EditTransaction> {
                             else
                               {
                                 db.editTransaction(
-                                  updated_transactionTitle:
-                                      titleController.text,
+                                  updated_transactionTitle: titleController.text,
                                   updated_amount: amtController.text,
-                                  updated_transactionType:
-                                      tranasctionTypeController.text,
+                                  updated_transactionType: tranasctionTypeController.text,
                                   updated_transactionTag: tagController.text,
                                   updated_transactionDate: dateController.text,
-                                  updated_transactionPerson:
-                                      toFromController.text,
+                                  updated_transactionPerson: toFromController.text,
                                   updated_transactionNote: noteController.text,
                                   updated_account: accountController.text,
                                   createdDate: widget.createdDate,
                                 ),
+                                context.read<ChangedMsg>().changed(),
                                 Navigator.pop(context, "here i am"),
                                 // Navigator.pop(context, "here i am"),
                               },

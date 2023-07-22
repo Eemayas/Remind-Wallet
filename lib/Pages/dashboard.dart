@@ -11,6 +11,7 @@ import 'package:expenses_tracker/Pages/to_receive_page.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
 import '../API/account_api.dart';
 import '../API/amount_list.dart';
@@ -18,6 +19,7 @@ import '../API/database.dart';
 import '../API/transaction_list.dart';
 import '../Componet/account_card.dart';
 import '../Componet/transaction.dart';
+import '../Provider/provider.dart';
 
 class Dashboard extends StatefulWidget {
   static String id = "DashBoard page";
@@ -44,6 +46,10 @@ class _DashboardState extends State<Dashboard> {
   var Changed = "";
   @override
   Widget build(BuildContext context) {
+    if (context.watch<ChangedMsg>().result == "changed") {
+      // context.read<ChangedMsg>().unchanged();
+      setState(() {});
+    }
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -71,7 +77,56 @@ class _DashboardState extends State<Dashboard> {
           style: kwhiteTextStyle,
         ),
         actions: [
-          IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),
+          GestureDetector(
+              onLongPress: () {
+                db.deleteAmountDB();
+                db.deleteTransaction();
+                db.deleteAccountDB();
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      backgroundColor: kBackgroundColorCard,
+                      content: Row(
+                        children: [
+                          Icon(Icons.error, color: Colors.red),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            'Database Deleted',
+                            style: kwhiteTextStyle,
+                          ),
+                        ],
+                      )),
+                );
+                db.getAccountDB();
+                db.getAmountDB();
+                db.getTransactionDB();
+                setState(() {});
+              },
+              onDoubleTap: () {
+                db.getAccountDB();
+                db.getAmountDB();
+                db.getTransactionDB();
+                setState(() {});
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      backgroundColor: kBackgroundColorCard,
+                      content: Row(
+                        children: [
+                          Icon(Icons.error, color: Colors.red),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            'Database Refresh',
+                            style: kwhiteTextStyle,
+                          ),
+                        ],
+                      )),
+                );
+              },
+              child: Icon(Icons.more_vert)),
         ],
       ),
       body: SingleChildScrollView(
@@ -82,7 +137,7 @@ class _DashboardState extends State<Dashboard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("Hi,", style: kwhiteTextStyle.copyWith(fontSize: 20)),
-              Text("Prashant Manandhar,", style: kwhiteTextStyle.copyWith(fontSize: 30, fontWeight: FontWeight.bold)),
+              Text("User,", style: kwhiteTextStyle.copyWith(fontSize: 30, fontWeight: FontWeight.bold)),
               SizedBox(
                 height: 30,
               ),

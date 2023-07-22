@@ -1,16 +1,21 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:expenses_tracker/Pages/account_detail_page.dart';
 import 'package:expenses_tracker/Pages/add_account.dart';
 import 'package:expenses_tracker/Pages/add_transaction.dart';
 import 'package:expenses_tracker/Pages/expenses_page.dart';
 import 'package:expenses_tracker/Pages/income_page.dart';
 import 'package:expenses_tracker/Pages/to_pay_page.dart';
 import 'package:expenses_tracker/Pages/to_receive_page.dart';
+import 'package:expenses_tracker/Pages/user_data_entry_page.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hive_flutter/adapters.dart';
+import 'package:provider/provider.dart';
+
+import 'Provider/provider.dart';
 
 Future<void> main() async {
   //* initialize hive
@@ -18,7 +23,10 @@ Future<void> main() async {
 
   //open the box
   var box = await Hive.openBox("expenses_tracker");
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [ChangeNotifierProvider(create: (_) => ChangedMsg())],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -36,7 +44,7 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
             ),
           )),
-      initialRoute: Dashboard.id,
+      initialRoute: UserDataEntryPage.id, // Dashboard.id, //AccountDetailPage.id,
       //TranasctionDetailPage.id, // //AddTransaction.id,
       routes: {
         Dashboard.id: (context) => const Dashboard(),
@@ -46,6 +54,8 @@ class MyApp extends StatelessWidget {
         ToReceivePage.id: (context) => const ToReceivePage(),
         AddTransaction.id: (context) => AddTransaction(),
         AddAccount.id: (context) => AddAccount(),
+        UserDataEntryPage.id: (context) => UserDataEntryPage(),
+        // AccountDetailPage.id: (context) => AccountDetailPage(),
         // EditTransaction.id: (context) => EditTransaction(),
         // TranasctionDetailPage.id: (context) => TranasctionDetailPage(),
       },

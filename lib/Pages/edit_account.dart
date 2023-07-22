@@ -1,56 +1,49 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, non_constant_identifier_names, avoid_print
+// ignore_for_file: prefer_const_constructors
 
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:expenses_tracker/API/transaction_list.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:provider/provider.dart';
 
 import '../API/database.dart';
-import '../Componet/date_Input_field.dart';
-import '../Componet/dropdown_button.dart';
 import '../Componet/input_filed.dart';
 import '../Provider/provider.dart';
 import '../constant.dart';
 
-class AddAccount extends StatefulWidget {
-  static String id = "Add Account";
+class EditAccount extends StatefulWidget {
+  const EditAccount({super.key, required this.accountName, required this.amount});
+  final String accountName;
+  final String amount;
 
   @override
-  State<AddAccount> createState() => _AddAccountState();
+  State<EditAccount> createState() => _EditAccountState();
 }
 
-class _AddAccountState extends State<AddAccount> {
-  final accountnameController = TextEditingController();
+class _EditAccountState extends State<EditAccount> {
+  final accountNameController = TextEditingController();
   final amtController = TextEditingController();
-
-  _addAccount() {
-    Database db = Database();
-    print("${accountnameController.text}  ${int.tryParse(amtController.text)}   ");
-    db.addAccountDB(accountName: accountnameController.text, amount: int.tryParse(amtController.text));
-    print("addedddddd");
-    context.read<ChangedMsg>().changed();
-    Navigator.pop(context, "added");
-  }
 
   @override
   void initState() {
     super.initState();
-    accountnameController.addListener(() => setState(() {}));
+    accountNameController.addListener(() => setState(() {}));
     amtController.addListener(() => setState(() {}));
+    accountNameController.text = widget.accountName;
+    amtController.text = widget.amount;
   }
 
   @override
   Widget build(BuildContext context) {
+    Database db = Database();
     return GestureDetector(
-      onTap: () => {print("${accountnameController.text}  ${amtController.text}   "), FocusScope.of(context).requestFocus(FocusNode())},
+      onTap: () => {print("${accountNameController.text}  ${amtController.text} "), FocusScope.of(context).requestFocus(FocusNode())},
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: kBackgroundColorAppBar,
           title: Text(
-            "Add Account",
+            "Edit Account",
             style: kwhiteTextStyle,
           ),
           actions: [
@@ -66,23 +59,22 @@ class _AddAccountState extends State<AddAccount> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   InputField(
-                      hintText: "Esewa/Khalti",
-                      Controllerss: accountnameController,
+                      isrequired: true,
+                      hintText: "",
+                      Controllerss: accountNameController,
                       keyboardType: TextInputType.text,
-                      labelText: "Account Name",
+                      labelText: "Title",
                       prefixIcon: Icons.account_balance_outlined),
                   SizedBox(
                     height: 20,
                   ),
                   InputField(
+                    isrequired: true,
                     Controllerss: amtController,
                     keyboardType: TextInputType.number,
                     labelText: "Amount",
                     prefixIcon: Icons.money,
                     hintText: "00000",
-                  ),
-                  SizedBox(
-                    height: 20,
                   ),
                   SizedBox(
                     height: 20,
@@ -93,8 +85,8 @@ class _AddAccountState extends State<AddAccount> {
                       maxWidth: 200.00,
                       iconedButtons: {
                         ButtonState.idle: IconedButton(
-                          text: "Add Account",
-                          icon: Icon(Icons.add, color: Colors.white),
+                          text: "Edit Account",
+                          icon: Icon(Icons.edit, color: Colors.white),
                           color: Colors.deepPurple.shade500,
                         ),
                         ButtonState.loading: IconedButton(text: "Loading", color: Colors.deepPurple.shade700),
@@ -108,7 +100,8 @@ class _AddAccountState extends State<AddAccount> {
                             color: Colors.green.shade400)
                       },
                       onPressed: () => {
-                            if (accountnameController.text.isEmpty)
+                            FocusScope.of(context).requestFocus(FocusNode()),
+                            if (accountNameController.text.isEmpty)
                               {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
@@ -120,16 +113,44 @@ class _AddAccountState extends State<AddAccount> {
                                             width: 10,
                                           ),
                                           Text(
-                                            'Plese Fill the title',
+                                            'Plese Fill the Account Name',
                                             style: kwhiteTextStyle.copyWith(color: Colors.red),
                                           ),
                                         ],
                                       )),
                                 )
                               }
+                            else if (amtController.text.isEmpty)
+                              {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      backgroundColor: kBackgroundColorCard,
+                                      content: Row(
+                                        children: [
+                                          Icon(Icons.error, color: Colors.red),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            'Plese Fill the amount',
+                                            style: kwhiteTextStyle,
+                                          ),
+                                        ],
+                                      )),
+                                )
+                              }
                             else
-                              {_addAccount()},
-                            FocusScope.of(context).requestFocus(FocusNode())
+                              {
+                                db.editAccount(
+                                    accountName: widget.accountName,
+                                    amount: widget.amount,
+                                    updated_accountName: accountNameController.text,
+                                    updated_amount: amtController.text),
+                                context.read<ChangedMsg>().changed(),
+                                Navigator.pop(context, "here i am"),
+                                // Navigator.pop(context, "here i am"),
+                                // Navigator.pop(context, "here i am"),
+                              },
                           },
                       state: ButtonState.idle),
                 ],

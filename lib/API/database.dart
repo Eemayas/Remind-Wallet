@@ -103,7 +103,7 @@ class Database {
     TransactionList = TransactionList + inputedTransactionLists;
     _account.put(transactionDatabase, TransactionList);
     getAmountDB();
-    int Amount = amount;
+    int Amount = amount ?? 0;
     switch (transactionType) {
       case incomeT:
         amountsList[totalIncomeD] = amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] + Amount;
@@ -119,10 +119,10 @@ class Database {
         break;
 
       case toPayT:
-        amountsList[toPayD] == null ? amountsList[toPayD] : amountsList[toPayD] + Amount;
+        amountsList[toPayD] = amount == null ? amountsList[toPayD] : amountsList[toPayD] + Amount;
         break;
       case toReceiveT:
-        amountsList[toReceiveD] == null ? amountsList[toReceiveD] : amountsList[toReceiveD] + Amount;
+        amountsList[toReceiveD] = amount == null ? amountsList[toReceiveD] : amountsList[toReceiveD] + Amount;
         break;
     }
     _account.put(amountListDatabase, amountsList);
@@ -261,6 +261,20 @@ class Database {
     TransactionList[index] = updatedTransactionLists;
     _account.put(transactionDatabase, TransactionList);
     _account.put(amountListDatabase, amountsList);
+  }
+
+  editAccount({accountName, amount, updated_accountName, updated_amount}) {
+    print(accountName + amount + updated_accountName + updated_amount);
+    getAccountDB();
+    final index = AccountsList.indexWhere((element) => element[accountNameD] == accountName && element[accountCurrentBalanceD].toString() == amount);
+    print(index);
+    AccountsList[index][accountNameD] = updated_accountName;
+    AccountsList[index][accountCurrentBalanceD] = updated_amount;
+    getAmountDB();
+    amountsList[currentBalanceD] =
+        updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - int.tryParse(amount) + int.parse(updated_amount);
+    _account.put(amountListDatabase, amountsList);
+    _account.put(accountDatabase, AccountsList);
   }
 }
 

@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
+import 'package:provider/provider.dart';
 
 import '../API/database.dart';
 import '../Componet/date_Input_field.dart';
 import '../Componet/dropdown_button.dart';
 import '../Componet/input_filed.dart';
+import '../Provider/provider.dart';
 import '../constant.dart';
 
 class AddTransaction extends StatefulWidget {
@@ -45,6 +47,7 @@ class _AddTransactionState extends State<AddTransaction> {
       account: accountController.text,
     );
     print("addedddddd");
+    context.read<ChangedMsg>().changed();
     Navigator.pop(context, "here i am");
   }
 
@@ -117,7 +120,7 @@ class _AddTransactionState extends State<AddTransaction> {
                     lists: TransactionTypelist,
                     Controllerss: tranasctionTypeController,
                     hintText: "Income/Expense/To Pay/To Receives",
-                    labelText: "Tranaction Type",
+                    labelText: "Transaction Type",
                   ),
                   SizedBox(
                     height: 20,
@@ -184,12 +187,8 @@ class _AddTransactionState extends State<AddTransaction> {
                           icon: Icon(Icons.add, color: Colors.white),
                           color: Colors.deepPurple.shade500,
                         ),
-                        ButtonState.loading: IconedButton(
-                            text: "Loading", color: Colors.deepPurple.shade700),
-                        ButtonState.fail: IconedButton(
-                            text: "Failed",
-                            icon: Icon(Icons.cancel, color: Colors.white),
-                            color: Colors.red.shade300),
+                        ButtonState.loading: IconedButton(text: "Loading", color: Colors.deepPurple.shade700),
+                        ButtonState.fail: IconedButton(text: "Failed", icon: Icon(Icons.cancel, color: Colors.white), color: Colors.red.shade300),
                         ButtonState.success: IconedButton(
                             text: "Success",
                             icon: Icon(
@@ -213,8 +212,7 @@ class _AddTransactionState extends State<AddTransaction> {
                                           ),
                                           Text(
                                             'Plese Fill the title',
-                                            style: kwhiteTextStyle.copyWith(
-                                                color: Colors.red),
+                                            style: kwhiteTextStyle.copyWith(color: Colors.red),
                                           ),
                                         ],
                                       )),
