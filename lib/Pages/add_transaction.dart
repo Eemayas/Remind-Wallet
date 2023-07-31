@@ -35,7 +35,7 @@ class _AddTransactionState extends State<AddTransaction> {
     print(
         "${titleController.text}  ${amtController.text}  ${tranasctionTypeController.text}  ${tagController.text}  ${dateController.text}  ${toFromController.text}  ${noteController.text}  ");
     Database db = Database();
-    db.addTransactionDb(
+    db.addTransactionDB(
       createdDate: DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now()),
       amount: int.tryParse(amtController.text),
       transactionDate: dateController.text,
@@ -64,6 +64,7 @@ class _AddTransactionState extends State<AddTransaction> {
     accountController.addListener(() => setState(() {}));
   }
 
+  Database db = Database();
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -138,7 +139,7 @@ class _AddTransactionState extends State<AddTransaction> {
                   ),
                   DropDownButton(
                     iconsName: Icons.account_balance_outlined,
-                    lists: Accountlist,
+                    lists: db.getAccountNameListDB(), //Accountlist,
                     Controllerss: accountController,
                     hintText: "Cash/Esewa/Khalti",
                     labelText: "Account",

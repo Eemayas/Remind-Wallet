@@ -1,6 +1,8 @@
-// ignore_for_file: prefer_const_constructors, unused_import, use_key_in_widget_constructors
+// ignore_for_file: prefer_const_constructors, unused_import, use_key_in_widget_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 
@@ -21,28 +23,36 @@ class _UserDataEntryPageState extends State<UserDataEntryPage> {
   _addUserData() {
     print("${userNameController.text}  ");
     Database db = Database();
+    db.addUserNameDB(userName: userNameController.text);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           backgroundColor: kBackgroundColorCard,
           content: Row(
             children: [
-              Icon(Icons.error, color: Colors.red),
+              Icon(Icons.error, color: Colors.green),
               SizedBox(
                 width: 10,
               ),
               Text(
                 'Username Added',
-                style: kwhiteTextStyle.copyWith(color: Colors.red),
+                style: kwhiteTextStyle.copyWith(color: Colors.green),
               ),
             ],
           )),
     );
+    Navigator.pop(context);
+    Navigator.pushNamed(context, Dashboard.id);
   }
 
   @override
   void initState() {
     super.initState();
     userNameController.addListener(() => setState(() {}));
+    // Database db = Database();
+    // if (db.userName != "") {
+    //   Navigator.pop(context);
+    //   Navigator.pushNamed(context, Dashboard.id);
+    // }
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -72,13 +82,32 @@ class _UserDataEntryPageState extends State<UserDataEntryPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Container(
+                    height: 200,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          offset: const Offset(10.0, 10.0),
+                          blurRadius: 10.0,
+                          spreadRadius: 2.0,
+                        )
+                      ],
+                      image: DecorationImage(image: AssetImage("assets/Logo/png/logo-white.png"), fit: BoxFit.fill),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 60,
+                  ),
                   InputField(
                       isrequired: true,
                       hintText: "",
                       Controllerss: userNameController,
                       keyboardType: TextInputType.text,
                       labelText: "Name",
-                      prefixIcon: Icons.title_sharp),
+                      prefixIcon: Icons.person_2),
                   SizedBox(
                     height: 20,
                   ),

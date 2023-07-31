@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:expenses_tracker/API/database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -39,6 +40,7 @@ List TagList = [
   'Savings',
   'Miscellaneous',
 ];
+
 List Accountlist = ["Cash", "Esewa", "Khalti"];
 const String incomeT = "Income";
 const String expensesT = "Expenses";
@@ -69,3 +71,4 @@ const String accountCurrentBalanceD = "accountCurrentBalanceD";
 const String transactionDatabase = "Transaction";
 const String accountDatabase = "Account";
 const String amountListDatabase = "AmountList";
+const String userDataDatabase = "UserData";

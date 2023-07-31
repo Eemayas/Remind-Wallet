@@ -266,7 +266,7 @@ class _EditTransactionState extends State<EditTransaction> {
                               }
                             else
                               {
-                                db.editTransaction(
+                                db.editTransactionDB(
                                   updated_transactionTitle: titleController.text,
                                   updated_amount: amtController.text,
                                   updated_transactionType: tranasctionTypeController.text,

@@ -13,10 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
-import '../API/account_api.dart';
-import '../API/amount_list.dart';
-import '../API/database.dart';
-import '../API/transaction_list.dart';
 import '../Componet/account_card.dart';
 import '../Componet/transaction.dart';
 import '../Provider/provider.dart';
@@ -36,6 +32,9 @@ class _DashboardState extends State<Dashboard> {
     db.getTransactionDB();
     db.getAmountDB();
     db.getAccountDB();
+    db.getUserNameDB();
+    db.getAccountNameListDB();
+    // db.deleteUserName();
     // db.deleteAmountDB();
     // db.deleteTransaction();
     // db.deleteAccountDB();
@@ -80,7 +79,7 @@ class _DashboardState extends State<Dashboard> {
           GestureDetector(
               onLongPress: () {
                 db.deleteAmountDB();
-                db.deleteTransaction();
+                db.deleteTransactionDB();
                 db.deleteAccountDB();
 
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -137,7 +136,7 @@ class _DashboardState extends State<Dashboard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("Hi,", style: kwhiteTextStyle.copyWith(fontSize: 20)),
-              Text("User,", style: kwhiteTextStyle.copyWith(fontSize: 30, fontWeight: FontWeight.bold)),
+              Text("${db.userName},", style: kwhiteTextStyle.copyWith(fontSize: 30, fontWeight: FontWeight.bold)),
               SizedBox(
                 height: 30,
               ),

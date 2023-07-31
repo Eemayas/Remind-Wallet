@@ -17,11 +17,23 @@ class InputField extends StatelessWidget {
   final String labelText;
   final IconData prefixIcon;
   final bool isrequired;
+  // String capitalizeFirstLetter(String text) {
+  //   if (text == null || text.isEmpty) {
+  //     return '';
+  //   }
+  //   return text[0].toUpperCase() + text.substring(1);
+  // }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: Controllerss,
+      // onChanged: (text) {
+      //   Controllerss.value = Controllerss.value.copyWith(
+      //     text: capitalizeFirstLetter(text),
+      //     selection: TextSelection.collapsed(offset: Controllerss.text.length),
+      //   );
+      // },
       validator: (value) {
         // if (isrequired) {
         if (value == null || value.isEmpty) {

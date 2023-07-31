@@ -12,6 +12,7 @@ class Database {
   List AccountsList = [];
   Map amountsList = {};
   List TransactionList = [];
+  String userName = "";
 
   final _account = Hive.box("expenses_tracker");
 
@@ -44,7 +45,7 @@ class Database {
     _account.delete(amountListDatabase);
   }
 
-  void deleteTransaction() {
+  void deleteTransactionDB() {
     _account.delete(transactionDatabase);
   }
 
@@ -82,7 +83,7 @@ class Database {
     print("updated accountss");
   }
 
-  void addTransactionDb(
+  void addTransactionDB(
       {transactionTitle, createdDate, amount, transactionType, transactionTag, transactionDate, transactionPerson, transactionNote, account}) {
     List inputedTransactionLists = [
       {
@@ -129,7 +130,7 @@ class Database {
     print("updated transaction");
   }
 
-  editTransaction({
+  void editTransactionDB({
     updated_transactionTitle,
     updated_amount,
     updated_transactionType,
@@ -263,7 +264,7 @@ class Database {
     _account.put(amountListDatabase, amountsList);
   }
 
-  editAccount({accountName, amount, updated_accountName, updated_amount}) {
+  void editAccountDB({accountName, amount, updated_accountName, updated_amount}) {
     print(accountName + amount + updated_accountName + updated_amount);
     getAccountDB();
     final index = AccountsList.indexWhere((element) => element[accountNameD] == accountName && element[accountCurrentBalanceD].toString() == amount);
@@ -275,6 +276,34 @@ class Database {
         updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - int.tryParse(amount) + int.parse(updated_amount);
     _account.put(amountListDatabase, amountsList);
     _account.put(accountDatabase, AccountsList);
+  }
+
+  void addUserNameDB({userName}) {
+    _account.put(userDataDatabase, userName);
+  }
+
+  void getUserNameDB() {
+    userName = _account.get(userDataDatabase) ?? "User";
+  }
+
+  void deleteUserNameDB() {
+    _account.delete(userDataDatabase);
+  }
+
+  void editUserNameDB({updated_userName}) {
+    getUserNameDB();
+    userName = updated_userName;
+    _account.put(userDataDatabase, userName);
+  }
+
+  List getAccountNameListDB() {
+    getAccountDB();
+    List AccountNameList = ["Others"];
+    for (int i = 0; i < AccountsList.length; i++) {
+      AccountNameList.add(AccountsList[i][accountNameD]);
+    }
+    print(AccountNameList);
+    return AccountNameList;
   }
 }
 

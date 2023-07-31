@@ -141,7 +141,7 @@ class _EditAccountState extends State<EditAccount> {
                               }
                             else
                               {
-                                db.editAccount(
+                                db.editAccountDB(
                                     accountName: widget.accountName,
                                     amount: widget.amount,
                                     updated_accountName: accountNameController.text,
