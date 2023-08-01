@@ -1,10 +1,14 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, camel_case_types
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, camel_case_types, prefer_const_literals_to_create_immutables
 
 import 'package:expenses_tracker/Pages/dashboard.dart';
+import 'package:expenses_tracker/Pages/signIn_signOut_page.dart';
 import 'package:expenses_tracker/Pages/user_data_entry_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:page_transition/page_transition.dart';
+
+import '../Componet/snackBar.dart';
 
 class Splash_Page extends StatefulWidget {
   static String id = "Splash Page";
@@ -25,8 +29,9 @@ class _Splash_PageState extends State<Splash_Page> {
 
   _navigatetohome({isDataPresent}) async {
     await Future.delayed(Duration(milliseconds: 900), () {});
-    Navigator.of(context).pushReplacement(
-        PageTransition(type: PageTransitionType.fade, duration: Duration(seconds: 1), child: isDataPresent ? Dashboard() : UserDataEntryPage()));
+    Navigator.of(context)
+        .pushReplacement(PageTransition(type: PageTransitionType.fade, duration: Duration(seconds: 1), child: CheckSignin_outPage()));
+    // child: isDataPresent ? Dashboard() : UserDataEntryPage()));
 
     //context, MaterialPageRoute( builder: (builder) => Starting_Page_1()));
   }
@@ -58,5 +63,28 @@ class _Splash_PageState extends State<Splash_Page> {
         )
       ]),
     )));
+  }
+}
+
+class CheckSignin_outPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              CustomSnackbar(context: context, text: "Something went wrong");
+            }
+            if (snapshot.hasData) {
+              print("checkedpage");
+              return Dashboard();
+            } else {
+              return SignUpPage();
+            }
+          }),
+    );
   }
 }

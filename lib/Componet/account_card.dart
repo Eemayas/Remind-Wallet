@@ -1,18 +1,16 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_print
 
 import 'package:expenses_tracker/Pages/account_detail_page.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../API/database.dart';
-import '../Provider/provider.dart';
 import '../constant.dart';
 
 class AccountCard extends StatefulWidget {
   final String amount;
   final String accountName;
 
-  AccountCard({super.key, required this.amount, required this.accountName});
+  const AccountCard({super.key, required this.amount, required this.accountName});
 
   @override
   State<AccountCard> createState() => _AccountCardState();

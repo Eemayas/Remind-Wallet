@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1082766596246",
+    "project_id": "remindwallet",
+    "storage_bucket": "remindwallet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082766596246:android:5d18f3be329e0aefe0cab7",
+        "android_client_info": {
+          "package_name": "com.example.expenses_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1082766596246-7ibtr3h77ci5ku49a2hkngj83f4qctrr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxZ2oDEIN_tfwcqye59j1JbplqFRGU3-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1082766596246-7ibtr3h77ci5ku49a2hkngj83f4qctrr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1082766596246-d6lhpe918h1f8f0h8587dt85ckhut5ql.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.expensesTracker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

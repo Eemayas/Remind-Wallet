@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, unused_import
 
 import 'package:expenses_tracker/Pages/account_detail_page.dart';
 import 'package:expenses_tracker/Pages/add_account.dart';
@@ -11,21 +11,33 @@ import 'package:expenses_tracker/Pages/to_receive_page.dart';
 import 'package:expenses_tracker/Pages/user_data_entry_page.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 
 import 'Pages/check_page.dart';
+import 'Pages/signIn_signOut_page.dart';
 import 'Provider/provider.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
+  //Firebase Initialization
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   //* initialize hive
   await Hive.initFlutter();
 
   //open the box
   var box = await Hive.openBox("expenses_tracker");
+
+  //Provider Initialization
   runApp(MultiProvider(
+    //List of Provider used in the app
     providers: [ChangeNotifierProvider(create: (_) => ChangedMsg())],
     child: const MyApp(),
   ));
@@ -35,10 +47,9 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    final box = Hive.box("expenses_tracker"); // Replace 'myData' with your box name
+    final box = Hive.box("expenses_tracker");
 
     // Check if data is present in the box
-    final bool isDataPresent = box.isNotEmpty;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
@@ -50,7 +61,7 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
             ),
           )),
-      initialRoute: Splash_Page.id, //Splash_Page.id, //  // Dashboard.id, //AccountDetailPage.id,
+      initialRoute: SignUpPage.id, ////Splash_Page.id, //  // Dashboard.id, //AccountDetailPage.id,
       //TranasctionDetailPage.id, // //AddTransaction.id,
       routes: {
         Dashboard.id: (context) => const Dashboard(),
@@ -63,6 +74,7 @@ class MyApp extends StatelessWidget {
         UserDataEntryPage.id: (context) => UserDataEntryPage(),
         Splash_Page.id: (context) => Splash_Page(),
         CheckPage.id: (context) => CheckPage(),
+        SignUpPage.id: (context) => SignUpPage()
         // AccountDetailPage.id: (context) => AccountDetailPage(),
         // EditTransaction.id: (context) => EditTransaction(),
         // TranasctionDetailPage.id: (context) => TranasctionDetailPage(),

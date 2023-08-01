@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, prefer_const_constructors, unused_import
+// ignore_for_file: non_constant_identifier_names, prefer_const_constructors, unused_import, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';

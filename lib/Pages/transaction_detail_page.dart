@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:expenses_tracker/API/database.dart';
-import 'package:expenses_tracker/Pages/add_transaction.dart';
 import 'package:expenses_tracker/Pages/edit_transaction.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:flutter/material.dart';
