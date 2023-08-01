@@ -17,8 +17,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
+import 'Componet/bottom_navigation_bar.dart';
 import 'Pages/check_page.dart';
 import 'Pages/authentication/signIn_signOut_page.dart';
+import 'Pages/show_user_detail.dart';
 import 'Provider/provider.dart';
 import 'firebase_options.dart';
 
@@ -65,7 +67,7 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
             ),
           )),
-      initialRoute: EditUserDetail.id, //Splash_Page.id, //LogInSignUpPage.id, //  Dashboard.id, //AccountDetailPage.id,
+      initialRoute: Splash_Page.id, //ShowUserDetailPage.id, // //LogInSignUpPage.id, //  Dashboard.id, //AccountDetailPage.id,
       //TranasctionDetailPage.id, // //AddTransaction.id,
       routes: {
         Dashboard.id: (context) => const Dashboard(),
@@ -80,7 +82,9 @@ class MyApp extends StatelessWidget {
         CheckPage.id: (context) => CheckPage(),
         LogInSignUpPage.id: (context) => LogInSignUpPage(),
         ForgotPassword.id: (context) => ForgotPassword(),
-        EditUserDetail.id: (context) => EditUserDetail()
+        EditUserDetail.id: (context) => EditUserDetail(),
+        ShowUserDetailPage.id: (context) => ShowUserDetailPage(),
+        BottomNavigationBars.id: (context) => BottomNavigationBars()
         // AccountDetailPage.id: (context) => AccountDetailPage(),
         // EditTransaction.id: (context) => EditTransaction(),
         // TranasctionDetailPage.id: (context) => TranasctionDetailPage(),

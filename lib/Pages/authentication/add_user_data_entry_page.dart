@@ -67,7 +67,7 @@ class _UserDataEntryPageState extends State<UserDataEntryPage> {
           backgroundColor: kBackgroundColorAppBar,
           title: Text(
             "User Detail",
-            style: kwhiteTextStyle,
+            style: kwhiteboldTextStyle,
           ),
           actions: [
             IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),
@@ -127,7 +127,7 @@ class _UserDataEntryPageState extends State<UserDataEntryPage> {
                     DateInputField(
                       controllerss: dateController,
                       keyboardType: TextInputType.datetime,
-                      labelText: "When",
+                      labelText: "Date of Birth",
                       prefixIcon: Icons.date_range_outlined,
                       hintText: "YYYY-MM-DD",
                     ),

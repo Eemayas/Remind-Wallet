@@ -72,7 +72,7 @@ class _DashboardState extends State<Dashboard> {
         backgroundColor: kBackgroundColorAppBar,
         title: Text(
           "Dashboard",
-          style: kwhiteTextStyle,
+          style: kwhiteboldTextStyle,
         ),
         actions: [
           GestureDetector(

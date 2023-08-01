@@ -42,7 +42,7 @@ class _EditAccountState extends State<EditAccount> {
           backgroundColor: kBackgroundColorAppBar,
           title: Text(
             "Edit Account",
-            style: kwhiteTextStyle,
+            style: kwhiteboldTextStyle,
           ),
           actions: [
             IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),

@@ -8,6 +8,7 @@ import '../constant.dart';
 class DateInputField extends StatelessWidget {
   const DateInputField({
     super.key,
+    this.isEnable = true,
     required this.controllerss,
     required this.keyboardType,
     required this.labelText,
@@ -18,12 +19,14 @@ class DateInputField extends StatelessWidget {
   final TextEditingController controllerss;
   final TextInputType keyboardType;
   final String labelText;
+  final bool isEnable;
   final IconData prefixIcon;
 
   @override
   Widget build(BuildContext context) {
     controllerss.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
     return TextField(
+      enabled: isEnable,
       controller: controllerss,
       cursorColor: Colors.white,
       style: kwhiteTextStyle,

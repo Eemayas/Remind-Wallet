@@ -56,7 +56,7 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
         backgroundColor: kBackgroundColorAppBar,
         title: Text(
           "Account Detail",
-          style: kwhiteTextStyle,
+          style: kwhiteboldTextStyle,
         ),
         actions: [
           IconButton(icon: Icon(Icons.account_balance_outlined), onPressed: () => {}),

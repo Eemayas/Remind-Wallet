@@ -77,7 +77,7 @@ class _AddTransactionState extends State<AddTransaction> {
           backgroundColor: kBackgroundColorAppBar,
           title: Text(
             "Add Transaction",
-            style: kwhiteTextStyle,
+            style: kwhiteboldTextStyle,
           ),
           actions: [
             IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),

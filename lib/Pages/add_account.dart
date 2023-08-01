@@ -46,7 +46,7 @@ class _AddAccountState extends State<AddAccount> {
           backgroundColor: kBackgroundColorAppBar,
           title: Text(
             "Add Account",
-            style: kwhiteTextStyle,
+            style: kwhiteboldTextStyle,
           ),
           actions: [
             IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),

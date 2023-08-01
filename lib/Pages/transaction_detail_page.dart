@@ -86,7 +86,7 @@ class _TranasctionDetailPageState extends State<TranasctionDetailPage> {
         backgroundColor: kBackgroundColorAppBar,
         title: Text(
           "Tranasction Detail",
-          style: kwhiteTextStyle,
+          style: kwhiteboldTextStyle,
         ),
         actions: [
           IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),

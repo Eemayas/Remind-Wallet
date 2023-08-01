@@ -25,7 +25,7 @@ class ExpensePage extends StatelessWidget {
         backgroundColor: kBackgroundColorAppBar,
         title: Text(
           "All Expenses",
-          style: kwhiteTextStyle,
+          style: kwhiteboldTextStyle,
         ),
         actions: [
           IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),

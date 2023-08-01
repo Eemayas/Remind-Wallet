@@ -25,7 +25,7 @@ class ToReceivePage extends StatelessWidget {
         backgroundColor: kBackgroundColorAppBar,
         title: Text(
           "All To Receive",
-          style: kwhiteTextStyle,
+          style: kwhiteboldTextStyle,
         ),
         actions: [
           IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),

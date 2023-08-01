@@ -63,7 +63,7 @@ class _EditUserDetailState extends State<EditUserDetail> {
           backgroundColor: kBackgroundColorAppBar,
           title: Text(
             "Edit User Detail",
-            style: kwhiteTextStyle,
+            style: kwhiteboldTextStyle,
           ),
           actions: [
             IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),
@@ -134,7 +134,7 @@ class _EditUserDetailState extends State<EditUserDetail> {
                     DateInputField(
                       controllerss: dateController,
                       keyboardType: TextInputType.datetime,
-                      labelText: "When",
+                      labelText: "Date of Birth",
                       prefixIcon: Icons.date_range_outlined,
                       hintText: "YYYY-MM-DD",
                     ),

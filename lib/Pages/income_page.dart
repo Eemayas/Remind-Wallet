@@ -25,7 +25,7 @@ class IncomePage extends StatelessWidget {
         backgroundColor: kBackgroundColorAppBar,
         title: Text(
           "All Income",
-          style: kwhiteTextStyle,
+          style: kwhiteboldTextStyle,
         ),
         actions: [
           IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),
