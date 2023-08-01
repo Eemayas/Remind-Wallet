@@ -3,9 +3,7 @@
 import 'package:flutter/material.dart';
 
 import '../API/amount_list.dart';
-import '../API/transaction_list.dart';
 import '../Componet/balance_card.dart';
-import '../Componet/transaction.dart';
 import '../constant.dart';
 
 class ExpensePage extends StatelessWidget {

@@ -1,23 +1,27 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import '../constant.dart';
 
 class InputField extends StatefulWidget {
   const InputField(
       {super.key,
-      required this.Controllerss,
+      required this.controllerss,
       required this.keyboardType,
       required this.labelText,
       required this.prefixIcon,
       required this.hintText,
+      this.isEnable = true,
       this.isrequired = false,
       this.isPassword = false});
   final String hintText;
-  final TextEditingController Controllerss;
+  final TextEditingController controllerss;
   final TextInputType keyboardType;
   final String labelText;
   final IconData prefixIcon;
   final bool isrequired;
   final bool isPassword;
+  final bool isEnable;
 
   @override
   State<InputField> createState() => _InputFieldState();
@@ -29,7 +33,8 @@ class _InputFieldState extends State<InputField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: widget.Controllerss,
+      enabled: widget.isEnable,
+      controller: widget.controllerss,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Please enter some text';
@@ -56,12 +61,12 @@ class _InputFieldState extends State<InputField> {
                   });
                 },
               )
-            : widget.Controllerss.text.isEmpty
+            : widget.controllerss.text.isEmpty
                 ? Container(width: 0)
                 : IconButton(
                     color: Colors.red,
                     icon: Icon(Icons.close),
-                    onPressed: () => widget.Controllerss.clear(),
+                    onPressed: () => widget.controllerss.clear(),
                   ),
         labelStyle: kwhiteTextStyle,
         filled: true,

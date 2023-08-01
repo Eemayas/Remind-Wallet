@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
 import 'package:expenses_tracker/API/database.dart';
 import 'package:expenses_tracker/Pages/edit_transaction.dart';
 import 'package:expenses_tracker/constant.dart';
@@ -43,6 +43,7 @@ class _TranasctionDetailPageState extends State<TranasctionDetailPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
+          // ignore: unused_local_variable
           final result = await Navigator.push(
               context,
               MaterialPageRoute(
@@ -185,7 +186,7 @@ class DetailField extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "${title}:",
+              "$title:",
               style: kwhiteTextStyle.copyWith(decoration: TextDecoration.underline),
             ),
             Padding(

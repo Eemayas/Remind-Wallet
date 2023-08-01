@@ -1,14 +1,13 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, camel_case_types, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, camel_case_types, prefer_const_literals_to_create_immutables, avoid_print
 
 import 'package:expenses_tracker/Pages/dashboard.dart';
-import 'package:expenses_tracker/Pages/signIn_signOut_page.dart';
-import 'package:expenses_tracker/Pages/user_data_entry_page.dart';
+import 'package:expenses_tracker/Pages/authentication/signIn_signOut_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../Componet/snackBar.dart';
+import '../Componet/custom_snackbar.dart';
 
 class Splash_Page extends StatefulWidget {
   static String id = "Splash Page";
@@ -67,6 +66,8 @@ class _Splash_PageState extends State<Splash_Page> {
 }
 
 class CheckSignin_outPage extends StatelessWidget {
+  const CheckSignin_outPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,13 +77,13 @@ class CheckSignin_outPage extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              CustomSnackbar(context: context, text: "Something went wrong");
+              customSnackbar(context: context, text: "Something went wrong");
             }
             if (snapshot.hasData) {
               print("checkedpage");
               return Dashboard();
             } else {
-              return SignUpPage();
+              return LogInSignUpPage();
             }
           }),
     );

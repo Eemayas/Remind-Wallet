@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, must_be_immutable
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, must_be_immutable, avoid_print
 
 import 'package:expenses_tracker/API/database.dart';
 import 'package:expenses_tracker/Componet/balance_card.dart';
@@ -10,7 +10,7 @@ import 'package:expenses_tracker/Pages/to_pay_page.dart';
 import 'package:expenses_tracker/Pages/to_receive_page.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+// import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import '../Componet/account_card.dart';
@@ -26,7 +26,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  final _expenses_tracker = Hive.box("expenses_tracker");
   @override
   void initState() {
     db.getTransactionDB();
@@ -42,7 +41,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Database db = Database();
-  var Changed = "";
+  var changed = "";
   @override
   Widget build(BuildContext context) {
     if (context.watch<ChangedMsg>().result == "changed") {
@@ -136,7 +135,7 @@ class _DashboardState extends State<Dashboard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("Hi,", style: kwhiteTextStyle.copyWith(fontSize: 20)),
-              Text("${db.userName},", style: kwhiteTextStyle.copyWith(fontSize: 30, fontWeight: FontWeight.bold)),
+              Text("${db.userDetail[userNameD]},", style: kwhiteTextStyle.copyWith(fontSize: 30, fontWeight: FontWeight.bold)),
               SizedBox(
                 height: 30,
               ),
@@ -292,6 +291,7 @@ class _DashboardState extends State<Dashboard> {
               ),
               for (int i = db.TransactionList.length - 1; i >= 0; i--)
                 if (db.TransactionList[i][transationNameD] != null &&
+                    // ignore: unnecessary_null_comparison
                     db.TransactionList[i][transactionAmountD].toString() != null &&
                     db.TransactionList[i][transactionTypeD] != "0" &&
                     db.TransactionList[i][transactionTagD] != null &&

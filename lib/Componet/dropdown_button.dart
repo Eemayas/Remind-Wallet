@@ -1,10 +1,12 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 import '../constant.dart';
 
 class DropDownButton extends StatelessWidget {
-  final TextEditingController Controllerss;
+  final TextEditingController controllerss;
   final String hintText;
   final String labelText;
   final IconData iconsName;
@@ -12,7 +14,7 @@ class DropDownButton extends StatelessWidget {
   final bool isrequired;
   const DropDownButton(
       {super.key,
-      required this.Controllerss,
+      required this.controllerss,
       required this.hintText,
       required this.labelText,
       required this.iconsName,
@@ -21,7 +23,6 @@ class DropDownButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? selectedValue;
     return DropdownButtonFormField2<String>(
       isExpanded: true,
       decoration: InputDecoration(
@@ -55,11 +56,9 @@ class DropDownButton extends StatelessWidget {
         return null;
       },
       onChanged: (value) {
-        Controllerss.text = value!;
+        controllerss.text = value!;
       },
-      onSaved: (value) {
-        selectedValue = value.toString();
-      },
+      onSaved: (value) {},
       buttonStyleData: const ButtonStyleData(
         padding: EdgeInsets.only(right: 8),
       ),

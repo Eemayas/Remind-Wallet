@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, avoid_print
 
 import 'package:expenses_tracker/Pages/transaction_detail_page.dart';
 import 'package:flutter/material.dart';
@@ -38,14 +38,8 @@ class TranactionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color cardMainColor =
-        transactionType == incomeT || transactionType == toReceiveT
-            ? kColorIncome
-            : kColorExpenses;
-    Color boxShadowColor =
-        transactionType == incomeT || transactionType == toReceiveT
-            ? kBoxShadowIncome
-            : kBoxShadowExpenses;
+    Color cardMainColor = transactionType == incomeT || transactionType == toReceiveT ? kColorIncome : kColorExpenses;
+    Color boxShadowColor = transactionType == incomeT || transactionType == toReceiveT ? kBoxShadowIncome : kBoxShadowExpenses;
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -120,9 +114,7 @@ class TranactionCard extends StatelessWidget {
                                 child: Text(transationName,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: kwhiteTextStyle.copyWith(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w300)),
+                                    style: kwhiteTextStyle.copyWith(fontSize: 15, fontWeight: FontWeight.w300)),
                               ),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.3,
@@ -130,10 +122,7 @@ class TranactionCard extends StatelessWidget {
                                     textDirection: TextDirection.rtl,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: kwhiteTextStyle.copyWith(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w300,
-                                        color: cardMainColor)),
+                                    style: kwhiteTextStyle.copyWith(fontSize: 15, fontWeight: FontWeight.w300, color: cardMainColor)),
                               ),
                             ],
                           ),
@@ -144,10 +133,7 @@ class TranactionCard extends StatelessWidget {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.4,
                           child: Text("TO/FROM-$transactionPerson",
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: ksubTextStyle.copyWith(
-                                  fontSize: 7, fontWeight: FontWeight.w300)),
+                              maxLines: 2, overflow: TextOverflow.ellipsis, style: ksubTextStyle.copyWith(fontSize: 7, fontWeight: FontWeight.w300)),
                         ),
                         SizedBox(
                           height: 10,
@@ -158,13 +144,10 @@ class TranactionCard extends StatelessWidget {
                             children: [
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.3,
-                                child: Text(
-                                    "($transactionTag)-$transactionDescription",
+                                child: Text("($transactionTag)-$transactionDescription",
                                     maxLines: 5,
                                     overflow: TextOverflow.ellipsis,
-                                    style: ksubTextStyle.copyWith(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w300)),
+                                    style: ksubTextStyle.copyWith(fontSize: 10, fontWeight: FontWeight.w300)),
                               ),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.3,
@@ -172,9 +155,7 @@ class TranactionCard extends StatelessWidget {
                                     textDirection: TextDirection.rtl,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: ksubTextStyle.copyWith(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w300)),
+                                    style: ksubTextStyle.copyWith(fontSize: 10, fontWeight: FontWeight.w300)),
                               ),
                             ],
                           ),
@@ -193,21 +174,15 @@ class TranactionCard extends StatelessWidget {
                                   padding: const EdgeInsets.only(right: 5),
                                   child: Container(
                                     height: 25,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: cardMainColor),
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: cardMainColor),
                                     child: SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.3,
+                                      width: MediaQuery.of(context).size.width * 0.3,
                                       child: Center(
                                         child: Text(transactionType,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: kwhiteTextStyle.copyWith(
-                                                color: cardMainColor ==
-                                                        kColorIncome
-                                                    ? Colors.black
-                                                    : Colors.white,
+                                                color: cardMainColor == kColorIncome ? Colors.black : Colors.white,
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w300)),
                                       ),
@@ -218,21 +193,15 @@ class TranactionCard extends StatelessWidget {
                                   padding: const EdgeInsets.only(right: 5),
                                   child: Container(
                                     height: 25,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: cardMainColor),
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: cardMainColor),
                                     child: SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.3,
+                                      width: MediaQuery.of(context).size.width * 0.3,
                                       child: Center(
                                         child: Text(transactionAccount,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: kwhiteTextStyle.copyWith(
-                                                color: cardMainColor ==
-                                                        kColorIncome
-                                                    ? Colors.black
-                                                    : Colors.white,
+                                                color: cardMainColor == kColorIncome ? Colors.black : Colors.white,
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w300)),
                                       ),
@@ -252,10 +221,7 @@ class TranactionCard extends StatelessWidget {
                 ),
                 Visibility(
                   // ignore: dead_code
-                  visible: (transactionType == toReceiveT ||
-                          transactionType == toPayT)
-                      ? true
-                      : false,
+                  visible: (transactionType == toReceiveT || transactionType == toPayT) ? true : false,
                   child: Column(
                     children: [
                       Divider(
@@ -268,17 +234,11 @@ class TranactionCard extends StatelessWidget {
                           iconedButtons: {
                             ButtonState.idle: IconedButton(
                               text: "Completed",
-                              icon: Icon(Icons.done_all_outlined,
-                                  color: Colors.white),
+                              icon: Icon(Icons.done_all_outlined, color: Colors.white),
                               color: Colors.deepPurple.shade500,
                             ),
-                            ButtonState.loading: IconedButton(
-                                text: "Loading",
-                                color: Colors.deepPurple.shade700),
-                            ButtonState.fail: IconedButton(
-                                text: "Failed",
-                                icon: Icon(Icons.cancel, color: Colors.white),
-                                color: Colors.red.shade300),
+                            ButtonState.loading: IconedButton(text: "Loading", color: Colors.deepPurple.shade700),
+                            ButtonState.fail: IconedButton(text: "Failed", icon: Icon(Icons.cancel, color: Colors.white), color: Colors.red.shade300),
                             ButtonState.success: IconedButton(
                                 text: "Success",
                                 icon: Icon(

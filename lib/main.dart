@@ -1,24 +1,24 @@
-// ignore_for_file: prefer_const_constructors, unused_import
+// ignore_for_file: prefer_const_constructors, unused_import, unused_local_variable
 
 import 'package:expenses_tracker/Pages/account_detail_page.dart';
 import 'package:expenses_tracker/Pages/add_account.dart';
 import 'package:expenses_tracker/Pages/add_transaction.dart';
+import 'package:expenses_tracker/Pages/authentication/forgot_password.dart';
+import 'package:expenses_tracker/Pages/edit_user_detail.dart';
 import 'package:expenses_tracker/Pages/expenses_page.dart';
 import 'package:expenses_tracker/Pages/income_page.dart';
 import 'package:expenses_tracker/Pages/splash_screen.dart';
 import 'package:expenses_tracker/Pages/to_pay_page.dart';
 import 'package:expenses_tracker/Pages/to_receive_page.dart';
-import 'package:expenses_tracker/Pages/user_data_entry_page.dart';
+import 'package:expenses_tracker/Pages/authentication/add_user_data_entry_page.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
-
 import 'Pages/check_page.dart';
-import 'Pages/signIn_signOut_page.dart';
+import 'Pages/authentication/signIn_signOut_page.dart';
 import 'Provider/provider.dart';
 import 'firebase_options.dart';
 
@@ -43,6 +43,8 @@ Future<void> main() async {
   ));
 }
 
+final navigatorkey = GlobalKey<NavigatorState>();
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
@@ -50,7 +52,9 @@ class MyApp extends StatelessWidget {
     final box = Hive.box("expenses_tracker");
 
     // Check if data is present in the box
+
     return MaterialApp(
+      navigatorKey: navigatorkey,
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -61,7 +65,7 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
             ),
           )),
-      initialRoute: SignUpPage.id, ////Splash_Page.id, //  // Dashboard.id, //AccountDetailPage.id,
+      initialRoute: EditUserDetail.id, //Splash_Page.id, //LogInSignUpPage.id, //  Dashboard.id, //AccountDetailPage.id,
       //TranasctionDetailPage.id, // //AddTransaction.id,
       routes: {
         Dashboard.id: (context) => const Dashboard(),
@@ -74,7 +78,9 @@ class MyApp extends StatelessWidget {
         UserDataEntryPage.id: (context) => UserDataEntryPage(),
         Splash_Page.id: (context) => Splash_Page(),
         CheckPage.id: (context) => CheckPage(),
-        SignUpPage.id: (context) => SignUpPage()
+        LogInSignUpPage.id: (context) => LogInSignUpPage(),
+        ForgotPassword.id: (context) => ForgotPassword(),
+        EditUserDetail.id: (context) => EditUserDetail()
         // AccountDetailPage.id: (context) => AccountDetailPage(),
         // EditTransaction.id: (context) => EditTransaction(),
         // TranasctionDetailPage.id: (context) => TranasctionDetailPage(),

@@ -1,43 +1,45 @@
 // ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names, use_build_context_synchronously, avoid_print
 
+import 'package:expenses_tracker/Pages/authentication/forgot_password.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 
-import '../API/database.dart';
-import '../Componet/input_filed.dart';
-import '../Componet/toggle_button.dart';
-import '../constant.dart';
+import '../../API/database.dart';
+import '../../Componet/input_filed.dart';
+import '../../Componet/toggle_button.dart';
+import '../../constant.dart';
+import '../../main.dart';
 
-class SignUpPage extends StatefulWidget {
+class LogInSignUpPage extends StatefulWidget {
   static String id = "SignUp Pagess";
-  const SignUpPage({super.key});
+  const LogInSignUpPage({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<LogInSignUpPage> createState() => _LogInSignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _LogInSignUpPageState extends State<LogInSignUpPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
   _forgotPassword() {
-    print("you again ");
+    Navigator.pushNamed(context, ForgotPassword.id);
   }
 
   Future<void> _logIn(BuildContext context) async {
-    print("${emailController.text}  ${passwordController.text}  ${confirmPasswordController.text}  ");
-    // showDialog(
-    //     context: context,
-    //     // barrierDismissible: false,
-    //     builder: (context) => Center(
-    //           child: CircularProgressIndicator(),
-    //         ));
+    print("${emailController.text}  ${passwordController.text}  ");
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(
+              child: CircularProgressIndicator(),
+            ));
     try {
+      // ignore: unused_local_variable
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
@@ -66,6 +68,48 @@ class _SignUpPageState extends State<SignUpPage> {
         print(e);
       }
     }
+    navigatorkey.currentState!.popUntil((route) => route.isFirst);
+  }
+
+  Future<void> _SignUp(BuildContext context) async {
+    print("${emailController.text}  ${passwordController.text}  ${confirmPasswordController.text}  ");
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(
+              child: CircularProgressIndicator(),
+            ));
+    try {
+      // ignore: unused_local_variable
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      // Add a listener to handle user authentication state changes
+      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+        if (user == null) {
+          print('User is currently signed out!');
+        } else {
+          print('User is signed in!');
+        }
+      });
+
+      Navigator.pop(context);
+      Navigator.pushNamed(context, Dashboard.id);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        SnackbarFun(context: context, text: 'No user found for that email.');
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        SnackbarFun(context: context, text: 'Wrong password provided for that user.');
+        print('Wrong password provided for that user.');
+      } else {
+        SnackbarFun(context: context, text: e.code);
+        print(e);
+      }
+    }
+    navigatorkey.currentState!.popUntil((route) => route.isFirst);
   }
 
   bool isLogIn = true;
@@ -144,7 +188,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   InputField(
                       isrequired: true,
                       hintText: "",
-                      Controllerss: emailController,
+                      controllerss: emailController,
                       keyboardType: TextInputType.emailAddress,
                       labelText: "Email",
                       prefixIcon: Icons.email_outlined),
@@ -154,7 +198,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   InputField(
                     isPassword: true,
                     isrequired: true,
-                    Controllerss: passwordController,
+                    controllerss: passwordController,
                     keyboardType: TextInputType.text,
                     labelText: "Password",
                     prefixIcon: Icons.password,
@@ -168,7 +212,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     child: InputField(
                       isPassword: true,
                       isrequired: true,
-                      Controllerss: confirmPasswordController,
+                      controllerss: confirmPasswordController,
                       keyboardType: TextInputType.text,
                       labelText: "Confirm Password",
                       prefixIcon: Icons.password,
@@ -259,7 +303,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 )
                               }
                             else
-                              {_logIn(context)},
+                              {isLogIn ? _logIn(context) : _SignUp(context)},
                           },
                       state: ButtonState.idle),
                 ],
@@ -272,23 +316,6 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 }
 
-// ToggleButton(
-//               width: 300.0,
-//               height: 50.0,
-//               toggleBackgroundColor: Colors.white,
-//               toggleBorderColor: (Colors.grey[350])!,
-//               toggleColor: (Colors.indigo[900])!,
-//               activeTextColor: Colors.white,
-//               inactiveTextColor: Colors.black,
-//               leftDescription: 'FAVORITES',
-//               rightDescription: 'HISTORY',
-//               onLeftToggleActive: () {
-//                 print('left toggle activated');
-//               },
-//               onRightToggleActive: () {
-//                 print('right toggle activated');
-//               },
-//             ),
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> SnackbarFun(
     {required BuildContext context, icons = Icons.error, iconsColor = Colors.red, text}) {
   return ScaffoldMessenger.of(context).showSnackBar(

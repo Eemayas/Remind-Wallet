@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, non_constant_identifier_names, avoid_print
 
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:expenses_tracker/API/transaction_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:progress_state_button/iconed_button.dart';
@@ -9,7 +7,7 @@ import 'package:progress_state_button/progress_button.dart';
 import 'package:provider/provider.dart';
 
 import '../API/database.dart';
-import '../Componet/date_Input_field.dart';
+import '../Componet/date_input_field.dart';
 import '../Componet/dropdown_button.dart';
 import '../Componet/input_filed.dart';
 import '../Provider/provider.dart';
@@ -97,7 +95,7 @@ class _AddTransactionState extends State<AddTransaction> {
                   InputField(
                       isrequired: true,
                       hintText: "",
-                      Controllerss: titleController,
+                      controllerss: titleController,
                       keyboardType: TextInputType.text,
                       labelText: "Title",
                       prefixIcon: Icons.title_sharp),
@@ -106,7 +104,7 @@ class _AddTransactionState extends State<AddTransaction> {
                   ),
                   InputField(
                     isrequired: true,
-                    Controllerss: amtController,
+                    controllerss: amtController,
                     keyboardType: TextInputType.number,
                     labelText: "Amount",
                     prefixIcon: Icons.money,
@@ -119,7 +117,7 @@ class _AddTransactionState extends State<AddTransaction> {
                     isrequired: true,
                     iconsName: Icons.category_outlined,
                     lists: TransactionTypelist,
-                    Controllerss: tranasctionTypeController,
+                    controllerss: tranasctionTypeController,
                     hintText: "Income/Expense/To Pay/To Receives",
                     labelText: "Transaction Type",
                   ),
@@ -129,7 +127,7 @@ class _AddTransactionState extends State<AddTransaction> {
                   DropDownButton(
                     iconsName: Icons.tag_rounded,
                     lists: TagList,
-                    Controllerss: tagController,
+                    controllerss: tagController,
                     hintText:
                         " Food/Transportation/Housing/Utilities/Healthcare/Education/Entertainment/Clothing/Personal Care/Gifts/Savings/Miscellaneous",
                     labelText: "Tag",
@@ -140,7 +138,7 @@ class _AddTransactionState extends State<AddTransaction> {
                   DropDownButton(
                     iconsName: Icons.account_balance_outlined,
                     lists: db.getAccountNameListDB(), //Accountlist,
-                    Controllerss: accountController,
+                    controllerss: accountController,
                     hintText: "Cash/Esewa/Khalti",
                     labelText: "Account",
                   ),
@@ -148,7 +146,7 @@ class _AddTransactionState extends State<AddTransaction> {
                     height: 20,
                   ),
                   DateInputField(
-                    Controllerss: dateController,
+                    controllerss: dateController,
                     keyboardType: TextInputType.datetime,
                     labelText: "When",
                     prefixIcon: Icons.date_range_outlined,
@@ -158,7 +156,7 @@ class _AddTransactionState extends State<AddTransaction> {
                     height: 20,
                   ),
                   InputField(
-                    Controllerss: toFromController,
+                    controllerss: toFromController,
                     keyboardType: TextInputType.text,
                     labelText: "To/From",
                     prefixIcon: Icons.person_2_outlined,
@@ -168,7 +166,7 @@ class _AddTransactionState extends State<AddTransaction> {
                     height: 20,
                   ),
                   InputField(
-                    Controllerss: noteController,
+                    controllerss: noteController,
                     keyboardType: TextInputType.text,
                     labelText: "Notes",
                     prefixIcon: Icons.fact_check_outlined,

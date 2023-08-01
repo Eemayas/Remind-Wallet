@@ -1,7 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:expenses_tracker/Pages/dashboard.dart';
-import 'package:expenses_tracker/Pages/user_data_entry_page.dart';
+import 'package:expenses_tracker/Pages/authentication/add_user_data_entry_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 

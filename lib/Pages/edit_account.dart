@@ -1,8 +1,6 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:provider/provider.dart';
@@ -61,7 +59,7 @@ class _EditAccountState extends State<EditAccount> {
                   InputField(
                       isrequired: true,
                       hintText: "",
-                      Controllerss: accountNameController,
+                      controllerss: accountNameController,
                       keyboardType: TextInputType.text,
                       labelText: "Title",
                       prefixIcon: Icons.account_balance_outlined),
@@ -70,7 +68,7 @@ class _EditAccountState extends State<EditAccount> {
                   ),
                   InputField(
                     isrequired: true,
-                    Controllerss: amtController,
+                    controllerss: amtController,
                     keyboardType: TextInputType.number,
                     labelText: "Amount",
                     prefixIcon: Icons.money,

@@ -1,16 +1,11 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, non_constant_identifier_names, avoid_print
 
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:expenses_tracker/API/transaction_list.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:provider/provider.dart';
 
 import '../API/database.dart';
-import '../Componet/date_Input_field.dart';
-import '../Componet/dropdown_button.dart';
 import '../Componet/input_filed.dart';
 import '../Provider/provider.dart';
 import '../constant.dart';
@@ -67,7 +62,7 @@ class _AddAccountState extends State<AddAccount> {
                 children: [
                   InputField(
                       hintText: "Esewa/Khalti",
-                      Controllerss: accountnameController,
+                      controllerss: accountnameController,
                       keyboardType: TextInputType.text,
                       labelText: "Account Name",
                       prefixIcon: Icons.account_balance_outlined),
@@ -75,7 +70,7 @@ class _AddAccountState extends State<AddAccount> {
                     height: 20,
                   ),
                   InputField(
-                    Controllerss: amtController,
+                    controllerss: amtController,
                     keyboardType: TextInputType.number,
                     labelText: "Amount",
                     prefixIcon: Icons.money,

@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:expenses_tracker/API/database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -67,6 +66,11 @@ const String transactionIconD = "transactionIconD";
 
 const String accountNameD = "accountNameD";
 const String accountCurrentBalanceD = "accountCurrentBalanceD";
+
+const String userNameD = "userNameD";
+const String userPhoneD = "userPhoneD";
+const String userEmailD = "userEmailD";
+const String userDOBD = "userDOBD";
 
 const String transactionDatabase = "Transaction";
 const String accountDatabase = "Account";

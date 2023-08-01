@@ -9,8 +9,7 @@ class Database {
   List AccountsList = [];
   Map amountsList = {};
   List TransactionList = [];
-  String userName = "";
-
+  Map userDetail = {};
   final _account = Hive.box("expenses_tracker");
 
   void getAccountDB() {
@@ -275,22 +274,36 @@ class Database {
     _account.put(accountDatabase, AccountsList);
   }
 
-  void addUserNameDB({userName}) {
-    _account.put(userDataDatabase, userName);
+  void addUserDB({userName, userEmail, userPhoneNumber, userDOB}) {
+    Map inputUser = {
+      userNameD: userName ?? "",
+      userPhoneD: userPhoneNumber ?? "",
+      userEmailD: userEmail ?? "",
+      userDOBD: userDOB ?? "",
+    };
+    _account.put(userDataDatabase, inputUser);
   }
 
   void getUserNameDB() {
-    userName = _account.get(userDataDatabase) ?? "User";
+    userDetail =
+        _account.get(userDataDatabase) ?? {userNameD: "User", userPhoneD: "9800000000", userEmailD: "xyz@example.com", userDOBD: "0000-00-00"};
+    print(userDetail);
   }
 
   void deleteUserNameDB() {
     _account.delete(userDataDatabase);
   }
 
-  void editUserNameDB({updated_userName}) {
+  void editUserNameDB({updated_userName, updated_userEmail, updated_userPhoneNumber, updated_userDOB}) {
     getUserNameDB();
-    userName = updated_userName;
-    _account.put(userDataDatabase, userName);
+    Map updated_inputUser = {
+      userNameD: updated_userName ?? "",
+      userPhoneD: updated_userPhoneNumber ?? "",
+      userEmailD: updated_userEmail ?? "",
+      userDOBD: updated_userDOB ?? "",
+    };
+    userDetail = updated_inputUser;
+    _account.put(userDataDatabase, userDetail);
   }
 
   List getAccountNameListDB() {
@@ -301,6 +314,13 @@ class Database {
     }
     print(AccountNameList);
     return AccountNameList;
+  }
+
+  deleteAll() {
+    deleteAccountDB();
+    deleteAmountDB();
+    deleteUserNameDB();
+    deleteTransactionDB();
   }
 }
 
