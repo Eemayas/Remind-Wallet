@@ -2,8 +2,6 @@
 
 import 'package:expenses_tracker/API/database.dart';
 import 'package:flutter/material.dart';
-
-import '../API/amount_list.dart';
 import '../Componet/balance_card.dart';
 import '../Componet/transaction.dart';
 import '../constant.dart';

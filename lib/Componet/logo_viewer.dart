@@ -11,6 +11,9 @@ class LogoViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // return Image(
+    //   image: AssetImage("assets/app_logo.png"),
+    // );
     return Container(
       height: side,
       width: side,
@@ -27,6 +30,7 @@ class LogoViewer extends StatelessWidget {
             blurRadius: 8,
           ),
         ],
+        // image: DecorationImage(image: NetworkImage('https://docs.flutter.dev/assets/images/dash/dash-fainting.gif')),
         image: DecorationImage(image: AssetImage("assets/Logo/png/logo-white.png"), fit: BoxFit.fill),
       ),
     );

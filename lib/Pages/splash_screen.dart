@@ -1,10 +1,7 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously, camel_case_types, prefer_const_literals_to_create_immutables, avoid_print
 
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:expenses_tracker/Componet/logo_viewer.dart';
-import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:expenses_tracker/Pages/authentication/signIn_signOut_page.dart';
-import 'package:expenses_tracker/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';

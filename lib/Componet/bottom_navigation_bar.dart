@@ -1,11 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:expenses_tracker/API/database.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:expenses_tracker/Pages/show_user_detail.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 
