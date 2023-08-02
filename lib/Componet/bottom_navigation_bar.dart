@@ -5,7 +5,6 @@ import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:expenses_tracker/Pages/show_user_detail.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
@@ -19,17 +18,40 @@ class BottomNavigationBars extends StatefulWidget {
 }
 
 class _BottomNavigationBarsState extends State<BottomNavigationBars> {
-  final screen = [
-    Dashboard(),
-    ShowUserDetailPage(),
-  ];
-  final PageController _pageController = PageController();
-  int _currentPageIndex = 0;
+  int _currentIndex = 0;
+  PageController _pageController = PageController(initialPage: 0);
 
-  int _page = 0;
+  final List<Widget> _pages = [Dashboard(), ShowUserDetailPage()];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: GestureDetector(
+        onHorizontalDragEnd: (DragEndDetails details) {
+          if (details.primaryVelocity! < 0) {
+            // Swiped to the left, move to the next page
+            _pageController.nextPage(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.ease,
+            );
+          } else if (details.primaryVelocity! > 0) {
+            // Swiped to the right, move to the previous page
+            _pageController.previousPage(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.ease,
+            );
+          }
+        },
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          children: _pages,
+        ),
+      ),
       bottomNavigationBar: GNav(
           duration: Duration(milliseconds: 500),
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -45,150 +67,27 @@ class _BottomNavigationBarsState extends State<BottomNavigationBars> {
           textStyle: kwhiteTextStyle.copyWith(color: Colors.black),
           color: Colors.white,
           curve: Curves.easeInOutCubicEmphasized,
-          selectedIndex: _page,
+          selectedIndex: _currentIndex,
           onTabChange: (index) {
             setState(() {
-              _page = index;
+              _currentIndex = index;
             });
+            _pageController.animateToPage(
+              index,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.ease,
+            );
           }, // navigation bar padding
           tabs: [
             GButton(
               icon: LineIcons.home,
               text: 'Home',
             ),
-            // GButton(
-            //   icon: LineIcons.user,
-            //   text: 'Likes',
-            // ),
-            // GButton(
-            //   icon: LineIcons.search,
-            //   text: 'Search',
-            // ),
             GButton(
               icon: LineIcons.user,
               text: 'Profile',
             )
           ]),
-      body: GestureDetector(
-        onHorizontalDragEnd: (DragEndDetails details) {
-          if (details.primaryVelocity! > 0 && _currentPageIndex > 0) {
-            // Swipe right, go to the previous page
-
-            // setState(() {
-
-            // });
-            _pageController.previousPage(
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          } else if (details.primaryVelocity! < 0 && _currentPageIndex < screen.length - 1) {
-            // Swipe left, go to the next page
-            _pageController.nextPage(
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          }
-        },
-        child: PageView(
-          controller: _pageController,
-          onPageChanged: (int index) {
-            setState(() {
-              _page = index;
-              _currentPageIndex = index;
-            });
-          },
-          children: screen,
-        ),
-      ),
-      // body: screen[_page],
     );
   }
 }
-
-  // GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         extendBody: true,
-//         bottomNavigationBar:
-//             OrientationBuilder(builder: (context, orientation) {
-//           if (orientation == Orientation.portrait) {
-//             return CurvedNavigationBar(
-//               height: ratio_height(context, 60), //60
-//               color: Colors.orangeAccent,
-//               buttonBackgroundColor: Colors.amberAccent,
-//               key: _bottomNavigationKey,
-//               backgroundColor: Colors.transparent,
-//               items: <Widget>[
-//                 Icon(
-//                   Icons.home,
-//                   size: ratio_height(context, 24),
-//                 ),
-//                 Icon(
-//                   Icons.favorite,
-//                   size: ratio_height(context, 24),
-//                 ), //24,),
-//                 Icon(
-//                   Icons.person,
-//                   size: ratio_height(context, 24),
-//                 ) //24,),
-//               ],
-//               onTap: (index) {
-//                 setState(() {
-//                   _page = index;
-//                 });
-//               },
-//             );
-//           } else {
-//             return CurvedNavigationBar(
-//               height: 60, //60
-//               color: Colors.orangeAccent,
-//               buttonBackgroundColor: Colors.amberAccent,
-//               key: _bottomNavigationKey,
-//               backgroundColor: Colors.transparent,
-//               items: <Widget>[
-//                 Icon(
-//                   Icons.home,
-//                   size: ratio_height(context, 45),
-//                 ),
-//                 Icon(
-//                   Icons.favorite,
-//                   size: ratio_height(context, 45),
-//                 ), //24,),
-//                 Icon(
-//                   Icons.person,
-//                   size: ratio_height(context, 45),
-//                 ) //24,),
-//               ],
-//               onTap: (index) {
-//                 setState(() {
-//                   _page = index;
-//                 });
-//               },
-//             );
-//           }
-//         }),
-//         body: screen[_page]
-//         // Container(
-//         //   color: Colors.blueAccent,
-//         //   child: Center(
-//         //     child: Column(
-//         //       children: <Widget>[
-//         //         Text(_page.toString(), textScaleFactor: 10.0),
-//         //         ElevatedButton(
-//         //           child: Text('Go To Page of index 1'),
-//         //           onPressed: () {
-//         //             //Page change using state does the same as clicking index 1 navigation button
-//         //             final CurvedNavigationBarState? navBarState =
-//         //                 _bottomNavigationKey.currentState;
-//         //             navBarState?.setPage(1);
-//         //           },
-//         //         )
-//         //       ],
-//         //     ),
-//         //   ),
-//         // )
-//         );
-//   }
-// }
