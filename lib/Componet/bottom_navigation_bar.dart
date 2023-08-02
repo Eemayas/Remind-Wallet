@@ -23,6 +23,9 @@ class _BottomNavigationBarsState extends State<BottomNavigationBars> {
     Dashboard(),
     ShowUserDetailPage(),
   ];
+  final PageController _pageController = PageController();
+  int _currentPageIndex = 0;
+
   int _page = 0;
   @override
   Widget build(BuildContext context) {
@@ -66,7 +69,38 @@ class _BottomNavigationBarsState extends State<BottomNavigationBars> {
               text: 'Profile',
             )
           ]),
-      body: screen[_page],
+      body: GestureDetector(
+        onHorizontalDragEnd: (DragEndDetails details) {
+          if (details.primaryVelocity! > 0 && _currentPageIndex > 0) {
+            // Swipe right, go to the previous page
+
+            // setState(() {
+
+            // });
+            _pageController.previousPage(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          } else if (details.primaryVelocity! < 0 && _currentPageIndex < screen.length - 1) {
+            // Swipe left, go to the next page
+            _pageController.nextPage(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          }
+        },
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (int index) {
+            setState(() {
+              _page = index;
+              _currentPageIndex = index;
+            });
+          },
+          children: screen,
+        ),
+      ),
+      // body: screen[_page],
     );
   }
 }
