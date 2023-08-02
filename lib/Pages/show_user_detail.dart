@@ -1,10 +1,15 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:expenses_tracker/Pages/edit_user_detail.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_state_button/iconed_button.dart';
+import 'package:progress_state_button/progress_button.dart';
 
 import '../API/database.dart';
 import '../Componet/date_input_field.dart';
 import '../Componet/input_filed.dart';
+import '../Componet/logo_viewer.dart';
 import '../constant.dart';
 
 class ShowUserDetailPage extends StatelessWidget {
@@ -52,26 +57,14 @@ class ShowUserDetailPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      height: 200,
-                      width: 200,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black,
-                            offset: const Offset(10.0, 10.0),
-                            blurRadius: 10.0,
-                            spreadRadius: 2.0,
-                          )
-                        ],
-                        image: DecorationImage(image: AssetImage("assets/Logo/png/logo-white.png"), fit: BoxFit.fill),
-                      ),
+                    LogoViewer(
+                      side: 200,
                     ),
                     SizedBox(
                       height: 60,
                     ),
                     InputField(
+                        isUserDetail: true,
                         isEnable: false,
                         isrequired: true,
                         hintText: "",
@@ -83,6 +76,7 @@ class ShowUserDetailPage extends StatelessWidget {
                       height: 20,
                     ),
                     InputField(
+                      isUserDetail: true,
                       isEnable: false,
                       isrequired: true,
                       controllerss: phoneNumberController,
@@ -95,6 +89,7 @@ class ShowUserDetailPage extends StatelessWidget {
                       height: 20,
                     ),
                     InputField(
+                      isUserDetail: true,
                       isEnable: false,
                       isrequired: true,
                       controllerss: emailController,
@@ -107,6 +102,7 @@ class ShowUserDetailPage extends StatelessWidget {
                       height: 20,
                     ),
                     DateInputField(
+                      isUserDetail: true,
                       isEnable: false,
                       controllerss: dateController,
                       keyboardType: TextInputType.datetime,
@@ -117,6 +113,13 @@ class ShowUserDetailPage extends StatelessWidget {
                     SizedBox(
                       height: 20,
                     ),
+                    CustomButton(
+                      label: "Edit User Details",
+                      icons: Icons.edit_square,
+                      onTap: () {
+                        Navigator.pushNamed(context, EditUserDetail.id);
+                      },
+                    )
                   ],
                 ),
               ),
@@ -125,5 +128,48 @@ class ShowUserDetailPage extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class CustomButton extends StatelessWidget {
+  final String label;
+  final double height;
+  final double maxWidth;
+  final IconData icons;
+  final Color iconColor;
+  final Function? onTap;
+  const CustomButton({
+    super.key,
+    required this.label,
+    this.height = 40.00,
+    this.maxWidth = 200.00,
+    required this.icons,
+    this.iconColor = Colors.white,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ProgressButton.icon(
+        textStyle: kwhiteTextStyle,
+        height: height,
+        maxWidth: maxWidth,
+        iconedButtons: {
+          ButtonState.idle: IconedButton(
+            text: label,
+            icon: Icon(icons, color: iconColor),
+            color: Colors.deepPurple.shade500,
+          ),
+          ButtonState.loading: IconedButton(text: "Loading", color: Colors.deepPurple.shade700),
+          ButtonState.fail: IconedButton(text: "Failed", icon: Icon(Icons.cancel, color: Colors.white), color: Colors.red.shade300),
+          ButtonState.success: IconedButton(
+              text: "Success",
+              icon: Icon(
+                Icons.check_circle,
+                color: Colors.white,
+              ),
+              color: Colors.green.shade400)
+        },
+        onPressed: onTap);
   }
 }

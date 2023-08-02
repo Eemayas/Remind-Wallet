@@ -12,6 +12,7 @@ class DateInputField extends StatelessWidget {
     required this.controllerss,
     required this.keyboardType,
     required this.labelText,
+    this.isUserDetail = false,
     required this.prefixIcon,
     required this.hintText,
   });
@@ -20,6 +21,8 @@ class DateInputField extends StatelessWidget {
   final TextInputType keyboardType;
   final String labelText;
   final bool isEnable;
+  final bool isUserDetail;
+
   final IconData prefixIcon;
 
   @override
@@ -43,13 +46,15 @@ class DateInputField extends StatelessWidget {
         fillColor: kBackgroundColorCard,
         labelText: labelText,
         prefixIcon: Icon(prefixIcon),
-        suffixIcon: controllerss.text.isEmpty
+        suffixIcon: isUserDetail
             ? Container(width: 0)
-            : IconButton(
-                icon: Icon(Icons.close),
-                color: Colors.red,
-                onPressed: () => controllerss.clear(),
-              ),
+            : controllerss.text.isEmpty
+                ? Container(width: 0)
+                : IconButton(
+                    icon: Icon(Icons.close),
+                    color: Colors.red,
+                    onPressed: () => controllerss.clear(),
+                  ),
         prefixIconColor: Colors.white,
         hintText: hintText,
         contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),

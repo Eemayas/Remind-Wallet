@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, unused_import, use_key_in_widget_constructors, prefer_const_literals_to_create_immutables, avoid_print
 
 import 'package:expenses_tracker/Componet/custom_snackbar.dart';
+import 'package:expenses_tracker/Componet/logo_viewer.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -84,22 +85,7 @@ class _UserDataEntryPageState extends State<UserDataEntryPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      height: 200,
-                      width: 200,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black,
-                            offset: const Offset(10.0, 10.0),
-                            blurRadius: 10.0,
-                            spreadRadius: 2.0,
-                          )
-                        ],
-                        image: DecorationImage(image: AssetImage("assets/Logo/png/logo-white.png"), fit: BoxFit.fill),
-                      ),
-                    ),
+                    LogoViewer(side: 200),
                     SizedBox(
                       height: 60,
                     ),

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously, avoid_print, prefer_const_literals_to_create_immutables
 
 import 'package:expenses_tracker/Componet/custom_snackbar.dart';
+import 'package:expenses_tracker/Componet/logo_viewer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_state_button/iconed_button.dart';
@@ -28,6 +29,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     } on FirebaseAuthException catch (e) {
       customSnackbar(context: context, text: "Something went wrong: \n${e.code}");
     }
+    Navigator.pop(context);
   }
 
   @override
@@ -54,22 +56,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.15,
                   ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    width: MediaQuery.of(context).size.height * 0.3,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          offset: const Offset(10.0, 10.0),
-                          blurRadius: 10.0,
-                          spreadRadius: 2.0,
-                        )
-                      ],
-                      image: DecorationImage(image: AssetImage("assets/Logo/png/logo-white.png"), fit: BoxFit.fill),
-                    ),
-                  ),
+                  LogoViewer(side: 200),
                   SizedBox(
                     height: 40,
                   ),

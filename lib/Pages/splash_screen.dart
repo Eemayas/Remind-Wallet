@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously, camel_case_types, prefer_const_literals_to_create_immutables, avoid_print
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:expenses_tracker/Componet/logo_viewer.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:expenses_tracker/Pages/authentication/signIn_signOut_page.dart';
 import 'package:expenses_tracker/constant.dart';
@@ -47,22 +48,9 @@ class _Splash_PageState extends State<Splash_Page> {
       width: MediaQuery.of(context).size.width,
       // decoration: boxDecoration_backgroundimage,
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Container(
-          height: MediaQuery.of(context).size.height * 0.3,
-          width: MediaQuery.of(context).size.height * 0.3,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black,
-                offset: const Offset(10.0, 10.0),
-                blurRadius: 10.0,
-                spreadRadius: 2.0,
-              )
-            ],
-            image: DecorationImage(image: AssetImage("assets/Logo/png/logo-white.png"), fit: BoxFit.fill),
-          ),
-        )
+        LogoViewer(
+          side: MediaQuery.of(context).size.height * 0.3,
+        ),
       ]),
     )));
   }

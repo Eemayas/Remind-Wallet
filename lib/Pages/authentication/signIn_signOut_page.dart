@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names, use_build_context_synchronously, avoid_print
 
+import 'package:expenses_tracker/Componet/logo_viewer.dart';
 import 'package:expenses_tracker/Pages/authentication/forgot_password.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -142,22 +143,7 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * (isLogIn ? 0.11 : 0.07),
                   ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    width: MediaQuery.of(context).size.height * 0.3,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          offset: const Offset(10.0, 10.0),
-                          blurRadius: 10.0,
-                          spreadRadius: 2.0,
-                        )
-                      ],
-                      image: DecorationImage(image: AssetImage("assets/Logo/png/logo-white.png"), fit: BoxFit.fill),
-                    ),
-                  ),
+                  LogoViewer(side: MediaQuery.of(context).size.height * 0.3),
                   SizedBox(
                     height: 40,
                   ),

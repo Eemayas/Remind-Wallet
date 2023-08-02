@@ -8,9 +8,9 @@ import '../Componet/balance_card.dart';
 import '../Componet/transaction.dart';
 import '../constant.dart';
 
-class IncomePage extends StatelessWidget {
-  static String id = "Income page";
-  const IncomePage({super.key});
+class ExpensePage extends StatelessWidget {
+  static String id = "Expense page";
+  const ExpensePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +22,14 @@ class IncomePage extends StatelessWidget {
         onPressed: () {
           // FAB button pressed
         },
-        backgroundColor: kColorIncome,
+        backgroundColor: kColorExpenses,
         foregroundColor: Colors.white,
         child: Icon(Icons.add),
       ),
       appBar: AppBar(
         backgroundColor: kBackgroundColorAppBar,
         title: Text(
-          "All Income",
+          "All Expenses",
           style: kwhiteboldTextStyle,
         ),
         actions: [
@@ -47,7 +47,7 @@ class IncomePage extends StatelessWidget {
               Column(
                 children: [
                   BalanceCard(
-                    cardName: "TOTAL INCOME",
+                    cardName: "TOTAL EXPENSES",
                     cardBalanceAmt: db.amountsList[totalExpensesD].toString(),
                   ),
                 ],
@@ -73,7 +73,7 @@ class IncomePage extends StatelessWidget {
                     db.TransactionList[i][transactionPersonD] != null &&
                     db.TransactionList[i][transactionCreatedDateD] != null &&
                     db.TransactionList[i][transactionDescriptionD] != null &&
-                    db.TransactionList[i][transactionTypeD] == incomeT)
+                    db.TransactionList[i][transactionTypeD] == expensesT)
                   TranactionCard(
                     transationName: db.TransactionList[i][transationNameD],
                     transactionAmount: db.TransactionList[i][transactionAmountD].toString(),

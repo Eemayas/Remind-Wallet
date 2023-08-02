@@ -1,16 +1,16 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:expenses_tracker/API/database.dart';
 import 'package:flutter/material.dart';
 
 import '../API/amount_list.dart';
-import '../API/database.dart';
 import '../Componet/balance_card.dart';
 import '../Componet/transaction.dart';
 import '../constant.dart';
 
-class IncomePage extends StatelessWidget {
-  static String id = "Income page";
-  const IncomePage({super.key});
+class ToPayPage extends StatelessWidget {
+  static String id = "ToPay page";
+  const ToPayPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +22,14 @@ class IncomePage extends StatelessWidget {
         onPressed: () {
           // FAB button pressed
         },
-        backgroundColor: kColorIncome,
+        backgroundColor: kColorExpenses,
         foregroundColor: Colors.white,
         child: Icon(Icons.add),
       ),
       appBar: AppBar(
         backgroundColor: kBackgroundColorAppBar,
         title: Text(
-          "All Income",
+          "All To Pay",
           style: kwhiteboldTextStyle,
         ),
         actions: [
@@ -47,8 +47,8 @@ class IncomePage extends StatelessWidget {
               Column(
                 children: [
                   BalanceCard(
-                    cardName: "TOTAL INCOME",
-                    cardBalanceAmt: db.amountsList[totalExpensesD].toString(),
+                    cardName: "TOTAL TO PAY",
+                    cardBalanceAmt: db.amountsList[toPayD].toString(),
                   ),
                 ],
               ),
@@ -66,14 +66,14 @@ class IncomePage extends StatelessWidget {
                 if (db.TransactionList[i][transationNameD] != null &&
                     // ignore: unnecessary_null_comparison
                     db.TransactionList[i][transactionAmountD].toString() != null &&
-                    db.TransactionList[i][transactionTypeD] != null &&
+                    db.TransactionList[i][transactionTypeD] != "0" &&
                     db.TransactionList[i][transactionTagD] != null &&
                     db.TransactionList[i][transactionDateD] != null &&
                     db.TransactionList[i][transactionAccountD] != null &&
                     db.TransactionList[i][transactionPersonD] != null &&
                     db.TransactionList[i][transactionCreatedDateD] != null &&
                     db.TransactionList[i][transactionDescriptionD] != null &&
-                    db.TransactionList[i][transactionTypeD] == incomeT)
+                    db.TransactionList[i][transactionTypeD] == toPayT)
                   TranactionCard(
                     transationName: db.TransactionList[i][transationNameD],
                     transactionAmount: db.TransactionList[i][transactionAmountD].toString(),

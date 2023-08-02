@@ -1,14 +1,17 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, must_be_immutable, avoid_print
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, must_be_immutable, avoid_print, no_leading_underscores_for_local_identifiers
 
 import 'package:expenses_tracker/API/database.dart';
 import 'package:expenses_tracker/Componet/balance_card.dart';
+import 'package:expenses_tracker/Componet/custom_alert_dialog.dart';
+import 'package:expenses_tracker/Componet/custom_snackbar.dart';
 import 'package:expenses_tracker/Pages/add_account.dart';
 import 'package:expenses_tracker/Pages/add_transaction.dart';
-import 'package:expenses_tracker/Pages/expenses_page.dart';
+import 'package:expenses_tracker/Pages/show_expenses_page.dart';
+import 'package:expenses_tracker/Pages/show_to_pay_page.dart';
 import 'package:expenses_tracker/Pages/income_page.dart';
-import 'package:expenses_tracker/Pages/to_pay_page.dart';
-import 'package:expenses_tracker/Pages/to_receive_page.dart';
+import 'package:expenses_tracker/Pages/show_to_receive_page.dart';
 import 'package:expenses_tracker/constant.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
@@ -44,17 +47,58 @@ class _DashboardState extends State<Dashboard> {
   var changed = "";
   @override
   Widget build(BuildContext context) {
+    Future<void> _handleMenuItemClick(String value, BuildContext context) async {
+      // Implement the logic for each option here
+      switch (value) {
+        case 'Delete DataBase':
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CustomAlertDialog(
+                    title: 'Warning: Database Deletion',
+                    titleTextColor: Colors.red,
+                    confirmTextColor: Colors.red,
+                    message: 'Are you sure you want to delete the database? This action cannot be undone.',
+                    onConfirm: () {});
+              });
+          // db.deleteAmountDB();
+          // db.deleteTransactionDB();
+          // db.deleteAccountDB();
+          // customSnackbar(
+          //   context: context,
+          //   text: 'Database Deleted',
+          //   icons: Icons.delete_forever,
+          // );
+          // db.getAccountDB();
+          // db.getAmountDB();
+          // db.getTransactionDB();
+          // setState(() {});
+          break;
+        case 'Update DataBase':
+          db.getAccountDB();
+          db.getAmountDB();
+          db.getTransactionDB();
+          setState(() {});
+          customSnackbar(context: context, text: 'Database Refresh', icons: Icons.done_all, iconsColor: Colors.green);
+          break;
+        case 'Options:':
+          break;
+        case 'Upload to cloud':
+          break;
+        case 'Logout':
+          await FirebaseAuth.instance.signOut();
+          // ignore: use_build_context_synchronously
+          customSnackbar(context: context, text: 'Logout Sucessfully', icons: Icons.logout_rounded, iconsColor: Colors.green);
+          break;
+      }
+    }
+
     if (context.watch<ChangedMsg>().result == "changed") {
-      // context.read<ChangedMsg>().unchanged();
       setState(() {});
     }
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // db.updateTransactionDb();
-          // db.updateAccountDb();
-          // db.updateAmountDb();
-
           final result = await Navigator.pushNamed(context, AddTransaction.id);
           print(result);
           if (result != null) {
@@ -75,56 +119,99 @@ class _DashboardState extends State<Dashboard> {
           style: kwhiteboldTextStyle,
         ),
         actions: [
-          GestureDetector(
-              onLongPress: () {
-                db.deleteAmountDB();
-                db.deleteTransactionDB();
-                db.deleteAccountDB();
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      backgroundColor: kBackgroundColorCard,
-                      content: Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            'Database Deleted',
-                            style: kwhiteTextStyle,
-                          ),
-                        ],
-                      )),
-                );
-                db.getAccountDB();
-                db.getAmountDB();
-                db.getTransactionDB();
-                setState(() {});
+          Padding(
+            padding: EdgeInsets.only(
+              right: 20.0,
+            ),
+            child: PopupMenuButton(
+              onSelected: (value) {
+                _handleMenuItemClick(value, context);
               },
-              onDoubleTap: () {
-                db.getAccountDB();
-                db.getAmountDB();
-                db.getTransactionDB();
-                setState(() {});
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      backgroundColor: kBackgroundColorCard,
-                      content: Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            'Database Refresh',
-                            style: kwhiteTextStyle,
-                          ),
-                        ],
-                      )),
-                );
-              },
-              child: Icon(Icons.more_vert)),
+              itemBuilder: (BuildContext context) => [
+                PopupMenuItem(
+                  textStyle: kwhiteTextStyle.copyWith(fontWeight: FontWeight.bold),
+                  value: 'Options:',
+                  child: Row(
+                    children: [
+                      Text('Options:'),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  textStyle: kwhiteTextStyle,
+                  value: 'Upload to cloud',
+                  child: Row(
+                    children: [
+                      Icon(Icons.cloud_done_outlined),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text('Upload to cloud'),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  textStyle: kwhiteTextStyle,
+                  value: 'Update DataBase',
+                  child: Row(
+                    children: [
+                      Icon(Icons.update),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text('Update DataBase'),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  textStyle: kwhiteTextStyle,
+                  value: 'Delete DataBase',
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete_forever_outlined),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text('Delete DataBase'),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  textStyle: kwhiteTextStyle,
+                  value: 'Logout',
+                  child: Row(
+                    children: [
+                      Icon(Icons.logout_outlined),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text('Logout'),
+                    ],
+                  ),
+                ),
+              ],
+              child: Icon(Icons.more_vert),
+            ),
+          ),
+          // GestureDetector(
+          //     onLongPress: () {
+          //       db.deleteAmountDB();
+          //       db.deleteTransactionDB();
+          //       db.deleteAccountDB();
+          //       customSnackbar(context: context, text: 'Database Deleted');
+          //       db.getAccountDB();
+          //       db.getAmountDB();
+          //       db.getTransactionDB();
+          //       setState(() {});
+          //     },
+          //     onDoubleTap: () {
+          //       db.getAccountDB();
+          //       db.getAmountDB();
+          //       db.getTransactionDB();
+          //       setState(() {});
+          //       customSnackbar(context: context, text: 'Database Refresh', icons: Icons.done_all, iconsColor: Colors.green);
+          //     },
+          //     child: Icon(Icons.more_vert)),
         ],
       ),
       body: SingleChildScrollView(

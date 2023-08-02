@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:expenses_tracker/Componet/logo_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
@@ -34,7 +35,7 @@ class _EditUserDetailState extends State<EditUserDetail> {
         updated_userPhoneNumber: phoneNumberController.text);
     db.getUserNameDB();
     customSnackbar(context: context, text: "User Detail was Successful updated", icons: Icons.done_all, iconsColor: Colors.green);
-    // Navigator.pop(context);
+    Navigator.pop(context);
     // Navigator.pushNamed(context, Dashboard.id);
   }
 
@@ -80,22 +81,7 @@ class _EditUserDetailState extends State<EditUserDetail> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      height: 200,
-                      width: 200,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black,
-                            offset: const Offset(10.0, 10.0),
-                            blurRadius: 10.0,
-                            spreadRadius: 2.0,
-                          )
-                        ],
-                        image: DecorationImage(image: AssetImage("assets/Logo/png/logo-white.png"), fit: BoxFit.fill),
-                      ),
-                    ),
+                    LogoViewer(side: 200),
                     SizedBox(
                       height: 60,
                     ),

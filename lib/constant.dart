@@ -27,7 +27,6 @@ TextStyle ksubTextStyle = GoogleFonts.quicksand(
   textStyle: const TextStyle(letterSpacing: 1, color: Color(0xffBDBDBD)),
 );
 
-List TransactionTypelist = [incomeT, expensesT, toReceiveT, toPayT];
 List TagList = [
   'Food',
   'Transportation',
@@ -42,8 +41,9 @@ List TagList = [
   'Savings',
   'Miscellaneous',
 ];
-
+List TransactionTypelist = [incomeT, expensesT, toReceiveT, toPayT];
 List Accountlist = ["Cash", "Esewa", "Khalti"];
+
 const String incomeT = "Income";
 const String expensesT = "Expenses";
 const String toReceiveT = "to Receive";

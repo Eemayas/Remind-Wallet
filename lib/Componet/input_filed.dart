@@ -12,6 +12,7 @@ class InputField extends StatefulWidget {
       required this.prefixIcon,
       required this.hintText,
       this.isEnable = true,
+      this.isUserDetail = false,
       this.isrequired = false,
       this.isPassword = false});
   final String hintText;
@@ -22,6 +23,7 @@ class InputField extends StatefulWidget {
   final bool isrequired;
   final bool isPassword;
   final bool isEnable;
+  final bool isUserDetail;
 
   @override
   State<InputField> createState() => _InputFieldState();
@@ -61,13 +63,15 @@ class _InputFieldState extends State<InputField> {
                   });
                 },
               )
-            : widget.controllerss.text.isEmpty
+            : widget.isUserDetail
                 ? Container(width: 0)
-                : IconButton(
-                    color: Colors.red,
-                    icon: Icon(Icons.close),
-                    onPressed: () => widget.controllerss.clear(),
-                  ),
+                : widget.controllerss.text.isEmpty
+                    ? Container(width: 0)
+                    : IconButton(
+                        color: Colors.red,
+                        icon: Icon(Icons.close),
+                        onPressed: () => widget.controllerss.clear(),
+                      ),
         labelStyle: kwhiteTextStyle,
         filled: true,
         hintStyle: ksubTextStyle,
