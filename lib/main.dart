@@ -5,6 +5,7 @@ import 'package:expenses_tracker/Pages/add_account.dart';
 import 'package:expenses_tracker/Pages/add_transaction.dart';
 import 'package:expenses_tracker/Pages/authentication/forgot_password.dart';
 import 'package:expenses_tracker/Pages/edit_user_detail.dart';
+import 'package:expenses_tracker/Pages/firebasetry.dart';
 import 'package:expenses_tracker/Pages/show_expenses_page.dart';
 import 'package:expenses_tracker/Pages/income_page.dart';
 import 'package:expenses_tracker/Pages/splash_screen.dart';
@@ -67,7 +68,7 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
             ),
           )),
-      initialRoute: Splash_Page.id, //ShowUserDetailPage.id, // //LogInSignUpPage.id, //  Dashboard.id, //AccountDetailPage.id,
+      initialRoute: Splash_Page.id, //  Tryyy.id,//ShowUserDetailPage.id, // //LogInSignUpPage.id, //  Dashboard.id, //AccountDetailPage.id,
       //TranasctionDetailPage.id, // //AddTransaction.id,
       routes: {
         Dashboard.id: (context) => const Dashboard(),
@@ -80,6 +81,7 @@ class MyApp extends StatelessWidget {
         AddUserDataPage.id: (context) => AddUserDataPage(),
         Splash_Page.id: (context) => Splash_Page(),
         CheckSignin_outPage.id: (context) => CheckSignin_outPage(),
+        Tryyy.id: (context) => Tryyy(),
         // CheckPage.id: (context) => CheckPage(),
         LogInSignUpPage.id: (context) => LogInSignUpPage(),
         ForgotPassword.id: (context) => ForgotPassword(),

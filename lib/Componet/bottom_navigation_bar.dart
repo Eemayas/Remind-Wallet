@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:expenses_tracker/Pages/dashboard.dart';
+import 'package:expenses_tracker/Pages/firebasetry.dart';
 import 'package:expenses_tracker/Pages/show_user_detail.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class _BottomNavigationBarsState extends State<BottomNavigationBars> {
   int _currentIndex = 0;
   PageController _pageController = PageController(initialPage: 0);
 
-  final List<Widget> _pages = [Dashboard(), ShowUserDetailPage()];
+  final List<Widget> _pages = [Dashboard(), Tryyy(), ShowUserDetailPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +78,10 @@ class _BottomNavigationBarsState extends State<BottomNavigationBars> {
             );
           }, // navigation bar padding
           tabs: [
+            GButton(
+              icon: LineIcons.home,
+              text: 'Home',
+            ),
             GButton(
               icon: LineIcons.home,
               text: 'Home',

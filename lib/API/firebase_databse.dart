@@ -1,4 +1,6 @@
 // firebase_database.dart
+// ignore_for_file: avoid_print, use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +8,13 @@ import '../Componet/custom_snackbar.dart';
 import './database.dart';
 
 const String transactionsFD = 'transactions';
+const String usersFD = 'users';
+const String amountsFD = 'amounts';
+const String amountsDocumentFD = 'amountsDocument';
+const String accountsFD = 'accounts';
+const String userDetailsFD = 'userDetails';
 
-class FirebaseDatabse {
+class FirebaseDatabases {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? _userId;
 
@@ -16,6 +23,9 @@ class FirebaseDatabse {
   List transactionList = [];
   Map userDetail = {};
   Database db = Database();
+  FirebaseDatabases() {
+    initUserId();
+  }
 
   // Initialize the user ID when the user signs in
   Future<void> initUserId() async {
@@ -38,14 +48,15 @@ class FirebaseDatabse {
 
       // Get a reference to the Firestore collection for transactions
 
-      CollectionReference transactionsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection(transactionsFD);
+      CollectionReference transactionsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(transactionsFD);
 
       // Save each transaction separately
       for (var transaction in transactionList) {
-        await transactionsRef.add(transaction);
+        await transactionsRef.add(Map<String, dynamic>.from(transaction));
       }
+      customSnackbar(context: context, text: "Transactions is saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
     } catch (e) {
-      customSnackbar(context: context, text: 'Error saving transaction data: $e');
+      customSnackbar(context: context, text: 'Error saving transaction data: \n$e');
       print('Error saving transaction data: $e');
     }
   }
@@ -57,16 +68,24 @@ class FirebaseDatabse {
     try {
       // Check if user is authenticated
       if (_userId == null) {
+        customSnackbar(context: context, text: "User not authenticated");
         throw Exception('User not authenticated');
       }
 
+      // Convert keys and values to strings
+      Map<String, dynamic> userDetailString = {};
+      userDetail.forEach((key, value) {
+        userDetailString[key.toString()] = value.toString();
+      });
+
       // Get a reference to the Firestore collection for users
-      CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
+      CollectionReference usersRef = FirebaseFirestore.instance.collection(usersFD);
 
       // Save user detail document for the current user
-      await usersRef.doc(_userId).set(userDetail);
+      await usersRef.doc(_userId).set(userDetailString);
+      customSnackbar(context: context, text: "UserData is saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
     } catch (e) {
-      customSnackbar(context: context, text: 'Error saving user detail: $e');
+      customSnackbar(context: context, text: 'Error saving user detail: \n$e');
       print('Error saving user detail: $e');
     }
   }
@@ -78,40 +97,116 @@ class FirebaseDatabse {
     try {
       // Check if user is authenticated
       if (_userId == null) {
+        customSnackbar(context: context, text: "User not authenticated");
         throw Exception('User not authenticated');
       }
 
+      // Convert keys and values to strings
+      Map<String, dynamic> amountsListString = {};
+      amountsList.forEach((key, value) {
+        amountsListString[key.toString()] = value.toString();
+      });
+
       // Get a reference to the Firestore collection for amounts
-      CollectionReference amountsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection('amounts');
+      CollectionReference amountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(amountsFD);
 
       // Save amounts document for the current user
-      await amountsRef.doc('amountsDocument').set(amountsList);
+      await amountsRef.doc(amountsDocumentFD).set(amountsListString);
+      customSnackbar(context: context, text: "Ammount is saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
     } catch (e) {
-      customSnackbar(context: context, text: 'Error saving amounts: $e');
-      print('Error saving amounts: $e');
+      customSnackbar(context: context, text: 'Error saving amounts: \n$e');
+      print('Error saving amounts: \n$e');
     }
   }
 
   // Save accounts to Firebase Firestore for the current user
   Future<void> saveAccountsToFirebase(BuildContext context) async {
+    // initUserId();
     db.getAccountDB();
     accountsList = db.AccountsList;
     try {
       // Check if user is authenticated
       if (_userId == null) {
+        customSnackbar(context: context, text: "User not authenticated");
         throw Exception('User not authenticated');
       }
 
       // Get a reference to the Firestore collection for accounts
-      CollectionReference accountsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection('accounts');
+      CollectionReference accountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(accountsFD);
 
       // Save each account separately
       for (var account in accountsList) {
-        await accountsRef.add(account);
+        await accountsRef.add(Map<String, dynamic>.from(account));
       }
+      customSnackbar(context: context, text: "Account is saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
     } catch (e) {
-      customSnackbar(context: context, text: 'Error saving accounts: $e');
+      customSnackbar(context: context, text: 'Error saving accounts: \n$e');
       print('Error saving accounts: $e');
+    }
+  }
+
+// function to save data to Firebase
+  Future<void> saveAllDataToFirebase(BuildContext context) async {
+    try {
+      // Check if user is authenticated
+      if (_userId == null) {
+        customSnackbar(context: context, text: "User not authenticated");
+        throw Exception('User not authenticated');
+      }
+
+      // Save transaction data
+      db.getTransactionDB();
+      transactionList = db.TransactionList;
+      CollectionReference transactionsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(transactionsFD);
+      for (var transaction in transactionList) {
+        // Convert keys and values to strings
+        Map<String, dynamic> transactionMap = {};
+        transaction.forEach((key, value) {
+          transactionMap[key.toString()] = value.toString();
+        });
+        await transactionsRef.add(transactionMap);
+      }
+
+      // Save user detail
+      db.getUserDetailDB();
+      userDetail = db.userDetail;
+      // Convert keys and values to strings
+      Map<String, dynamic> userDetailString = {};
+      userDetail.forEach((key, value) {
+        userDetailString[key.toString()] = value.toString();
+      });
+      // CollectionReference usersRef = FirebaseFirestore.instance.collection(usersFD); change to this
+      CollectionReference usersRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(userDetailsFD);
+      await usersRef.doc(_userId).set(userDetailString);
+
+      // Save amounts data
+      db.getAmountDB();
+      amountsList = db.amountsList;
+      // Convert keys and values to strings
+      Map<String, dynamic> amountsListString = {};
+      amountsList.forEach((key, value) {
+        amountsListString[key.toString()] = value.toString();
+      });
+      CollectionReference amountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(amountsFD);
+      await amountsRef.doc(amountsDocumentFD).set(amountsListString);
+
+      // Save accounts data
+      db.getAccountDB();
+      accountsList = db.AccountsList;
+      CollectionReference accountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(accountsFD);
+      for (var account in accountsList) {
+        // Convert keys and values to strings
+        Map<String, dynamic> accountMap = {};
+        account.forEach((key, value) {
+          accountMap[key.toString()] = value.toString();
+        });
+        await accountsRef.add(accountMap);
+      }
+
+      customSnackbar(context: context, text: "All Data is saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
+    } catch (e) {
+      customSnackbar(context: context, text: 'Error saving data to Firebase: \n$e');
+      print('Error saving data to Firebase: $e');
     }
   }
 
@@ -120,18 +215,19 @@ class FirebaseDatabse {
     try {
       // Check if user is authenticated
       if (_userId == null) {
+        customSnackbar(context: context, text: "User not authenticated");
         throw Exception('User not authenticated');
       }
 
       // Get a reference to the Firestore collection for transactions
-      CollectionReference transactionsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection(transactionsFD);
+      CollectionReference transactionsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(transactionsFD);
 
       // Retrieve transaction data for the current user
       QuerySnapshot transactionSnapshot = await transactionsRef.get();
       List<DocumentSnapshot> transactionDocuments = transactionSnapshot.docs;
       transactionList = transactionDocuments.map((transaction) => transaction.data() as Map<String, dynamic>).toList();
     } catch (e) {
-      customSnackbar(context: context, text: 'Error retrieving transactions: $e');
+      customSnackbar(context: context, text: 'Error retrieving transactions: \n$e');
       print('Error retrieving transactions: $e');
       transactionList = [];
     }
@@ -142,17 +238,18 @@ class FirebaseDatabse {
     try {
       // Check if user is authenticated
       if (_userId == null) {
+        customSnackbar(context: context, text: "User not authenticated");
         throw Exception('User not authenticated');
       }
 
       // Get a reference to the Firestore collection for users
-      CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
+      CollectionReference usersRef = FirebaseFirestore.instance.collection(usersFD);
 
       // Retrieve user detail for the current user
       DocumentSnapshot userSnapshot = await usersRef.doc(_userId).get();
       userDetail = userSnapshot.data() as Map<String, dynamic>;
     } catch (e) {
-      customSnackbar(context: context, text: 'Error retrieving user detail: $e');
+      customSnackbar(context: context, text: 'Error retrieving user detail: \n$e');
       print('Error retrieving user detail: $e');
       userDetail = {};
     }
@@ -163,17 +260,18 @@ class FirebaseDatabse {
     try {
       // Check if user is authenticated
       if (_userId == null) {
+        customSnackbar(context: context, text: "User not authenticated");
         throw Exception('User not authenticated');
       }
 
       // Get a reference to the Firestore collection for amounts
-      CollectionReference amountsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection('amounts');
+      CollectionReference amountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(amountsFD);
 
       // Retrieve amounts for the current user
-      DocumentSnapshot amountsSnapshot = await amountsRef.doc('amountsDocument').get();
+      DocumentSnapshot amountsSnapshot = await amountsRef.doc(amountsDocumentFD).get();
       amountsList = amountsSnapshot.data() as Map<String, dynamic>;
     } catch (e) {
-      customSnackbar(context: context, text: 'Error retrieving amounts: $e');
+      customSnackbar(context: context, text: 'Error retrieving amounts: \n$e');
       print('Error retrieving amounts: $e');
       amountsList = {};
     }
@@ -184,76 +282,38 @@ class FirebaseDatabse {
     try {
       // Check if user is authenticated
       if (_userId == null) {
+        customSnackbar(context: context, text: "User not authenticated");
         throw Exception('User not authenticated');
       }
 
       // Get a reference to the Firestore collection for accounts
-      CollectionReference accountsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection('accounts');
+      CollectionReference accountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(accountsFD);
 
       // Retrieve accounts for the current user
       QuerySnapshot accountSnapshot = await accountsRef.get();
       List<DocumentSnapshot> accountDocuments = accountSnapshot.docs;
       accountsList = accountDocuments.map((account) => account.data() as Map<String, dynamic>).toList();
     } catch (e) {
-      customSnackbar(context: context, text: 'Error retrieving accounts: $e');
+      customSnackbar(context: context, text: 'Error retrieving accounts: \n$e');
       print('Error retrieving accounts: $e');
       accountsList = [];
     }
   }
 
-  Future<void> saveAllDataToFirebase(BuildContext context) async {
-    try {
-      // Check if user is authenticated
-      if (_userId == null) {
-        throw Exception('User not authenticated');
-      }
-
-      // Save transaction data
-      db.getTransactionDB();
-      transactionList = db.TransactionList;
-      CollectionReference transactionsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection(transactionsFD);
-      for (var transaction in transactionList) {
-        await transactionsRef.add(transaction);
-      }
-
-      // Save user detail
-      db.getUserDetailDB();
-      userDetail = db.userDetail;
-      CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
-      await usersRef.doc(_userId).set(userDetail);
-
-      // Save amounts data
-      db.getAmountDB();
-      amountsList = db.amountsList;
-      CollectionReference amountsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection('amounts');
-      await amountsRef.doc('amountsDocument').set(amountsList);
-
-      // Save accounts data
-      db.getAccountDB();
-      accountsList = db.AccountsList;
-      CollectionReference accountsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection('accounts');
-      for (var account in accountsList) {
-        await accountsRef.add(account);
-      }
-    } catch (e) {
-      customSnackbar(context: context, text: 'Error saving data to Firebase: $e');
-      print('Error saving data to Firebase: $e');
-    }
-  }
-
-  // Private function to retrieve data from Firebase
+  // function to retrieve data from Firebase
   Future<void> retrieveAllDataFromFirebase(BuildContext context) async {
     try {
       // Check if user is authenticated
       if (_userId == null) {
+        customSnackbar(context: context, text: "User not authenticated");
         throw Exception('User not authenticated');
       }
 
       // Get references to the Firestore collections
-      CollectionReference transactionsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection(transactionsFD);
-      CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
-      CollectionReference amountsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection('amounts');
-      CollectionReference accountsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection('accounts');
+      CollectionReference transactionsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(transactionsFD);
+      CollectionReference usersRef = FirebaseFirestore.instance.collection(usersFD);
+      CollectionReference amountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(amountsFD);
+      CollectionReference accountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(accountsFD);
 
       // Retrieve transaction data
       QuerySnapshot transactionSnapshot = await transactionsRef.get();
@@ -265,7 +325,7 @@ class FirebaseDatabse {
       userDetail = userSnapshot.data() as Map<String, dynamic>;
 
       // Retrieve amounts data
-      DocumentSnapshot amountsSnapshot = await amountsRef.doc('amountsDocument').get();
+      DocumentSnapshot amountsSnapshot = await amountsRef.doc(amountsDocumentFD).get();
       amountsList = amountsSnapshot.data() as Map<String, dynamic>;
 
       // Retrieve accounts data
@@ -279,386 +339,60 @@ class FirebaseDatabse {
       print('Amount Data: $amountsList');
       print('Accounts Data: $accountsList');
     } catch (e) {
-      customSnackbar(context: context, text: 'Error retrieving data from Firebase: $e');
+      customSnackbar(context: context, text: 'Error retrieving data from Firebase: \n$e');
       print('Error retrieving data from Firebase: $e');
     }
   }
+
+  Future<void> deleteAllDocumentsFromCollection(BuildContext context, String collectionName) async {
+    try {
+      // Get a reference to the Firestore collection
+      CollectionReference collectionRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(collectionName);
+      CollectionReference collectionAmtRef = FirebaseFirestore.instance.collection(collectionName);
+
+      // Query for all documents in the collection
+      QuerySnapshot querySnapshot = await collectionRef.get();
+      QuerySnapshot queryAmtSnapshot = await collectionRef.get();
+
+      // Delete each document
+      for (var doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+      for (var doc in queryAmtSnapshot.docs) {
+        await doc.reference.delete();
+      }
+      print('All documents in $collectionName collection deleted successfully');
+      customSnackbar(
+          context: context,
+          text: 'All documents in $collectionName collection deleted successfully',
+          icons: Icons.done_all,
+          iconsColor: Colors.green);
+    } catch (e) {
+      customSnackbar(context: context, text: 'Error deleting documents: \n$e');
+      print('Error deleting documents: $e');
+    }
+  }
+
+  Future<void> deleteAllDataFromFirestore(BuildContext context) async {
+    try {
+      // Delete all documents from the "users" collection
+      await deleteAllDocumentsFromCollection(context, usersFD);
+
+      // Delete all documents from the "transactions" collection
+      await deleteAllDocumentsFromCollection(context, transactionsFD);
+
+      // Delete all documents from the "amounts" collection
+      await deleteAllDocumentsFromCollection(context, amountsFD);
+
+      // Delete all documents from the "accounts" collection
+      await deleteAllDocumentsFromCollection(context, accountsFD);
+
+      // Add more collections to delete if needed
+      customSnackbar(context: context, text: "Account is deleted from Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
+      print('All data in Firestore deleted successfully');
+    } catch (e) {
+      customSnackbar(context: context, text: 'Error deleting data from Firestore: \n$e');
+      print('Error deleting data from Firestore: $e');
+    }
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// class FirebaseDatabase {
-//   final FirebaseAuth _auth = FirebaseAuth.instance;
-//   String? _userId;
-
-//   List accountsList = [];
-//   Map amountsList = {};
-//   List transactionList = [];
-//   Map userDetail = {};
-//   Database db = Database();
-
-//   // Initialize the user ID when the user signs in
-//   Future<void> initUserId() async {
-//     User? user = _auth.currentUser;
-//     if (user != null) {
-//       _userId = user.uid;
-//     }
-//   }
-
-//   // Combined function to save and retrieve data from Firebase Firestore
-//   Future<void> saveAndRetrieveDataFromFirebase(BuildContext context) async {
-//     try {
-//       // Check if user is authenticated
-//       if (_userId == null) {
-//         throw Exception('User not authenticated');
-//       }
-
-//       // Save data to Firebase
-//       await _saveDataToFirebase(context);
-
-//       // Retrieve data from Firebase
-//       await _retrieveDataFromFirebase(context);
-
-//       // Perform any other actions after saving and retrieving data if needed
-
-//     } catch (e) {
-//       customSnackbar(context: context, text: 'Error: $e');
-//       print('Error: $e');
-//     }
-//   }
-
-//   // Private function to save data to Firebase
-//   Future<void> _saveDataToFirebase(BuildContext context) async {
-//     try {
-//       // Check if user is authenticated
-//       if (_userId == null) {
-//         throw Exception('User not authenticated');
-//       }
-
-//       // Save transaction data
-//       db.getTransactionDB();
-//       transactionList = db.TransactionList;
-//       CollectionReference transactionsRef =
-//           FirebaseFirestore.instance.collection('users').doc(_userId).collection(transactionsFD);
-//       for (var transaction in transactionList) {
-//         await transactionsRef.add(transaction);
-//       }
-
-//       // Save user detail
-//       db.getUserDetailDB();
-//       userDetail = db.userDetail;
-//       CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
-//       await usersRef.doc(_userId).set(userDetail);
-
-//       // Save amounts data
-//       db.getAmountDB();
-//       amountsList = db.amountsList;
-//       CollectionReference amountsRef =
-//           FirebaseFirestore.instance.collection('users').doc(_userId).collection('amounts');
-//       await amountsRef.doc('amountsDocument').set(amountsList);
-
-//       // Save accounts data
-//       db.getAccountDB();
-//       accountsList = db.AccountsList;
-//       CollectionReference accountsRef =
-//           FirebaseFirestore.instance.collection('users').doc(_userId).collection('accounts');
-//       for (var account in accountsList) {
-//         await accountsRef.add(account);
-//       }
-//     } catch (e) {
-//       customSnackbar(context: context, text: 'Error saving data to Firebase: $e');
-//       print('Error saving data to Firebase: $e');
-//     }
-//   }
-
-//   // Private function to retrieve data from Firebase
-//   Future<void> _retrieveDataFromFirebase(BuildContext context) async {
-//     try {
-//       // Check if user is authenticated
-//       if (_userId == null) {
-//         throw Exception('User not authenticated');
-//       }
-
-//       // Get references to the Firestore collections
-//       CollectionReference transactionsRef =
-//           FirebaseFirestore.instance.collection('users').doc(_userId).collection(transactionsFD);
-//       CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
-//       CollectionReference amountsRef =
-//           FirebaseFirestore.instance.collection('users').doc(_userId).collection('amounts');
-//       CollectionReference accountsRef =
-//           FirebaseFirestore.instance.collection('users').doc(_userId).collection('accounts');
-
-//       // Retrieve transaction data
-//       QuerySnapshot transactionSnapshot = await transactionsRef.get();
-//       List<DocumentSnapshot> transactionDocuments = transactionSnapshot.docs;
-//       transactionList =
-//           transactionDocuments.map((transaction) => transaction.data() as Map<String, dynamic>).toList();
-
-//       // Retrieve user detail
-//       DocumentSnapshot userSnapshot = await usersRef.doc(_userId).get();
-//       userDetail = userSnapshot.data() as Map<String, dynamic>;
-
-//       // Retrieve amounts data
-//       DocumentSnapshot amountsSnapshot = await amountsRef.doc('amountsDocument').get();
-//       amountsList = amountsSnapshot.data() as Map<String, dynamic>;
-
-//       // Retrieve accounts data
-//       QuerySnapshot accountSnapshot = await accountsRef.get();
-//       List<DocumentSnapshot> accountDocuments = accountSnapshot.docs;
-//       accountsList = accountDocuments.map((account) => account.data() as Map<String, dynamic>).toList();
-
-//       // Do something with the retrieved data...
-//       print('Transaction Data: $transactionList');
-//       print('User Data: $userDetail');
-//       print('Amount Data: $amountsList');
-//       print('Accounts Data: $accountsList');
-//     } catch (e) {
-//       customSnackbar(context: context, text: 'Error retrieving data from Firebase: $e');
-//       print('Error retrieving data from Firebase: $e');
-//     }
-//   }
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // ignore_for_file: avoid_print
-
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:expenses_tracker/Componet/custom_snackbar.dart';
-// import 'package:flutter/material.dart';
-// import './database.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-
-// class FirebaseDatabse {
-//   final FirebaseAuth _auth = FirebaseAuth.instance;
-//   String? _userId;
-
-//   List accountsList = [];
-//   Map amountsList = {};
-//   List transactionList = [];
-//   Map userDetail = {};
-//   Database db = Database();
-
-//   // Initialize the user ID when the user signs in
-//   Future<void> initUserId() async {
-//     User? user = _auth.currentUser;
-//     if (user != null) {
-//       _userId = user.uid;
-//     }
-//   }
-
-//   // Save transaction data to Firebase Firestore for the current user
-//   Future<void> saveTransactionDataToFirebase(BuildContext context) async {
-//     db.getTransactionDB();
-//     transactionList = db.TransactionList;
-//     try {
-//       // Check if user is authenticated
-//       if (_userId == null) {
-//         customSnackbar(context: context, text: "User not authenticated");
-//         throw Exception('User not authenticated');
-//       }
-
-//       // Get a reference to the Firestore collection for transactions
-//       CollectionReference transactionsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection(transactionsFD);
-
-//       // Save each transaction separately
-//       for (var transaction in transactionList) {
-//         await transactionsRef.add(transaction);
-//       }
-//     } catch (e) {
-//       customSnackbar(context: context, text: 'Error saving transaction data: \n$e');
-//       print('Error saving transaction data: $e');
-//     }
-//   }
-
-//   // Save user detail to Firebase Firestore for the current user
-//   Future<void> saveUserDetailToFirebase() async {
-//     db.getUserDetailDB();
-//     userDetail = db.userDetail;
-//     try {
-//       // Check if user is authenticated
-//       if (_userId == null) {
-//         throw Exception('User not authenticated');
-//       }
-
-//       // Get a reference to the Firestore collection for users
-//       CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
-
-//       // Save user detail document for the current user
-//       await usersRef.doc(_userId).set(userDetail);
-//     } catch (e) {
-//       print('Error saving user detail: $e');
-//     }
-//   }
-
-//   // Save amounts to Firebase Firestore for the current user
-//   Future<void> saveAmountsToFirebase() async {
-//     db.getAmountDB();
-//     amountsList = db.amountsList;
-//     try {
-//       // Check if user is authenticated
-//       if (_userId == null) {
-//         throw Exception('User not authenticated');
-//       }
-
-//       // Get a reference to the Firestore collection for amounts
-//       CollectionReference amountsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection('amounts');
-
-//       // Save amounts document for the current user
-//       await amountsRef.doc('amountsDocument').set(amountsList);
-//     } catch (e) {
-//       print('Error saving amounts: $e');
-//     }
-//   }
-
-//   // Save accounts to Firebase Firestore for the current user
-//   Future<void> saveAccountsToFirebase() async {
-//     db.getAccountDB();
-//     accountsList = db.AccountsList;
-//     try {
-//       // Check if user is authenticated
-//       if (_userId == null) {
-//         throw Exception('User not authenticated');
-//       }
-
-//       // Get a reference to the Firestore collection for accounts
-//       CollectionReference accountsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection('accounts');
-
-//       // Save each account separately
-//       for (var account in accountsList) {
-//         await accountsRef.add(account);
-//       }
-//     } catch (e) {
-//       print('Error saving accounts: $e');
-//     }
-//   }
-
-//   // Retrieve transaction data from Firebase Firestore for the current user
-//   Future<void> retrieveTransactionsFromFirebase() async {
-//     try {
-//       // Check if user is authenticated
-//       if (_userId == null) {
-//         throw Exception('User not authenticated');
-//       }
-
-//       // Get a reference to the Firestore collection for transactions
-//       CollectionReference transactionsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection(transactionsFD);
-
-//       // Retrieve transaction data for the current user
-//       QuerySnapshot transactionSnapshot = await transactionsRef.get();
-//       List<DocumentSnapshot> transactionDocuments = transactionSnapshot.docs;
-//       transactionList = transactionDocuments.map((transaction) => transaction.data() as Map<String, dynamic>).toList();
-//     } catch (e) {
-//       print('Error retrieving transactions: $e');
-//       transactionList = [];
-//     }
-//   }
-
-//   // Retrieve user detail from Firebase Firestore for the current user
-//   Future<void> retrieveUserDetailFromFirebase() async {
-//     try {
-//       // Check if user is authenticated
-//       if (_userId == null) {
-//         throw Exception('User not authenticated');
-//       }
-
-//       // Get a reference to the Firestore collection for users
-//       CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
-
-//       // Retrieve user detail for the current user
-//       DocumentSnapshot userSnapshot = await usersRef.doc(_userId).get();
-//       userDetail = userSnapshot.data() as Map<String, dynamic>;
-//     } catch (e) {
-//       print('Error retrieving user detail: $e');
-//       userDetail = {};
-//     }
-//   }
-
-//   // Retrieve amounts from Firebase Firestore for the current user
-//   Future<void> retrieveAmountsFromFirebase() async {
-//     try {
-//       // Check if user is authenticated
-//       if (_userId == null) {
-//         throw Exception('User not authenticated');
-//       }
-
-//       // Get a reference to the Firestore collection for amounts
-//       CollectionReference amountsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection('amounts');
-
-//       // Retrieve amounts for the current user
-//       DocumentSnapshot amountsSnapshot = await amountsRef.doc('amountsDocument').get();
-//       amountsList = amountsSnapshot.data() as Map<String, dynamic>;
-//     } catch (e) {
-//       print('Error retrieving amounts: $e');
-//       amountsList = {};
-//     }
-//   }
-
-//   // Retrieve accounts from Firebase Firestore for the current user
-//   Future<void> retrieveAccountsFromFirebase() async {
-//     try {
-//       // Check if user is authenticated
-//       if (_userId == null) {
-//         throw Exception('User not authenticated');
-//       }
-
-//       // Get a reference to the Firestore collection for accounts
-//       CollectionReference accountsRef = FirebaseFirestore.instance.collection('users').doc(_userId).collection('accounts');
-
-//       // Retrieve accounts for the current user
-//       QuerySnapshot accountSnapshot = await accountsRef.get();
-//       List<DocumentSnapshot> accountDocuments = accountSnapshot.docs;
-//       accountsList = accountDocuments.map((account) => account.data() as Map<String, dynamic>).toList();
-//     } catch (e) {
-//       print('Error retrieving accounts: $e');
-//       accountsList = [];
-//     }
-//   }
-// }
