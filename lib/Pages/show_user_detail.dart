@@ -21,7 +21,7 @@ class ShowUserDetailPage extends StatelessWidget {
     final dateController = TextEditingController();
     final emailController = TextEditingController();
     Database db = Database();
-    db.getUserNameDB();
+    db.getUserDetailDB();
     userNameController.text = db.userDetail[userNameD];
     dateController.text = db.userDetail[userDOBD];
     phoneNumberController.text = db.userDetail[userPhoneD];

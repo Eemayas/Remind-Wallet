@@ -34,7 +34,7 @@ class _DashboardState extends State<Dashboard> {
     db.getTransactionDB();
     db.getAmountDB();
     db.getAccountDB();
-    db.getUserNameDB();
+    db.getUserDetailDB();
     db.getAccountNameListDB();
     // db.deleteUserName();
     // db.deleteAmountDB();
@@ -60,9 +60,7 @@ class _DashboardState extends State<Dashboard> {
                     confirmTextColor: Colors.red,
                     message: 'Are you sure you want to delete the database? This action cannot be undone.',
                     onConfirm: () {
-                      db.deleteAmountDB();
-                      db.deleteTransactionDB();
-                      db.deleteAccountDB();
+                      db.deleteAll();
                       Navigator.pop(context);
                       customSnackbar(
                         context: context,

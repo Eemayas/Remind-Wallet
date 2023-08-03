@@ -33,7 +33,7 @@ class _EditUserDetailState extends State<EditUserDetail> {
         updated_userDOB: dateController.text,
         updated_userEmail: emailController.text,
         updated_userPhoneNumber: phoneNumberController.text);
-    db.getUserNameDB();
+    db.getUserDetailDB();
     customSnackbar(context: context, text: "User Detail was Successful updated", icons: Icons.done_all, iconsColor: Colors.green);
     Navigator.pop(context);
     // Navigator.pushNamed(context, Dashboard.id);
@@ -45,7 +45,7 @@ class _EditUserDetailState extends State<EditUserDetail> {
     userNameController.addListener(() => setState(() {}));
     emailController.addListener(() => setState(() {}));
     phoneNumberController.addListener(() => setState(() {}));
-    db.getUserNameDB();
+    db.getUserDetailDB();
     userNameController.text = db.userDetail[userNameD];
     dateController.text = db.userDetail[userDOBD];
     phoneNumberController.text = db.userDetail[userPhoneD];

@@ -64,6 +64,7 @@ class _EditTransactionState extends State<EditTransaction> {
     titleController.text = widget.transactionTitle;
     amtController.text = widget.amount;
     tranasctionTypeController.text = widget.transactionType;
+    accountController.text = widget.Account;
     // tagController.text = widget.transactionTag;
     // dateController.text = widget.transactionDate;
     toFromController.text = widget.transactionPerson;

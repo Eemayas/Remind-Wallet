@@ -37,7 +37,7 @@ class _AddUserDataPageState extends State<AddUserDataPage> {
 
     db.addUserDB(
         userName: userNameController.text, userDOB: dateController.text, userEmail: "xyz@example.com", userPhoneNumber: phoneNumberController.text);
-    db.getUserNameDB();
+    db.getUserDetailDB();
     customSnackbar(context: context, text: "User Detail was Successful Added", icons: Icons.done_all, iconsColor: Colors.green);
     Navigator.pop(context);
     Navigator.pushNamed(context, CheckSignin_outPage.id);

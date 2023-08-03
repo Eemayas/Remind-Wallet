@@ -1,5 +1,4 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print, unused_local_variable
-
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
@@ -12,11 +11,6 @@ class Database {
   Map userDetail = {};
   final _account = Hive.box("expenses_tracker");
 
-  void getAccountDB() {
-    AccountsList = _account.get(accountDatabase) ?? [];
-    print(AccountsList);
-  }
-
   void accountInitialized() {
     getAccountDB();
     if (AccountsList.isEmpty) {
@@ -25,6 +19,11 @@ class Database {
         amount: 0,
       );
     }
+  }
+
+  void getAccountDB() {
+    AccountsList = _account.get(accountDatabase) ?? [];
+    print(AccountsList);
   }
 
   void getAmountDB() {
@@ -45,7 +44,7 @@ class Database {
 
   List getAccountNameListDB() {
     getAccountDB();
-    List AccountNameList = ["Others"];
+    List AccountNameList = [];
     for (int i = 0; i < AccountsList.length; i++) {
       AccountNameList.add(AccountsList[i][accountNameD]);
     }
@@ -53,7 +52,7 @@ class Database {
     return AccountNameList;
   }
 
-  void getUserNameDB() {
+  void getUserDetailDB() {
     userDetail =
         _account.get(userDataDatabase) ?? {userNameD: "User", userPhoneD: "9800000000", userEmailD: "xyz@example.com", userDOBD: "0000-00-00"};
     print(userDetail);
@@ -78,11 +77,12 @@ class Database {
   void deleteAll() {
     deleteAccountDB();
     deleteAmountDB();
-    deleteUserNameDB();
+    // deleteUserNameDB();
     deleteTransactionDB();
+    accountInitialized();
   }
 
-  void addAccountDB({accountName, amount}) {
+  bool addAccountDB({accountName, amount}) {
     List inputAccount = [
       {
         accountNameD: accountName ?? "",
@@ -90,30 +90,37 @@ class Database {
       },
     ];
     getAccountDB();
-    AccountsList = AccountsList + inputAccount;
-    _account.put(accountDatabase, AccountsList);
-    getAmountDB();
-    amountsList[currentBalanceD] = amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + amount;
-    _account.put(amountListDatabase, amountsList);
-    List inputedTransactionLists = [
-      {
-        transationNameD: accountName,
-        transactionAmountD: amount,
-        transactionTypeD: incomeT,
-        transactionTagD: "Account",
-        transactionDateD: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-        transactionAccountD: accountName ?? "",
-        transactionPersonD: "Self",
-        transactionDescriptionD: "$accountName account added ",
-        transactionIconD: " ",
-        transactionCreatedDateD: DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now()),
-        // "transactionNote": "$accountName account added",
-      },
-    ];
-    getTransactionDB();
-    TransactionList = TransactionList + inputedTransactionLists;
-    _account.put(transactionDatabase, TransactionList);
-    print("updated accountss");
+    bool isAccountNamePresent = AccountsList.where((account) => account[accountNameD] == accountName).isNotEmpty;
+    if (!isAccountNamePresent) {
+      AccountsList = AccountsList + inputAccount;
+      _account.put(accountDatabase, AccountsList);
+      getAmountDB();
+      amountsList[totalIncomeD] = amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] + amount;
+      amountsList[currentBalanceD] = amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + amount;
+      _account.put(amountListDatabase, amountsList);
+      List inputedTransactionLists = [
+        {
+          transationNameD: accountName,
+          transactionAmountD: amount,
+          transactionTypeD: incomeT,
+          transactionTagD: "Account",
+          transactionDateD: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+          transactionAccountD: accountName ?? "",
+          transactionPersonD: "Self",
+          transactionDescriptionD: "$accountName account added ",
+          transactionIconD: " ",
+          transactionCreatedDateD: DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now()),
+          // "transactionNote": "$accountName account added",
+        },
+      ];
+      getTransactionDB();
+      TransactionList = TransactionList + inputedTransactionLists;
+      _account.put(transactionDatabase, TransactionList);
+      print("updated accountss");
+      return true;
+    } else {
+      return false;
+    }
   }
 
   void addTransactionDB(
@@ -125,7 +132,7 @@ class Database {
         transactionTypeD: transactionType ?? "",
         transactionTagD: transactionTag ?? "",
         transactionDateD: transactionDate ?? "",
-        transactionAccountD: account ?? "",
+        transactionAccountD: account ?? miscellaneousaccountNameD,
         transactionPersonD: transactionPerson ?? "",
         transactionDescriptionD: transactionNote ?? "",
         transactionCreatedDateD: createdDate ?? "",
@@ -137,12 +144,18 @@ class Database {
     TransactionList = TransactionList + inputedTransactionLists;
     _account.put(transactionDatabase, TransactionList);
     getAmountDB();
+    getAccountDB();
     int Amount = amount ?? 0;
+    var index = AccountsList.indexWhere((element) => element[accountNameD] == account);
+    index = index != -1 ? index : 0;
+
     switch (transactionType) {
       case incomeT:
         amountsList[totalIncomeD] = amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] + Amount;
         amountsList[currentBalanceD] = amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + Amount;
 
+        //for accounts
+        AccountsList[index][accountCurrentBalanceD] = AccountsList[index][accountCurrentBalanceD] + Amount;
         break;
 
       case expensesT:
@@ -150,6 +163,7 @@ class Database {
         print(amountsList[currentBalanceD]);
         amountsList[currentBalanceD] = amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - Amount;
         print(amountsList[currentBalanceD]);
+        AccountsList[index][accountCurrentBalanceD] = AccountsList[index][accountCurrentBalanceD] - Amount;
         break;
 
       case toPayT:
@@ -159,6 +173,7 @@ class Database {
         amountsList[toReceiveD] = amount == null ? amountsList[toReceiveD] : amountsList[toReceiveD] + Amount;
         break;
     }
+    _account.put(accountDatabase, AccountsList);
     _account.put(amountListDatabase, amountsList);
     print("updated transaction");
   }
@@ -198,104 +213,120 @@ class Database {
       transactionDescriptionD: updated_transactionNote ?? "",
       transactionCreatedDateD: createdDate ?? "",
       transactionIconD: updated_transactionTag ?? "",
-      // "transactionNote": updated_transactionNote ?? "",  // "transactionTags": updated_transactionTag ?? "",
     };
 
     if (index != -1) {
       getAmountDB();
-      if (TransactionList[index][transactionAmountD] != updated_amount) {
-        int? prevAmount = TransactionList[index][transactionAmountD];
-        int Amount = int.tryParse(updated_amount)! - prevAmount!;
+      getAccountDB();
+      var accountIndex = AccountsList.indexWhere((element) => element[accountNameD] == updated_account);
+      accountIndex = accountIndex != -1 ? accountIndex : 0;
+
+      int? prevAmount = TransactionList[index][transactionAmountD];
+      int Amount = int.tryParse(updated_amount) ?? 0;
+
+      if (TransactionList[index][transactionAmountD] != Amount) {
+        int amountChange = Amount - (prevAmount ?? 0);
         switch (updated_transactionType) {
           case incomeT:
-            amountsList[totalIncomeD] = updated_amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] + Amount;
-            amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + Amount;
-
+            amountsList[totalIncomeD] += amountChange;
+            amountsList[currentBalanceD] += amountChange;
+            AccountsList[accountIndex][accountCurrentBalanceD] += amountChange;
             break;
-
           case expensesT:
-            amountsList[totalExpensesD] = updated_amount == null ? amountsList[totalExpensesD] : amountsList[totalExpensesD] + Amount;
-            print(amountsList[currentBalanceD]);
-            amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - Amount;
-            print(amountsList[currentBalanceD]);
+            amountsList[totalExpensesD] += amountChange;
+            amountsList[currentBalanceD] -= amountChange;
+            AccountsList[accountIndex][accountCurrentBalanceD] -= amountChange;
             break;
-
           case toPayT:
-            amountsList[toPayD] == null ? amountsList[toPayD] : amountsList[toPayD] + Amount;
+            amountsList[toPayD] ??= 0;
+            amountsList[toPayD] += amountChange;
             break;
           case toReceiveT:
-            amountsList[toReceiveD] == null ? amountsList[toReceiveD] : amountsList[toReceiveD] + Amount;
+            amountsList[toReceiveD] ??= 0;
+            amountsList[toReceiveD] += amountChange;
             break;
         }
       }
+
       if (TransactionList[index][transactionTypeD] != updated_transactionType) {
-        int? prevAmount = TransactionList[index][transactionAmountD];
         switch (updated_transactionType) {
           case incomeT:
-            amountsList[totalIncomeD] = updated_amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] + prevAmount;
+            amountsList[totalIncomeD] += prevAmount ?? 0;
             switch (TransactionList[index][transactionTypeD]) {
               case expensesT:
-                amountsList[totalExpensesD] = updated_amount == null ? amountsList[totalExpensesD] : amountsList[totalExpensesD] - prevAmount;
-                amountsList[currentBalanceD] =
-                    updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + prevAmount + prevAmount;
+                amountsList[totalExpensesD] -= prevAmount ?? 0;
+                amountsList[currentBalanceD] += prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] += prevAmount ?? 0;
                 break;
               case toPayT:
-                amountsList[toPayD] = updated_amount == null ? amountsList[toPayD] : amountsList[toPayD] - prevAmount;
-                amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + prevAmount;
+                amountsList[toPayD] -= prevAmount ?? 0;
+                amountsList[currentBalanceD] += prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] += prevAmount ?? 0;
                 break;
               case toReceiveT:
-                amountsList[toReceiveD] = updated_amount == null ? amountsList[toReceiveD] : amountsList[toReceiveD] - prevAmount;
-                amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + prevAmount;
+                amountsList[toReceiveD] -= prevAmount ?? 0;
+                amountsList[currentBalanceD] += prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] += prevAmount ?? 0;
                 break;
             }
             break;
           case expensesT:
-            amountsList[totalExpensesD] = updated_amount == null ? amountsList[totalExpensesD] : amountsList[totalExpensesD] + prevAmount;
+            amountsList[totalExpensesD] += prevAmount ?? 0;
             switch (TransactionList[index][transactionTypeD]) {
               case incomeT:
-                amountsList[totalIncomeD] = updated_amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] - prevAmount;
-                amountsList[currentBalanceD] =
-                    updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - prevAmount - prevAmount;
+                amountsList[totalIncomeD] -= prevAmount ?? 0;
+                amountsList[currentBalanceD] -= (prevAmount ?? 0) * 2;
+                AccountsList[accountIndex][accountCurrentBalanceD] -= (prevAmount ?? 0) * 2;
                 break;
               case toPayT:
-                amountsList[toPayD] = updated_amount == null ? amountsList[toPayD] : amountsList[toPayD] - prevAmount;
-                amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - prevAmount;
+                amountsList[toPayD] -= prevAmount ?? 0;
+                amountsList[currentBalanceD] -= prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] -= prevAmount ?? 0;
                 break;
               case toReceiveT:
-                amountsList[toReceiveD] = updated_amount == null ? amountsList[toReceiveD] : amountsList[toReceiveD] - prevAmount;
-                amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - prevAmount;
+                amountsList[toReceiveD] -= prevAmount ?? 0;
+                amountsList[currentBalanceD] -= prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] -= prevAmount ?? 0;
                 break;
             }
             break;
           case toPayT:
-            amountsList[toPayD] = updated_amount == null ? amountsList[toPayD] : amountsList[toPayD] + prevAmount;
+            amountsList[toPayD] ??= 0;
+            amountsList[toPayD] += prevAmount ?? 0;
             switch (TransactionList[index][transactionTypeD]) {
               case expensesT:
-                amountsList[totalExpensesD] = updated_amount == null ? amountsList[totalExpensesD] : amountsList[totalExpensesD] - prevAmount;
-                amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + prevAmount;
+                amountsList[totalExpensesD] -= prevAmount ?? 0;
+                amountsList[currentBalanceD] += prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] += prevAmount ?? 0;
                 break;
               case incomeT:
-                amountsList[totalIncomeD] = updated_amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] - prevAmount;
-                amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - prevAmount;
+                amountsList[totalIncomeD] -= prevAmount ?? 0;
+                amountsList[currentBalanceD] -= prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] -= prevAmount ?? 0;
                 break;
               case toReceiveT:
-                amountsList[toReceiveD] = updated_amount == null ? amountsList[toReceiveD] : amountsList[toReceiveD] - prevAmount;
+                amountsList[toReceiveD] -= prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] -= prevAmount ?? 0;
                 break;
             }
             break;
           case toReceiveT:
-            amountsList[toReceiveD] = updated_amount == null ? amountsList[toReceiveD] : amountsList[toReceiveD] + prevAmount;
+            amountsList[toReceiveD] ??= 0;
+            amountsList[toReceiveD] += prevAmount ?? 0;
             switch (TransactionList[index][transactionTypeD]) {
               case expensesT:
-                amountsList[totalExpensesD] = updated_amount == null ? amountsList[totalExpensesD] : amountsList[totalExpensesD] - prevAmount;
-                amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + prevAmount;
+                amountsList[totalExpensesD] -= prevAmount ?? 0;
+                amountsList[currentBalanceD] += prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] += prevAmount ?? 0;
                 break;
               case incomeT:
-                amountsList[totalIncomeD] = updated_amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] - prevAmount;
-                amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - prevAmount;
+                amountsList[totalIncomeD] -= prevAmount ?? 0;
+                amountsList[currentBalanceD] -= prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] -= prevAmount ?? 0;
                 break;
               case toPayT:
-                amountsList[toPayD] = updated_amount == null ? amountsList[toPayD] : amountsList[toPayD] - prevAmount;
+                amountsList[toPayD] -= prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] -= prevAmount ?? 0;
                 break;
             }
             break;
@@ -307,22 +338,34 @@ class Database {
     _account.put(amountListDatabase, amountsList);
   }
 
-  void editAccountDB({accountName, amount, updated_accountName, updated_amount}) {
+  bool editAccountDB({accountName, amount, updated_accountName, updated_amount}) {
     print(accountName + amount + updated_accountName + updated_amount);
     getAccountDB();
-    final index = AccountsList.indexWhere((element) => element[accountNameD] == accountName && element[accountCurrentBalanceD].toString() == amount);
-    print(index);
-    AccountsList[index][accountNameD] = updated_accountName;
-    AccountsList[index][accountCurrentBalanceD] = updated_amount;
-    getAmountDB();
-    amountsList[currentBalanceD] =
-        updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - int.tryParse(amount) + int.parse(updated_amount);
-    _account.put(amountListDatabase, amountsList);
-    _account.put(accountDatabase, AccountsList);
+    bool isSameAccount = accountName == updated_accountName;
+    bool isAccountNamePresent = AccountsList.where((account) => account[accountNameD] == updated_accountName).isNotEmpty;
+
+    if (!isAccountNamePresent || isSameAccount) {
+      final index =
+          AccountsList.indexWhere((element) => element[accountNameD] == accountName && element[accountCurrentBalanceD].toString() == amount);
+      print(index);
+      AccountsList[index][accountNameD] = updated_accountName;
+      AccountsList[index][accountCurrentBalanceD] = updated_amount;
+      getAmountDB();
+      getAmountDB();
+      amountsList[totalIncomeD] =
+          updated_amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] - int.tryParse(amount) + int.parse(updated_amount);
+      amountsList[currentBalanceD] =
+          updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - int.tryParse(amount) + int.parse(updated_amount);
+      _account.put(amountListDatabase, amountsList);
+      _account.put(accountDatabase, AccountsList);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   void editUserNameDB({updated_userName, updated_userEmail, updated_userPhoneNumber, updated_userDOB}) {
-    getUserNameDB();
+    getUserDetailDB();
     Map updated_inputUser = {
       userNameD: updated_userName ?? "",
       userPhoneD: updated_userPhoneNumber ?? "",
@@ -363,6 +406,197 @@ class Database {
 
 
 
+//  void editTransactionDB({
+//     updated_transactionTitle,
+//     updated_amount,
+//     updated_transactionType,
+//     updated_transactionTag,
+//     updated_transactionDate,
+//     updated_transactionPerson,
+//     updated_transactionNote,
+//     updated_account,
+//     createdDate,
+//   }) {
+//     getTransactionDB();
+//     final index = TransactionList.indexWhere((element) => element[transactionCreatedDateD] == createdDate);
+//     print(index);
+//     Map updatedTransactionLists = {
+//       transationNameD: updated_transactionTitle ?? "",
+//       transactionAmountD: int.tryParse(updated_amount) ?? 0,
+//       transactionTypeD: updated_transactionType ?? "",
+//       transactionTagD: updated_transactionTag ?? "",
+//       transactionDateD: updated_transactionDate ?? "",
+//       transactionAccountD: updated_account ?? "",
+//       transactionPersonD: updated_transactionPerson ?? "",
+//       transactionDescriptionD: updated_transactionNote ?? "",
+//       transactionCreatedDateD: createdDate ?? "",
+//       transactionIconD: updated_transactionTag ?? "",
+//       // "transactionNote": updated_transactionNote ?? "",  // "transactionTags": updated_transactionTag ?? "",
+//     };
+
+//     if (index != -1) {
+//       getAmountDB();
+//       getAccountDB();
+//       var accountIndex = AccountsList.indexWhere((element) => element[accountNameD] == updated_account);
+//       accountIndex = accountIndex != -1 ? accountIndex : 0;
+//       //amount is changed from PreAmount to updated ammoun
+//       if (TransactionList[index][transactionAmountD] != updated_amount) {
+//         int? prevAmount = TransactionList[index][transactionAmountD];
+//         //calculate amount change from previous amount to updated amount
+//         int Amount = int.tryParse(updated_amount)! - prevAmount!;
+
+//         switch (updated_transactionType) {
+//           //initiate transaction was income
+//           case incomeT:
+//             amountsList[totalIncomeD] = updated_amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] + Amount;
+//             amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + Amount;
+
+//             //Accounts updation
+//             AccountsList[accountIndex][accountCurrentBalanceD] = AccountsList[accountIndex][accountCurrentBalanceD] + Amount;
+//             break;
+
+//           //initiate transaction was expense
+//           case expensesT:
+//             amountsList[totalExpensesD] = updated_amount == null ? amountsList[totalExpensesD] : amountsList[totalExpensesD] + Amount;
+//             print(amountsList[currentBalanceD]);
+//             amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - Amount;
+//             print(amountsList[currentBalanceD]);
+
+//             //Accounts updation
+//             AccountsList[accountIndex][accountCurrentBalanceD] = AccountsList[accountIndex][accountCurrentBalanceD] - Amount;
+//             break;
+//           //initiate transaction was toPay
+//           case toPayT:
+//             amountsList[toPayD] == null ? amountsList[toPayD] : amountsList[toPayD] + Amount;
+//             break;
+
+//           //initiate transaction was toreceive
+//           case toReceiveT:
+//             amountsList[toReceiveD] == null ? amountsList[toReceiveD] : amountsList[toReceiveD] + Amount;
+//             break;
+//         }
+//       }
+
+//       //transaction type wa changer
+//       if (TransactionList[index][transactionTypeD] != updated_transactionType) {
+//         int? prevAmount = TransactionList[index][transactionAmountD];
+//         switch (updated_transactionType) {
+//           //updated transaction is income
+//           case incomeT:
+//             amountsList[totalIncomeD] = updated_amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] + prevAmount;
+//             switch (TransactionList[index][transactionTypeD]) {
+//               //expensens to income
+//               case expensesT:
+//                 amountsList[totalExpensesD] = updated_amount == null ? amountsList[totalExpensesD] : amountsList[totalExpensesD] - prevAmount;
+//                 amountsList[currentBalanceD] =
+//                     updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + prevAmount + prevAmount;
+
+//                 //Account updation
+//                 AccountsList[accountIndex][accountCurrentBalanceD] = AccountsList[accountIndex][accountCurrentBalanceD] + prevAmount + prevAmount;
+//                 break;
+//               //topay to income
+//               case toPayT:
+//                 amountsList[toPayD] = updated_amount == null ? amountsList[toPayD] : amountsList[toPayD] - prevAmount;
+//                 amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + prevAmount;
+//                 //Account updation
+//                 AccountsList[accountIndex][accountCurrentBalanceD] = AccountsList[accountIndex][accountCurrentBalanceD] + prevAmount;
+//                 break;
+//               //torecive to income
+//               case toReceiveT:
+//                 amountsList[toReceiveD] = updated_amount == null ? amountsList[toReceiveD] : amountsList[toReceiveD] - prevAmount;
+//                 amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + prevAmount;
+//                 //Account updation
+//                 AccountsList[accountIndex][accountCurrentBalanceD] = AccountsList[accountIndex][accountCurrentBalanceD] + prevAmount;
+//                 break;
+//             }
+//             break;
+//           //updated transaction was expenses
+//           case expensesT:
+//             amountsList[totalExpensesD] = updated_amount == null ? amountsList[totalExpensesD] : amountsList[totalExpensesD] + prevAmount;
+//             switch (TransactionList[index][transactionTypeD]) {
+//               //income to expenses
+//               case incomeT:
+//                 amountsList[totalIncomeD] = updated_amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] - prevAmount;
+//                 amountsList[currentBalanceD] =
+//                     updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - prevAmount - prevAmount;
+//                 //Account updation
+//                 AccountsList[accountIndex][accountCurrentBalanceD] = AccountsList[accountIndex][accountCurrentBalanceD] - prevAmount - prevAmount;
+//                 break;
+//               //topay to expenses
+//               case toPayT:
+//                 amountsList[toPayD] = updated_amount == null ? amountsList[toPayD] : amountsList[toPayD] - prevAmount;
+//                 amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - prevAmount;
+//                 //Account updation
+//                 AccountsList[accountIndex][accountCurrentBalanceD] = AccountsList[accountIndex][accountCurrentBalanceD] - prevAmount;
+//                 break;
+//               //torecive to expenses
+//               case toReceiveT:
+//                 amountsList[toReceiveD] = updated_amount == null ? amountsList[toReceiveD] : amountsList[toReceiveD] - prevAmount;
+//                 amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - prevAmount;
+//                 //Account updation
+//                 AccountsList[accountIndex][accountCurrentBalanceD] = AccountsList[accountIndex][accountCurrentBalanceD] - prevAmount;
+//                 break;
+//             }
+//             break;
+//           //updated transaction was to pay
+//           case toPayT:
+//             amountsList[toPayD] = updated_amount == null ? amountsList[toPayD] : amountsList[toPayD] + prevAmount;
+//             switch (TransactionList[index][transactionTypeD]) {
+//               //expensens to  To Pay
+//               case expensesT:
+//                 amountsList[totalExpensesD] = updated_amount == null ? amountsList[totalExpensesD] : amountsList[totalExpensesD] - prevAmount;
+//                 amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + prevAmount;
+//                 //Account updation
+//                 AccountsList[accountIndex][accountCurrentBalanceD] = AccountsList[accountIndex][accountCurrentBalanceD] + prevAmount;
+//                 break;
+//               //income to  To Pay
+//               case incomeT:
+//                 amountsList[totalIncomeD] = updated_amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] - prevAmount;
+//                 amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - prevAmount;
+//                 //Account updation
+//                 AccountsList[accountIndex][accountCurrentBalanceD] = AccountsList[accountIndex][accountCurrentBalanceD] - prevAmount;
+//                 break;
+//               //torecive to To Pay
+//               case toReceiveT:
+//                 amountsList[toReceiveD] = updated_amount == null ? amountsList[toReceiveD] : amountsList[toReceiveD] - prevAmount;
+//                 //Account updation
+//                 AccountsList[accountIndex][accountCurrentBalanceD] = AccountsList[accountIndex][accountCurrentBalanceD] - prevAmount;
+//                 break;
+//             }
+//             break;
+//           //update transaction is toreceived
+//           case toReceiveT:
+//             amountsList[toReceiveD] = updated_amount == null ? amountsList[toReceiveD] : amountsList[toReceiveD] + prevAmount;
+//             switch (TransactionList[index][transactionTypeD]) {
+//               //expensens to toReceive
+//               case expensesT:
+//                 amountsList[totalExpensesD] = updated_amount == null ? amountsList[totalExpensesD] : amountsList[totalExpensesD] - prevAmount;
+//                 amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + prevAmount;
+//                 //Account updation
+//                 AccountsList[accountIndex][accountCurrentBalanceD] = AccountsList[accountIndex][accountCurrentBalanceD] + prevAmount;
+//                 break;
+//               //income to toReceive
+//               case incomeT:
+//                 amountsList[totalIncomeD] = updated_amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] - prevAmount;
+//                 amountsList[currentBalanceD] = updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - prevAmount;
+//                 //Account updation
+//                 AccountsList[accountIndex][accountCurrentBalanceD] = AccountsList[accountIndex][accountCurrentBalanceD] - prevAmount;
+//                 break;
+//               //topay to toReceive
+//               case toPayT:
+//                 amountsList[toPayD] = updated_amount == null ? amountsList[toPayD] : amountsList[toPayD] - prevAmount;
+//                 //Account updation
+//                 AccountsList[accountIndex][accountCurrentBalanceD] = AccountsList[accountIndex][accountCurrentBalanceD] - prevAmount;
+//                 break;
+//             }
+//             break;
+//         }
+//       }
+//     }
+//     TransactionList[index] = updatedTransactionLists;
+//     _account.put(transactionDatabase, TransactionList);
+//     _account.put(amountListDatabase, amountsList);
+//   }
 
 
 

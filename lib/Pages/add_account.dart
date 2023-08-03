@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, non_constant_identifier_names, avoid_print
 
+import 'package:expenses_tracker/Componet/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
@@ -24,10 +25,20 @@ class _AddAccountState extends State<AddAccount> {
   _addAccount() {
     Database db = Database();
     print("${accountnameController.text}  ${int.tryParse(amtController.text)}   ");
-    db.addAccountDB(accountName: accountnameController.text, amount: int.tryParse(amtController.text));
+    bool isSucessfull = db.addAccountDB(accountName: accountnameController.text, amount: int.tryParse(amtController.text));
     print("addedddddd");
     context.read<ChangedMsg>().changed();
     Navigator.pop(context, "added");
+    if (isSucessfull) {
+      customSnackbar(
+        context: context,
+        text: "Account is sucessfull added",
+        icons: Icons.done_all,
+        iconsColor: Colors.green,
+      );
+    } else {
+      customSnackbar(context: context, text: "Error:Account is not added. \nTry changing the name");
+    }
   }
 
   @override

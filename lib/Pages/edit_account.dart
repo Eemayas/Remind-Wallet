@@ -6,6 +6,7 @@ import 'package:progress_state_button/progress_button.dart';
 import 'package:provider/provider.dart';
 
 import '../API/database.dart';
+import '../Componet/custom_snackbar.dart';
 import '../Componet/input_filed.dart';
 import '../Provider/provider.dart';
 import '../constant.dart';
@@ -22,6 +23,23 @@ class EditAccount extends StatefulWidget {
 class _EditAccountState extends State<EditAccount> {
   final accountNameController = TextEditingController();
   final amtController = TextEditingController();
+  Database db = Database();
+  void _editAccount() {
+    bool isSucessfull = db.editAccountDB(
+        accountName: widget.accountName, amount: widget.amount, updated_accountName: accountNameController.text, updated_amount: amtController.text);
+    context.read<ChangedMsg>().changed();
+    Navigator.pop(context, "here i am");
+    if (isSucessfull) {
+      customSnackbar(
+        context: context,
+        text: "Account is sucessfull added",
+        icons: Icons.done_all,
+        iconsColor: Colors.green,
+      );
+    } else {
+      customSnackbar(context: context, text: "Error:Account is not added. \nTry changing the name");
+    }
+  }
 
   @override
   void initState() {
@@ -34,7 +52,6 @@ class _EditAccountState extends State<EditAccount> {
 
   @override
   Widget build(BuildContext context) {
-    Database db = Database();
     return GestureDetector(
       onTap: () => {print("${accountNameController.text}  ${amtController.text} "), FocusScope.of(context).requestFocus(FocusNode())},
       child: Scaffold(
@@ -139,13 +156,8 @@ class _EditAccountState extends State<EditAccount> {
                               }
                             else
                               {
-                                db.editAccountDB(
-                                    accountName: widget.accountName,
-                                    amount: widget.amount,
-                                    updated_accountName: accountNameController.text,
-                                    updated_amount: amtController.text),
-                                context.read<ChangedMsg>().changed(),
-                                Navigator.pop(context, "here i am"),
+                                _editAccount(),
+
                                 // Navigator.pop(context, "here i am"),
                                 // Navigator.pop(context, "here i am"),
                               },

@@ -37,8 +37,8 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
           final result = await Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      EditAccount(accountName: db.AccountsList[index][accountNameD], amount: db.AccountsList[index][accountCurrentBalanceD])));
+                  builder: (context) => EditAccount(
+                      accountName: db.AccountsList[index][accountNameD], amount: db.AccountsList[index][accountCurrentBalanceD].toString())));
           db.getAccountDB();
           db.getAmountDB();
           db.getTransactionDB();
