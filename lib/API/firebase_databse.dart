@@ -4,6 +4,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import '../Componet/custom_snackbar.dart';
 import './database.dart';
 
@@ -35,7 +36,7 @@ class FirebaseDatabases {
     }
   }
 
-  // Save transaction data to Firebase Firestore for the current user
+// Save transaction data to Firebase Firestore for the current user
   Future<void> saveTransactionDataToFirebase(BuildContext context) async {
     db.getTransactionDB();
     transactionList = db.TransactionList;
@@ -47,17 +48,155 @@ class FirebaseDatabases {
       }
 
       // Get a reference to the Firestore collection for transactions
+      CollectionReference transactionsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(transactionsFD);
 
+      // Delete existing transaction data
+      var existingTransactions = await transactionsRef.get();
+      for (var doc in existingTransactions.docs) {
+        await doc.reference.delete();
+      }
+
+      // Save each transaction separately
+      for (var transaction in transactionList) {
+        // Convert keys and values to strings
+        Map<String, dynamic> transactionMap = {};
+        transaction.forEach((key, value) {
+          transactionMap[key.toString()] = value.toString();
+        });
+
+        // Add the transaction data to Firestore
+        await transactionsRef.add(transactionMap);
+      }
+
+      customSnackbar(context: context, text: "Transactions are saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
+    } catch (e) {
+      customSnackbar(context: context, text: 'Error saving transaction data: \n$e');
+      print('Error saving transaction data: $e');
+    }
+  }
+
+// Save accounts to Firebase Firestore for the current user
+  Future<void> saveAccountsToFirebase(BuildContext context) async {
+    // initUserId();
+    db.getAccountDB();
+    accountsList = db.AccountsList;
+    try {
+      // Check if user is authenticated
+      if (_userId == null) {
+        customSnackbar(context: context, text: "User not authenticated");
+        throw Exception('User not authenticated');
+      }
+
+      // Get a reference to the Firestore collection for accounts
+      CollectionReference accountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(accountsFD);
+
+      // Delete existing account data
+      var existingAccounts = await accountsRef.get();
+      for (var doc in existingAccounts.docs) {
+        await doc.reference.delete();
+      }
+
+      // Save each account separately
+      for (var account in accountsList) {
+        // Convert keys and values to strings
+        Map<String, dynamic> accountMap = {};
+        account.forEach((key, value) {
+          accountMap[key.toString()] = value.toString();
+        });
+
+        // Add the account data to Firestore
+        await accountsRef.add(accountMap);
+      }
+
+      customSnackbar(context: context, text: "Accounts are saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
+    } catch (e) {
+      customSnackbar(context: context, text: 'Error saving accounts: \n$e');
+      print('Error saving accounts: $e');
+    }
+  }
+
+// Save transaction data to Firebase Firestore for the current user
+  Future<void> saveSingleTransactionDataToFirebase(BuildContext context) async {
+    db.getTransactionDB();
+    transactionList = db.TransactionList;
+    try {
+      // Check if user is authenticated
+      if (_userId == null) {
+        customSnackbar(context: context, text: "User not authenticated");
+        throw Exception('User not authenticated');
+      }
+
+      // Get a reference to the Firestore collection for transactions
       CollectionReference transactionsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(transactionsFD);
 
       // Save each transaction separately
       for (var transaction in transactionList) {
-        await transactionsRef.add(Map<String, dynamic>.from(transaction));
+        // Generate a unique identifier for the transaction
+        String uniqueIdentifier = Uuid().v4();
+
+        // Convert keys and values to strings
+        Map<String, dynamic> transactionMap = {};
+        transaction.forEach((key, value) {
+          transactionMap[key.toString()] = value.toString();
+        });
+
+        // Add the unique identifier to the transaction map
+        transactionMap['uniqueIdentifier'] = uniqueIdentifier;
+
+        // Check if the transaction with the same unique identifier exists
+        var query = await transactionsRef.where("uniqueIdentifier", isNotEqualTo: uniqueIdentifier).get();
+        if (query.docs.isEmpty) {
+          await transactionsRef.add(transactionMap);
+        }
       }
-      customSnackbar(context: context, text: "Transactions is saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
+
+      customSnackbar(context: context, text: "Transactions are saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
     } catch (e) {
       customSnackbar(context: context, text: 'Error saving transaction data: \n$e');
       print('Error saving transaction data: $e');
+    }
+  }
+
+// Save accounts to Firebase Firestore for the current user
+  Future<void> saveSingleAccountsToFirebase(BuildContext context) async {
+    // initUserId();
+    db.getAccountDB();
+    accountsList = db.AccountsList;
+    try {
+      // Check if user is authenticated
+      if (_userId == null) {
+        customSnackbar(context: context, text: "User not authenticated");
+        throw Exception('User not authenticated');
+      }
+
+      // Get a reference to the Firestore collection for accounts
+      CollectionReference accountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(accountsFD);
+
+      // Save each account separately
+      for (var account in accountsList) {
+        // Generate a unique identifier for the account
+        String uniqueIdentifier = Uuid().v4();
+
+        // Convert keys and values to strings
+        Map<String, dynamic> accountMap = {};
+        account.forEach((key, value) {
+          accountMap[key.toString()] = value.toString();
+        });
+
+        // Add the unique identifier to the account map
+        accountMap['uniqueIdentifier'] = uniqueIdentifier;
+
+        // Check if the account with the same unique identifier exists
+        var query = await accountsRef.where("uniqueIdentifier", isEqualTo: uniqueIdentifier).get();
+        if (query.docs.isEmpty) {
+          await accountsRef.add(accountMap);
+        }
+      }
+
+      customSnackbar(context: context, text: "Accounts are saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
+    } catch (e) {
+      customSnackbar(context: context, text: 'Error saving accounts: \n$e');
+      print('Error saving accounts: $e');
     }
   }
 
@@ -116,32 +255,6 @@ class FirebaseDatabases {
     } catch (e) {
       customSnackbar(context: context, text: 'Error saving amounts: \n$e');
       print('Error saving amounts: \n$e');
-    }
-  }
-
-  // Save accounts to Firebase Firestore for the current user
-  Future<void> saveAccountsToFirebase(BuildContext context) async {
-    // initUserId();
-    db.getAccountDB();
-    accountsList = db.AccountsList;
-    try {
-      // Check if user is authenticated
-      if (_userId == null) {
-        customSnackbar(context: context, text: "User not authenticated");
-        throw Exception('User not authenticated');
-      }
-
-      // Get a reference to the Firestore collection for accounts
-      CollectionReference accountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(accountsFD);
-
-      // Save each account separately
-      for (var account in accountsList) {
-        await accountsRef.add(Map<String, dynamic>.from(account));
-      }
-      customSnackbar(context: context, text: "Account is saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
-    } catch (e) {
-      customSnackbar(context: context, text: 'Error saving accounts: \n$e');
-      print('Error saving accounts: $e');
     }
   }
 
