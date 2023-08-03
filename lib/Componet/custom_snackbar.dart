@@ -13,6 +13,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> customSnackbar({
 }) {
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
+        showCloseIcon: true,
         backgroundColor: kBackgroundColorCard,
         content: Row(
           children: [
@@ -21,7 +22,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> customSnackbar({
               width: 10,
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.77,
+              width: MediaQuery.of(context).size.width * 0.67,
               child: Text(
                 text,
                 softWrap: true,

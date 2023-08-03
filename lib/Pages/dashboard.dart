@@ -59,7 +59,21 @@ class _DashboardState extends State<Dashboard> {
                     titleTextColor: Colors.red,
                     confirmTextColor: Colors.red,
                     message: 'Are you sure you want to delete the database? This action cannot be undone.',
-                    onConfirm: () {});
+                    onConfirm: () {
+                      db.deleteAmountDB();
+                      db.deleteTransactionDB();
+                      db.deleteAccountDB();
+                      Navigator.pop(context);
+                      customSnackbar(
+                        context: context,
+                        text: 'Database Deleted',
+                        icons: Icons.delete_forever,
+                      );
+                      db.getAccountDB();
+                      db.getAmountDB();
+                      db.getTransactionDB();
+                      setState(() {});
+                    });
               });
           // db.deleteAmountDB();
           // db.deleteTransactionDB();

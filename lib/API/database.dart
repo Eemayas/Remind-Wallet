@@ -17,6 +17,16 @@ class Database {
     print(AccountsList);
   }
 
+  void accountInitialized() {
+    getAccountDB();
+    if (AccountsList.isEmpty) {
+      addAccountDB(
+        accountName: miscellaneousaccountNameD,
+        amount: 0,
+      );
+    }
+  }
+
   void getAmountDB() {
     amountsList = _account.get(amountListDatabase) ??
         {
@@ -33,6 +43,22 @@ class Database {
     print(TransactionList);
   }
 
+  List getAccountNameListDB() {
+    getAccountDB();
+    List AccountNameList = ["Others"];
+    for (int i = 0; i < AccountsList.length; i++) {
+      AccountNameList.add(AccountsList[i][accountNameD]);
+    }
+    print(AccountNameList);
+    return AccountNameList;
+  }
+
+  void getUserNameDB() {
+    userDetail =
+        _account.get(userDataDatabase) ?? {userNameD: "User", userPhoneD: "9800000000", userEmailD: "xyz@example.com", userDOBD: "0000-00-00"};
+    print(userDetail);
+  }
+
   void deleteAccountDB() {
     _account.delete(accountDatabase);
   }
@@ -43,6 +69,17 @@ class Database {
 
   void deleteTransactionDB() {
     _account.delete(transactionDatabase);
+  }
+
+  void deleteUserNameDB() {
+    _account.delete(userDataDatabase);
+  }
+
+  void deleteAll() {
+    deleteAccountDB();
+    deleteAmountDB();
+    deleteUserNameDB();
+    deleteTransactionDB();
   }
 
   void addAccountDB({accountName, amount}) {
@@ -124,6 +161,16 @@ class Database {
     }
     _account.put(amountListDatabase, amountsList);
     print("updated transaction");
+  }
+
+  void addUserDB({userName, userEmail, userPhoneNumber, userDOB}) {
+    Map inputUser = {
+      userNameD: userName ?? "",
+      userPhoneD: userPhoneNumber ?? "",
+      userEmailD: userEmail ?? "",
+      userDOBD: userDOB ?? "",
+    };
+    _account.put(userDataDatabase, inputUser);
   }
 
   void editTransactionDB({
@@ -274,26 +321,6 @@ class Database {
     _account.put(accountDatabase, AccountsList);
   }
 
-  void addUserDB({userName, userEmail, userPhoneNumber, userDOB}) {
-    Map inputUser = {
-      userNameD: userName ?? "",
-      userPhoneD: userPhoneNumber ?? "",
-      userEmailD: userEmail ?? "",
-      userDOBD: userDOB ?? "",
-    };
-    _account.put(userDataDatabase, inputUser);
-  }
-
-  void getUserNameDB() {
-    userDetail =
-        _account.get(userDataDatabase) ?? {userNameD: "User", userPhoneD: "9800000000", userEmailD: "xyz@example.com", userDOBD: "0000-00-00"};
-    print(userDetail);
-  }
-
-  void deleteUserNameDB() {
-    _account.delete(userDataDatabase);
-  }
-
   void editUserNameDB({updated_userName, updated_userEmail, updated_userPhoneNumber, updated_userDOB}) {
     getUserNameDB();
     Map updated_inputUser = {
@@ -306,21 +333,31 @@ class Database {
     _account.put(userDataDatabase, userDetail);
   }
 
-  List getAccountNameListDB() {
-    getAccountDB();
-    List AccountNameList = ["Others"];
-    for (int i = 0; i < AccountsList.length; i++) {
-      AccountNameList.add(AccountsList[i][accountNameD]);
-    }
-    print(AccountNameList);
-    return AccountNameList;
-  }
-
-  deleteAll() {
-    deleteAccountDB();
-    deleteAmountDB();
-    deleteUserNameDB();
-    deleteTransactionDB();
+  void onCompletedClicked({
+    updated_transactionTitle,
+    updated_amount,
+    updated_transactionType,
+    updated_transactionTag,
+    updated_transactionDate,
+    updated_transactionPerson,
+    updated_transactionNote,
+    updated_account,
+    createdDate,
+  }) {
+    getTransactionDB();
+    final index = TransactionList.indexWhere((element) => element[transactionCreatedDateD] == createdDate);
+    print(index);
+    editTransactionDB(
+      updated_transactionTitle: TransactionList[index][transationNameD],
+      updated_amount: TransactionList[index][transactionAmountD].toString(),
+      updated_transactionType: TransactionList[index][transactionTypeD] == toPayT ? expensesT : incomeT,
+      updated_transactionTag: TransactionList[index][transactionTagD],
+      updated_transactionDate: TransactionList[index][transactionDateD],
+      updated_transactionPerson: TransactionList[index][transactionPersonD],
+      updated_transactionNote: TransactionList[index][updated_transactionNote],
+      updated_account: TransactionList[index][transactionAccountD],
+      createdDate: TransactionList[index][transactionCreatedDateD],
+    );
   }
 }
 

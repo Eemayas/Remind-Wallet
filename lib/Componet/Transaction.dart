@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names, avoid_print
 
+import 'package:expenses_tracker/API/database.dart';
 import 'package:expenses_tracker/Pages/transaction_detail_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
+import 'package:provider/provider.dart';
 
+import '../Provider/provider.dart';
 import '../constant.dart';
 
 class TranactionCard extends StatelessWidget {
@@ -22,7 +25,7 @@ class TranactionCard extends StatelessWidget {
   final String transactionCreatedDate;
 
   final String transactionDate;
-  const TranactionCard({
+  TranactionCard({
     super.key,
     required this.transationName,
     required this.transactionTag,
@@ -35,7 +38,7 @@ class TranactionCard extends StatelessWidget {
     required this.transactionDate,
     required this.transactionCreatedDate, // this.Account = "Cash",
   });
-
+  Database db = Database();
   @override
   Widget build(BuildContext context) {
     Color cardMainColor = transactionType == incomeT || transactionType == toReceiveT ? kColorIncome : kColorExpenses;
@@ -247,7 +250,19 @@ class TranactionCard extends StatelessWidget {
                                 ),
                                 color: Colors.green.shade400)
                           },
-                          onPressed: () => {print("Pressed")},
+                          onPressed: () => {
+                                db.onCompletedClicked(
+                                    updated_transactionTitle: transationName,
+                                    updated_amount: transactionAccount,
+                                    updated_transactionType: transactionType,
+                                    updated_transactionTag: transactionTag,
+                                    updated_transactionDate: transactionDate,
+                                    updated_transactionPerson: transactionPerson,
+                                    updated_transactionNote: transactionDescription,
+                                    updated_account: transactionAccount,
+                                    createdDate: transactionCreatedDate),
+                                context.read<ChangedMsg>().changed()
+                              },
                           state: ButtonState.idle),
                     ],
                   ),

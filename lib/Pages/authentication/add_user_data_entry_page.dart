@@ -2,6 +2,7 @@
 
 import 'package:expenses_tracker/Componet/custom_snackbar.dart';
 import 'package:expenses_tracker/Componet/logo_viewer.dart';
+import 'package:expenses_tracker/Pages/check_page.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -13,14 +14,14 @@ import '../../Componet/date_input_field.dart';
 import '../../Componet/input_filed.dart';
 import '../../constant.dart';
 
-class UserDataEntryPage extends StatefulWidget {
+class AddUserDataPage extends StatefulWidget {
   static String id = "user_data_entry";
 
   @override
-  State<UserDataEntryPage> createState() => _UserDataEntryPageState();
+  State<AddUserDataPage> createState() => _AddUserDataPageState();
 }
 
-class _UserDataEntryPageState extends State<UserDataEntryPage> {
+class _AddUserDataPageState extends State<AddUserDataPage> {
   final userNameController = TextEditingController();
   final titleController = TextEditingController();
   final phoneNumberController = TextEditingController();
@@ -39,7 +40,7 @@ class _UserDataEntryPageState extends State<UserDataEntryPage> {
     db.getUserNameDB();
     customSnackbar(context: context, text: "User Detail was Successful Added", icons: Icons.done_all, iconsColor: Colors.green);
     Navigator.pop(context);
-    Navigator.pushNamed(context, Dashboard.id);
+    Navigator.pushNamed(context, CheckSignin_outPage.id);
   }
 
   @override

@@ -74,6 +74,7 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
               DetailField(
                 iconsData: Icons.account_balance_outlined,
                 title: 'Title',
+                isNote: true,
                 data: db.AccountsList[index][accountNameD],
                 // data: widget.transactionTitle,
               ),
@@ -86,7 +87,6 @@ class _AccountDetailPageState extends State<AccountDetailPage> {
               SizedBox(
                 height: 40,
               ),
-              Text(context.watch<ChangedMsg>().result)
             ],
           ),
         ),

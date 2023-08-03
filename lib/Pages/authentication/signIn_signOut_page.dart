@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names, use_build_context_synchronously, avoid_print
 
 import 'package:expenses_tracker/Componet/logo_viewer.dart';
+import 'package:expenses_tracker/Pages/authentication/add_user_data_entry_page.dart';
 import 'package:expenses_tracker/Pages/authentication/forgot_password.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,6 +24,7 @@ class LogInSignUpPage extends StatefulWidget {
 }
 
 class _LogInSignUpPageState extends State<LogInSignUpPage> {
+  Database db = Database();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -95,9 +97,7 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
           print('User is signed in!');
         }
       });
-
-      Navigator.pop(context);
-      Navigator.pushNamed(context, Dashboard.id);
+      Navigator.pushNamed(context, AddUserDataPage.id);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         SnackbarFun(context: context, text: 'No user found for that email.');
@@ -110,7 +110,9 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
         print(e);
       }
     }
-    navigatorkey.currentState!.popUntil((route) => route.isFirst);
+    db.accountInitialized();
+    //stopt the loading animation
+    // navigatorkey.currentState!.popUntil((route) => route.isFirst);
   }
 
   bool isLogIn = true;
@@ -121,7 +123,6 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
     passwordController.addListener(() => setState(() {}));
   }
 
-  Database db = Database();
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {

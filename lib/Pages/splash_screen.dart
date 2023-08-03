@@ -9,6 +9,7 @@ import 'package:page_transition/page_transition.dart';
 
 import '../Componet/bottom_navigation_bar.dart';
 import '../Componet/custom_snackbar.dart';
+import 'check_page.dart';
 
 class Splash_Page extends StatefulWidget {
   static String id = "Splash Page";
@@ -53,27 +54,27 @@ class _Splash_PageState extends State<Splash_Page> {
   }
 }
 
-class CheckSignin_outPage extends StatelessWidget {
-  const CheckSignin_outPage({super.key});
+// class CheckSignin_outPage extends StatelessWidget {
+//   const CheckSignin_outPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              customSnackbar(context: context, text: "Something went wrong");
-            }
-            if (snapshot.hasData) {
-              print("checkedpage");
-              return BottomNavigationBars();
-            } else {
-              return LogInSignUpPage();
-            }
-          }),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: StreamBuilder<User?>(
+//           stream: FirebaseAuth.instance.authStateChanges(),
+//           builder: (context, snapshot) {
+//             if (snapshot.connectionState == ConnectionState.waiting) {
+//               return Center(child: CircularProgressIndicator());
+//             } else if (snapshot.hasError) {
+//               customSnackbar(context: context, text: "Something went wrong");
+//             }
+//             if (snapshot.hasData) {
+//               print("checkedpage");
+//               return BottomNavigationBars();
+//             } else {
+//               return LogInSignUpPage();
+//             }
+//           }),
+//     );
+//   }
+// }
