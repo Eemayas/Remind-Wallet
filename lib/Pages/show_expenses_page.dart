@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 
-import '../API/amount_list.dart';
 import '../API/database.dart';
 import '../Componet/balance_card.dart';
 import '../Componet/transaction.dart';

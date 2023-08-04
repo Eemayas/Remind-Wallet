@@ -1,14 +1,10 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously, camel_case_types, prefer_const_literals_to_create_immutables, avoid_print
 
 import 'package:expenses_tracker/Componet/logo_viewer.dart';
-import 'package:expenses_tracker/Pages/authentication/signIn_signOut_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../Componet/bottom_navigation_bar.dart';
-import '../Componet/custom_snackbar.dart';
 import 'check_page.dart';
 
 class Splash_Page extends StatefulWidget {

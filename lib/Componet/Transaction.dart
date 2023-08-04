@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, avoid_print
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, avoid_print, must_be_immutable
 
 import 'package:expenses_tracker/API/database.dart';
 import 'package:expenses_tracker/Pages/transaction_detail_page.dart';

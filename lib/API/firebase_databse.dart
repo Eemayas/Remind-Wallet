@@ -37,7 +37,7 @@ class FirebaseDatabases {
   }
 
 // Save transaction data to Firebase Firestore for the current use
-  final _uuid = Uuid();
+  final _uuid = const Uuid();
 
 // Save transaction data to Firebase Firestore for the current user
   Future<void> saveTransactionDataToFirebase(BuildContext context) async {
@@ -358,19 +358,19 @@ class FirebaseDatabases {
     try {
       // Get a reference to the Firestore collection
       CollectionReference collectionRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(collectionName);
-      CollectionReference collectionAmtRef = FirebaseFirestore.instance.collection(collectionName);
+      // CollectionReference collectionAmtRef = FirebaseFirestore.instance.collection(collectionName);
 
       // Query for all documents in the collection
       QuerySnapshot querySnapshot = await collectionRef.get();
-      QuerySnapshot queryAmtSnapshot = await collectionRef.get();
+      // QuerySnapshot queryAmtSnapshot = await collectionRef.get();
 
       // Delete each document
       for (var doc in querySnapshot.docs) {
         await doc.reference.delete();
       }
-      for (var doc in queryAmtSnapshot.docs) {
-        await doc.reference.delete();
-      }
+      // for (var doc in queryAmtSnapshot.docs) {
+      //   await doc.reference.delete();
+      // }
       print('All documents in $collectionName collection deleted successfully');
       customSnackbar(
           context: context,
@@ -423,7 +423,7 @@ class FirebaseDatabases {
       // Save each transaction separately
       for (var transaction in transactionList) {
         // Generate a unique identifier for the transaction
-        String uniqueIdentifier = Uuid().v4();
+        String uniqueIdentifier = const Uuid().v4();
 
         // Convert keys and values to strings
         Map<String, dynamic> transactionMap = {};
@@ -466,7 +466,7 @@ class FirebaseDatabases {
       // Save each account separately
       for (var account in accountsList) {
         // Generate a unique identifier for the account
-        String uniqueIdentifier = Uuid().v4();
+        String uniqueIdentifier = const Uuid().v4();
 
         // Convert keys and values to strings
         Map<String, dynamic> accountMap = {};

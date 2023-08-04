@@ -27,7 +27,8 @@ class ShowUserDetailPage extends StatelessWidget {
     phoneNumberController.text = db.userDetail[userPhoneD];
     emailController.text = db.userDetail[userEmailD];
 
-    final _formKey = GlobalKey<FormState>();
+    // ignore: non_constant_identifier_names
+    final FormKey = GlobalKey<FormState>();
 
     // @override
     // Widget build(BuildContext context) {
@@ -49,7 +50,7 @@ class ShowUserDetailPage extends StatelessWidget {
               child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Form(
-              key: _formKey,
+              key: FormKey,
               child: Center(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,

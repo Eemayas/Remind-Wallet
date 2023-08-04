@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, prefer_const_constructors
+// ignore_for_file: must_be_immutable, prefer_const_constructors, camel_case_types
 
 import 'package:expenses_tracker/API/firebase_databse.dart';
 import 'package:expenses_tracker/Componet/custom_button.dart';

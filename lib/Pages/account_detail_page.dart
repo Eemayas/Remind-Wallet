@@ -2,27 +2,25 @@
 
 import 'package:expenses_tracker/Pages/edit_account.dart';
 import 'package:expenses_tracker/Pages/transaction_detail_page.dart';
-import 'package:expenses_tracker/Provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../API/database.dart';
 import '../constant.dart';
 
-class AccountDetailPage extends StatefulWidget {
+class ShowAccountDetailPage extends StatefulWidget {
   final int index;
 
   static String id = "accoun detail page";
-  const AccountDetailPage({
+  const ShowAccountDetailPage({
     super.key,
     required this.index,
   });
 
   @override
-  State<AccountDetailPage> createState() => _AccountDetailPageState();
+  State<ShowAccountDetailPage> createState() => _AccountDetailPageState();
 }
 
-class _AccountDetailPageState extends State<AccountDetailPage> {
+class _AccountDetailPageState extends State<ShowAccountDetailPage> {
   @override
   Widget build(BuildContext context) {
     Database db = Database();

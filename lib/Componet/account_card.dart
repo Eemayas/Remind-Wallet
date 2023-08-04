@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_print
 
-import 'package:expenses_tracker/Pages/account_detail_page.dart';
 import 'package:flutter/material.dart';
 
 import '../API/database.dart';
+import '../Pages/account_detail_page.dart';
 import '../constant.dart';
 
 class AccountCard extends StatefulWidget {
@@ -30,7 +30,7 @@ class _AccountCardState extends State<AccountCard> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => AccountDetailPage(
+                builder: (context) => ShowAccountDetailPage(
                       index: index,
                     )));
       },

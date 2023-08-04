@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, camel_case_types
 
 // import 'package:expenses_tracker/Pages/dashboard.dart';
 // import 'package:expenses_tracker/Pages/authentication/add_user_data_entry_page.dart';
