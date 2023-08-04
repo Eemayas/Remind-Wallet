@@ -46,7 +46,7 @@ class IncomePage extends StatelessWidget {
                 children: [
                   BalanceCard(
                     cardName: "TOTAL INCOME",
-                    cardBalanceAmt: db.amountsList[totalExpensesD].toString(),
+                    cardBalanceAmt: db.amountsList[totalIncomeD].toString(),
                   ),
                 ],
               ),

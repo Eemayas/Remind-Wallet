@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, unused_import, use_key_in_widget_constructors, prefer_const_literals_to_create_immutables, avoid_print
 
+import 'package:expenses_tracker/API/firebase_databse.dart';
 import 'package:expenses_tracker/Componet/custom_snackbar.dart';
 import 'package:expenses_tracker/Componet/logo_viewer.dart';
 import 'package:expenses_tracker/Pages/check_page.dart';
@@ -32,12 +33,14 @@ class _AddUserDataPageState extends State<AddUserDataPage> {
   final dateController = TextEditingController();
   final accountController = TextEditingController();
   Database db = Database();
+  FirebaseDatabases fd = FirebaseDatabases();
   _addUserData() {
     print("${userNameController.text}  ");
 
     db.addUserDB(
         userName: userNameController.text, userDOB: dateController.text, userEmail: "xyz@example.com", userPhoneNumber: phoneNumberController.text);
     db.getUserDetailDB();
+    fd.saveUserDetailToFirebase(context);
     customSnackbar(context: context, text: "User Detail was Successful Added", icons: Icons.done_all, iconsColor: Colors.green);
     Navigator.pop(context);
     Navigator.pushNamed(context, CheckSignin_outPage.id);

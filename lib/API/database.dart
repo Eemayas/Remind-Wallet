@@ -39,6 +39,7 @@ class Database {
 
   void getTransactionDB() {
     TransactionList = _account.get(transactionDatabase) ?? [];
+    TransactionList.sort((a, b) => a[transactionCreatedDateD].compareTo(b[transactionCreatedDateD]));
     print(TransactionList);
   }
 
@@ -68,9 +69,10 @@ class Database {
 
   void deleteTransactionDB() {
     _account.delete(transactionDatabase);
+    print("Transaction database deleted");
   }
 
-  void deleteUserNameDB() {
+  void deleteUserDetailDB() {
     _account.delete(userDataDatabase);
   }
 
@@ -123,6 +125,25 @@ class Database {
     }
   }
 
+  bool addAccountOnlyDB({accountName, amount}) {
+    List inputAccount = [
+      {
+        accountNameD: accountName ?? "",
+        accountCurrentBalanceD: amount ?? 0,
+      },
+    ];
+    getAccountDB();
+    bool isAccountNamePresent = AccountsList.where((account) => account[accountNameD] == accountName).isNotEmpty;
+    if (!isAccountNamePresent) {
+      AccountsList = AccountsList + inputAccount;
+      _account.put(accountDatabase, AccountsList);
+      print("updated accountss only");
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   void addTransactionDB(
       {transactionTitle, createdDate, amount, transactionType, transactionTag, transactionDate, transactionPerson, transactionNote, account}) {
     List inputedTransactionLists = [
@@ -140,42 +161,44 @@ class Database {
         // "transactionNote": transactionNote ?? "",// transactionTagD: transactionTag ?? "",
       },
     ];
-    getTransactionDB();
-    TransactionList = TransactionList + inputedTransactionLists;
-    _account.put(transactionDatabase, TransactionList);
-    getAmountDB();
-    getAccountDB();
-    int Amount = amount ?? 0;
-    var index = AccountsList.indexWhere((element) => element[accountNameD] == account);
-    index = index != -1 ? index : 0;
+    if (!TransactionList.contains(inputedTransactionLists)) {
+      getTransactionDB();
+      TransactionList = TransactionList + inputedTransactionLists;
+      _account.put(transactionDatabase, TransactionList);
+      getAmountDB();
+      getAccountDB();
+      int Amount = amount ?? 0;
+      var index = AccountsList.indexWhere((element) => element[accountNameD] == account);
+      index = index != -1 ? index : 0;
 
-    switch (transactionType) {
-      case incomeT:
-        amountsList[totalIncomeD] = amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] + Amount;
-        amountsList[currentBalanceD] = amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + Amount;
+      switch (transactionType) {
+        case incomeT:
+          amountsList[totalIncomeD] = amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] + Amount;
+          amountsList[currentBalanceD] = amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + Amount;
 
-        //for accounts
-        AccountsList[index][accountCurrentBalanceD] = AccountsList[index][accountCurrentBalanceD] + Amount;
-        break;
+          //for accounts
+          AccountsList[index][accountCurrentBalanceD] = AccountsList[index][accountCurrentBalanceD] + Amount;
+          break;
 
-      case expensesT:
-        amountsList[totalExpensesD] = amount == null ? amountsList[totalExpensesD] : amountsList[totalExpensesD] + Amount;
-        print(amountsList[currentBalanceD]);
-        amountsList[currentBalanceD] = amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - Amount;
-        print(amountsList[currentBalanceD]);
-        AccountsList[index][accountCurrentBalanceD] = AccountsList[index][accountCurrentBalanceD] - Amount;
-        break;
+        case expensesT:
+          amountsList[totalExpensesD] = amount == null ? amountsList[totalExpensesD] : amountsList[totalExpensesD] + Amount;
+          print(amountsList[currentBalanceD]);
+          amountsList[currentBalanceD] = amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - Amount;
+          print(amountsList[currentBalanceD]);
+          AccountsList[index][accountCurrentBalanceD] = AccountsList[index][accountCurrentBalanceD] - Amount;
+          break;
 
-      case toPayT:
-        amountsList[toPayD] = amount == null ? amountsList[toPayD] : amountsList[toPayD] + Amount;
-        break;
-      case toReceiveT:
-        amountsList[toReceiveD] = amount == null ? amountsList[toReceiveD] : amountsList[toReceiveD] + Amount;
-        break;
+        case toPayT:
+          amountsList[toPayD] = amount == null ? amountsList[toPayD] : amountsList[toPayD] + Amount;
+          break;
+        case toReceiveT:
+          amountsList[toReceiveD] = amount == null ? amountsList[toReceiveD] : amountsList[toReceiveD] + Amount;
+          break;
+      }
+      _account.put(accountDatabase, AccountsList);
+      _account.put(amountListDatabase, amountsList);
+      print("updated transaction");
     }
-    _account.put(accountDatabase, AccountsList);
-    _account.put(amountListDatabase, amountsList);
-    print("updated transaction");
   }
 
   void addUserDB({userName, userEmail, userPhoneNumber, userDOB}) {
@@ -374,6 +397,19 @@ class Database {
     };
     userDetail = updated_inputUser;
     _account.put(userDataDatabase, userDetail);
+  }
+
+  void editAmountDB({updated_CurrentBalance, updated_TotalIncome, updated_totalExpenses, updated_TotalToPay, updated_TotalToReceive}) {
+    getAmountDB();
+    Map updated_inputAmount = {
+      currentBalanceD: updated_CurrentBalance ?? 0,
+      totalIncomeD: updated_TotalIncome ?? 0,
+      totalExpensesD: updated_totalExpenses ?? 0,
+      toReceiveD: updated_TotalToReceive ?? 0,
+      toPayD: updated_TotalToPay ?? 0,
+    };
+    amountsList = updated_inputAmount;
+    _account.put(amountListDatabase, amountsList);
   }
 
   void onCompletedClicked({

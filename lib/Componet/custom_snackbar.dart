@@ -1,7 +1,4 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
-
 import '../constant.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> customSnackbar({
@@ -11,25 +8,65 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> customSnackbar({
   text,
   backgroundColor = kBackgroundColorCard,
 }) {
+  // Get the screen width once and store it in a variable
+  double screenWidth = MediaQuery.of(context).size.width;
+
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-        showCloseIcon: true,
-        backgroundColor: kBackgroundColorCard,
-        content: Row(
-          children: [
-            Icon(icons, color: iconsColor),
-            SizedBox(
-              width: 10,
+      showCloseIcon: true,
+      backgroundColor: kBackgroundColorCard,
+      content: Row(
+        children: [
+          Icon(icons, color: iconsColor),
+          SizedBox(width: 10),
+          SizedBox(
+            width: screenWidth * 0.67,
+            child: Text(
+              text,
+              softWrap: true,
+              style: kwhiteTextStyle,
             ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.67,
-              child: Text(
-                text,
-                softWrap: true,
-                style: kwhiteTextStyle,
-              ),
-            ),
-          ],
-        )),
+          ),
+        ],
+      ),
+    ),
   );
 }
+
+
+
+// // ignore_for_file: prefer_const_constructors
+
+// import 'package:flutter/material.dart';
+
+// import '../constant.dart';
+
+// ScaffoldFeatureController<SnackBar, SnackBarClosedReason> customSnackbar({
+//   required BuildContext context,
+//   icons = Icons.error,
+//   iconsColor = Colors.red,
+//   text,
+//   backgroundColor = kBackgroundColorCard,
+// }) {
+//   return ScaffoldMessenger.of(context).showSnackBar(
+//     SnackBar(
+//         showCloseIcon: true,
+//         backgroundColor: kBackgroundColorCard,
+//         content: Row(
+//           children: [
+//             Icon(icons, color: iconsColor),
+//             SizedBox(
+//               width: 10,
+//             ),
+//             SizedBox(
+//               width: MediaQuery.of(context).size.width * 0.67,
+//               child: Text(
+//                 text,
+//                 softWrap: true,
+//                 style: kwhiteTextStyle,
+//               ),
+//             ),
+//           ],
+//         )),
+//   );
+// }

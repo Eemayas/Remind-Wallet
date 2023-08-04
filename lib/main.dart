@@ -4,9 +4,9 @@ import 'package:expenses_tracker/Pages/add_account.dart';
 import 'package:expenses_tracker/Pages/add_transaction.dart';
 import 'package:expenses_tracker/Pages/authentication/forgot_password.dart';
 import 'package:expenses_tracker/Pages/edit_user_detail.dart';
-import 'package:expenses_tracker/Pages/firebasetry.dart';
+import 'package:expenses_tracker/Pages/firebase_all_options.dart';
 import 'package:expenses_tracker/Pages/show_expenses_page.dart';
-import 'package:expenses_tracker/Pages/income_page.dart';
+import 'package:expenses_tracker/Pages/show_income_page.dart';
 import 'package:expenses_tracker/Pages/splash_screen.dart';
 import 'package:expenses_tracker/Pages/show_to_receive_page.dart';
 import 'package:expenses_tracker/Pages/show_to_pay_page.dart';
@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
         AddUserDataPage.id: (context) => AddUserDataPage(),
         Splash_Page.id: (context) => Splash_Page(),
         CheckSignin_outPage.id: (context) => CheckSignin_outPage(),
-        Tryyy.id: (context) => Tryyy(),
+        FirebaseAllOptions.id: (context) => FirebaseAllOptions(),
         // CheckPage.id: (context) => CheckPage(),
         LogInSignUpPage.id: (context) => LogInSignUpPage(),
         ForgotPassword.id: (context) => ForgotPassword(),

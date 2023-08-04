@@ -1,14 +1,16 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, must_be_immutable, avoid_print, no_leading_underscores_for_local_identifiers
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_key_in_widget_constructors, must_be_immutable, avoid_print, no_leading_underscores_for_local_identifiers, use_build_context_synchronously
 
 import 'package:expenses_tracker/API/database.dart';
+import 'package:expenses_tracker/API/firebase_databse.dart';
 import 'package:expenses_tracker/Componet/balance_card.dart';
 import 'package:expenses_tracker/Componet/custom_alert_dialog.dart';
+import 'package:expenses_tracker/Componet/custom_drawer.dart';
 import 'package:expenses_tracker/Componet/custom_snackbar.dart';
 import 'package:expenses_tracker/Pages/add_account.dart';
 import 'package:expenses_tracker/Pages/add_transaction.dart';
 import 'package:expenses_tracker/Pages/show_expenses_page.dart';
 import 'package:expenses_tracker/Pages/show_to_pay_page.dart';
-import 'package:expenses_tracker/Pages/income_page.dart';
+import 'package:expenses_tracker/Pages/show_income_page.dart';
 import 'package:expenses_tracker/Pages/show_to_receive_page.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -44,6 +46,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Database db = Database();
+  FirebaseDatabases fd = FirebaseDatabases();
   var changed = "";
   @override
   Widget build(BuildContext context) {
@@ -73,18 +76,6 @@ class _DashboardState extends State<Dashboard> {
                       setState(() {});
                     });
               });
-          // db.deleteAmountDB();
-          // db.deleteTransactionDB();
-          // db.deleteAccountDB();
-          // customSnackbar(
-          //   context: context,
-          //   text: 'Database Deleted',
-          //   icons: Icons.delete_forever,
-          // );
-          // db.getAccountDB();
-          // db.getAmountDB();
-          // db.getTransactionDB();
-          // setState(() {});
           break;
         case 'Update DataBase':
           db.getAccountDB();
@@ -96,19 +87,48 @@ class _DashboardState extends State<Dashboard> {
         case 'Options:':
           break;
         case 'Upload to cloud':
+          // ignore: unused_local_variable
+          Future<bool> isSucess = fd.saveAllDataToFirebase(context);
+
+          break;
+        case 'Retrive from cloud':
+          // ignore: unused_local_variable
+          Future<bool> isSucess = fd.retrieveAllDataFromFirebase(context);
+          if (await isSucess) {
+            customSnackbar(context: context, text: "All datas are received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
+            db.getAccountDB();
+            db.getAmountDB();
+            db.getTransactionDB();
+            setState(() {});
+          }
+
           break;
         case 'Logout':
-          await FirebaseAuth.instance.signOut();
-          // ignore: use_build_context_synchronously
-          customSnackbar(context: context, text: 'Logout Sucessfully', icons: Icons.logout_rounded, iconsColor: Colors.green);
+          // Future<bool> isSucess = fd.saveAllDataToFirebase(context);
+          if (await fd.saveAllDataToFirebase(context)) {
+            db.deleteAll();
+            db.deleteUserDetailDB();
+            await FirebaseAuth.instance.signOut();
+            customSnackbar(context: context, text: 'Logout Sucessfully', icons: Icons.logout_rounded, iconsColor: Colors.green);
+          } else {
+            customSnackbar(
+              context: context,
+              text: 'Please Upload to Firebase First',
+            );
+          }
           break;
       }
     }
 
     if (context.watch<ChangedMsg>().result == "changed") {
+      db.getAccountDB();
+      db.getAmountDB();
+      db.getTransactionDB();
       setState(() {});
     }
+
     return Scaffold(
+      drawer: CustomDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.pushNamed(context, AddTransaction.id);
@@ -159,6 +179,19 @@ class _DashboardState extends State<Dashboard> {
                         width: 5,
                       ),
                       Text('Upload to cloud'),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  textStyle: kwhiteTextStyle,
+                  value: 'Retrive from cloud',
+                  child: Row(
+                    children: [
+                      Icon(Icons.downloading_sharp),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text('Retrive from cloud'),
                     ],
                   ),
                 ),
@@ -405,7 +438,7 @@ class _DashboardState extends State<Dashboard> {
                     transactionType: db.TransactionList[i][transactionTypeD],
                     transactionTag: db.TransactionList[i][transactionTagD],
                     transactionDate: db.TransactionList[i][transactionDateD],
-                    transactionAccount: db.TransactionList[i][transactionAccountD],
+                    transactionAccount: db.TransactionList[i][transactionAccountD].toString(),
                     transactionPerson: db.TransactionList[i][transactionPersonD],
                     transactionDescription: db.TransactionList[i][transactionDescriptionD],
                     iconsName: db.TransactionList[i][transactionIconD] == "shooping" ? Icons.shopping_cart_outlined : Icons.abc,

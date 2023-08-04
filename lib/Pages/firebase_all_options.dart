@@ -4,9 +4,9 @@ import 'package:expenses_tracker/API/firebase_databse.dart';
 import 'package:expenses_tracker/Componet/custom_button.dart';
 import 'package:flutter/material.dart';
 
-class Tryyy extends StatelessWidget {
+class FirebaseAllOptions extends StatelessWidget {
   static String id = "sfsdsd";
-  Tryyy({super.key});
+  FirebaseAllOptions({super.key});
   FirebaseDatabases fd = FirebaseDatabases();
   @override
   Widget build(BuildContext context) {

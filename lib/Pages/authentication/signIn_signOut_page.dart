@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names, use_build_context_synchronously, avoid_print
 
+import 'package:expenses_tracker/API/firebase_databse.dart';
 import 'package:expenses_tracker/Componet/logo_viewer.dart';
 import 'package:expenses_tracker/Pages/authentication/add_user_data_entry_page.dart';
 import 'package:expenses_tracker/Pages/authentication/forgot_password.dart';
@@ -10,6 +11,7 @@ import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 import '../../API/database.dart';
+import '../../Componet/custom_snackbar.dart';
 import '../../Componet/input_filed.dart';
 import '../../Componet/toggle_button.dart';
 import '../../constant.dart';
@@ -24,6 +26,7 @@ class LogInSignUpPage extends StatefulWidget {
 }
 
 class _LogInSignUpPageState extends State<LogInSignUpPage> {
+  FirebaseDatabases fd = FirebaseDatabases();
   Database db = Database();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -57,8 +60,13 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
         }
       });
 
+      // fd.retrieveAccountsFromFirebase(context);
+      Future<bool> isSucess = fd.retrieveAllDataFromFirebase(context);
+      // if (await fd.retrieveAllDataFromFirebase(context)) {
+      // customSnackbar(context: context, text: "All datas are received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
       Navigator.pop(context);
       Navigator.pushNamed(context, Dashboard.id);
+      // }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         SnackbarFun(context: context, text: 'No user found for that email.');
