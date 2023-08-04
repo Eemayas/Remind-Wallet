@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, unused_import, unused_local_variable
 
-import 'package:expenses_tracker/Pages/account_detail_page.dart';
 import 'package:expenses_tracker/Pages/add_account.dart';
 import 'package:expenses_tracker/Pages/add_transaction.dart';
 import 'package:expenses_tracker/Pages/authentication/forgot_password.dart';
