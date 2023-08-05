@@ -32,11 +32,11 @@ Future<void> handleMenuItemClick(String value, BuildContext context) async {
                     text: 'Database Deleted',
                     icons: Icons.delete_forever,
                   );
-                  List tryyy = db.TransactionList;
+                  // List tryyy = db.TransactionList;
                   db.getAccountDB();
                   db.getAmountDB();
                   db.getTransactionDB();
-                  tryyy = db.TransactionList;
+                  // tryyy = db.TransactionList;
                   context.read<ChangedMsg>().changed();
                 });
           });

@@ -1,32 +1,15 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:expenses_tracker/Componet/logo_viewer.dart';
 import 'package:expenses_tracker/Componet/menu_clicked_action.dart';
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icon.dart';
 
 import '../constant.dart';
 
 class CustomDrawer extends StatelessWidget {
+  const CustomDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
-    Widget buildDrawerOption(
-      String title,
-      IconData icons,
-    ) {
-      return ListTile(
-        leading: Icon(icons),
-        title: Text(title),
-        onTap: () {
-          // onTap;
-          // Handle the onTap event for each option here
-          // For example, you can use Navigator to navigate to a new screen.
-          Navigator.pop(context); // Close the drawer after an option is selected
-        },
-      );
-    }
-
     return SafeArea(
       child: Drawer(
         shape: RoundedRectangleBorder(

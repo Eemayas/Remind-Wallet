@@ -18,7 +18,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> customSnackbar({
       content: Row(
         children: [
           Icon(icons, color: iconsColor),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           SizedBox(
             width: screenWidth * 0.67,
             child: Text(

@@ -11,7 +11,6 @@ import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 import '../../API/database.dart';
-import '../../Componet/custom_snackbar.dart';
 import '../../Componet/input_filed.dart';
 import '../../Componet/toggle_button.dart';
 import '../../constant.dart';
@@ -61,6 +60,7 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
       });
 
       // fd.retrieveAccountsFromFirebase(context);
+      // ignore: unused_local_variable
       Future<bool> isSucess = fd.retrieveAllDataFromFirebase(context);
       // if (await fd.retrieveAllDataFromFirebase(context)) {
       // customSnackbar(context: context, text: "All datas are received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);

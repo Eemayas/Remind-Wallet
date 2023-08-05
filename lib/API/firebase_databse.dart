@@ -6,11 +6,8 @@ import 'package:expenses_tracker/Componet/check_internet_connection.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icon.dart';
-import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import '../Componet/custom_snackbar.dart';
-import '../Provider/provider.dart';
 import './database.dart';
 
 const String transactionsFD = 'transactions';
@@ -534,7 +531,6 @@ class FirebaseDatabases {
         List<DocumentSnapshot> transactionDocuments = transactionSnapshot.docs;
         transactionList = transactionDocuments.map((transaction) => transaction.data() as Map<String, dynamic>).toList();
         db.deleteTransactionDB();
-        List trys = db.TransactionList;
         for (int i = 0; i < transactionList.length; i++) {
           db.addTransactionDB(
               transactionTitle: transactionList[i][transationNameD],
@@ -549,7 +545,6 @@ class FirebaseDatabases {
               transactionNote: transactionList[i][transactionDescriptionD],
               account: transactionList[i][transactionAmountD]);
         }
-        trys = db.TransactionList;
         // Retrieve user detail
         // await retrieveUserDetailFromFirebase(context);
         // Get a reference to the Firestore collection for users
@@ -565,7 +560,6 @@ class FirebaseDatabases {
           updated_userPhoneNumber: userDetail[userPhoneD],
           updated_userDOB: userDetail[userDOBD],
         );
-        trys = db.TransactionList;
         // Retrieve accounts data
         // await retrieveAccountsFromFirebase(context);
         // Get a reference to the Firestore collection for accounts
@@ -583,7 +577,6 @@ class FirebaseDatabases {
                   ? int.tryParse(accountsList[i][accountCurrentBalanceD])
                   : accountsList[i][accountCurrentBalanceD]);
         }
-        trys = db.TransactionList;
         // Retrieve amounts data
         // await retrieveAmountsFromFirebase(context);
         // Get a reference to the Firestore collection for amounts
@@ -599,7 +592,6 @@ class FirebaseDatabases {
           updated_TotalToPay: int.tryParse(amountsList[toPayD]),
           updated_TotalToReceive: int.tryParse(amountsList[toReceiveD]),
         );
-        trys = db.TransactionList;
         // Do something with the retrieved data...
         if (transactionList.isNotEmpty &&
             userDetail.isNotEmpty &&
