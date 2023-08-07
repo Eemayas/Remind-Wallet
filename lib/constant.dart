@@ -30,7 +30,9 @@ TextStyle ksubTextStyle = GoogleFonts.quicksand(
 List TagList = [
   'Food',
   'Transportation',
-  'Housing',
+  'Salary',
+  'Grocery'
+      'Housing',
   'Utilities',
   'Healthcare',
   'Education',
@@ -41,6 +43,41 @@ List TagList = [
   'Savings',
   'Miscellaneous',
 ];
+IconData getIconForElement(String element) {
+  switch (element) {
+    case 'Food':
+      return Icons.fastfood;
+    case 'Transportation':
+      return Icons.directions_car;
+    case 'Salary':
+      return Icons.attach_money;
+    case 'Grocery':
+      return Icons.shopping_cart;
+    case 'Housing':
+      return Icons.home;
+    case 'Utilities':
+      return Icons.lightbulb_outline;
+    case 'Healthcare':
+      return Icons.local_hospital;
+    case 'Education':
+      return Icons.school;
+    case 'Entertainment':
+      return Icons.movie;
+    case 'Clothing':
+      return Icons.shopping_bag;
+    case 'Personal Care':
+      return Icons.spa;
+    case 'Gifts':
+      return Icons.card_giftcard;
+    case 'Savings':
+      return Icons.account_balance_wallet;
+    case 'Miscellaneous':
+      return Icons.build;
+    default:
+      return Icons.attach_money;
+  }
+}
+
 List TransactionTypelist = [incomeT, expensesT, toReceiveT, toPayT];
 List Accountlist = ["Cash", "Esewa", "Khalti"];
 

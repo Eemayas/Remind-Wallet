@@ -604,14 +604,14 @@ class FirebaseDatabases {
           print('User Data: $userDetail');
           print('Amount Data: $amountsList');
           print('Accounts Data: $accountsList');
-          // customSnackbar(context: context, text: "All datas are received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
+          customSnackbar(context: context, text: "All datas are received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
           return true;
         } else {
           customSnackbar(context: context, text: "All datas are empty in Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
           return false;
         }
       } catch (e) {
-        customSnackbar(context: context, text: 'Error retrieving data from Firebase: \n$e');
+        // customSnackbar(context: context, text: 'Error retrieving data from Firebase: \n$e');
         print('Error retrieving data from Firebase: $e');
         return false;
       }

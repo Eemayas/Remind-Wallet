@@ -72,6 +72,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       hintText: "",
                       controllerss: emailController,
                       keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.none,
                       labelText: "Email",
                       prefixIcon: Icons.email_outlined),
                   SizedBox(

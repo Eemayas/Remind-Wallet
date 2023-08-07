@@ -67,7 +67,7 @@ class _EditUserDetailState extends State<EditUserDetail> {
             style: kwhiteboldTextStyle,
           ),
           actions: [
-            IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),
+            // IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),
           ],
         ),
         body: SingleChildScrollView(
@@ -91,6 +91,7 @@ class _EditUserDetailState extends State<EditUserDetail> {
                         controllerss: userNameController,
                         keyboardType: TextInputType.text,
                         labelText: "Name",
+                        textCapitalization: TextCapitalization.words,
                         prefixIcon: Icons.person_2),
                     SizedBox(
                       height: 20,
@@ -108,6 +109,7 @@ class _EditUserDetailState extends State<EditUserDetail> {
                     ),
                     InputField(
                       isrequired: true,
+                      textCapitalization: TextCapitalization.none,
                       controllerss: emailController,
                       keyboardType: TextInputType.emailAddress,
                       labelText: "Email Address",

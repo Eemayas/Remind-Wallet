@@ -15,6 +15,7 @@ import 'package:expenses_tracker/Pages/show_to_receive_page.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 // import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
@@ -33,6 +34,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
+    // EasyLoading.show(dismissOnTap: true);
     db.getTransactionDB();
     db.getAmountDB();
     db.getAccountDB();
@@ -63,6 +65,7 @@ class _DashboardState extends State<Dashboard> {
                     confirmTextColor: Colors.red,
                     message: 'Are you sure you want to delete the database? This action cannot be undone.',
                     onConfirm: () {
+                      EasyLoading.show(status: 'Deleting database', maskType: EasyLoadingMaskType.black, dismissOnTap: true);
                       db.deleteAll();
                       Navigator.pop(context);
                       customSnackbar(
@@ -73,14 +76,20 @@ class _DashboardState extends State<Dashboard> {
                       db.getAccountDB();
                       db.getAmountDB();
                       db.getTransactionDB();
+                      EasyLoading.dismiss();
                       setState(() {});
                     });
               });
           break;
         case 'Update DataBase':
+          EasyLoading.show(
+            status: 'Updating database',
+            maskType: EasyLoadingMaskType.black,
+          );
           db.getAccountDB();
           db.getAmountDB();
           db.getTransactionDB();
+          EasyLoading.dismiss();
           setState(() {});
           customSnackbar(context: context, text: 'Database Refresh', icons: Icons.done_all, iconsColor: Colors.green);
           break;
@@ -88,10 +97,23 @@ class _DashboardState extends State<Dashboard> {
           break;
         case 'Upload to cloud':
           // ignore: unused_local_variable
+          EasyLoading.show(
+            status: 'Uploading to cloud',
+            maskType: EasyLoadingMaskType.black,
+          );
           Future<bool> isSucess = fd.saveAllDataToFirebase(context);
-
+          if (await isSucess) {
+            EasyLoading.dismiss();
+          }
+          {
+            EasyLoading.dismiss();
+          }
           break;
         case 'Retrive from cloud':
+          EasyLoading.show(
+            status: 'Retriving from cloud',
+            maskType: EasyLoadingMaskType.black,
+          );
           // ignore: unused_local_variable
           Future<bool> isSucess = fd.retrieveAllDataFromFirebase(context);
           if (await isSucess) {
@@ -99,18 +121,27 @@ class _DashboardState extends State<Dashboard> {
             db.getAccountDB();
             db.getAmountDB();
             db.getTransactionDB();
+            EasyLoading.dismiss();
             setState(() {});
+          } else {
+            EasyLoading.dismiss();
           }
 
           break;
         case 'Logout':
+          EasyLoading.show(
+            status: 'Processing',
+            maskType: EasyLoadingMaskType.black,
+          );
           // Future<bool> isSucess = fd.saveAllDataToFirebase(context);
           if (await fd.saveAllDataToFirebase(context)) {
             db.deleteAll();
             db.deleteUserDetailDB();
             await FirebaseAuth.instance.signOut();
+            EasyLoading.dismiss();
             customSnackbar(context: context, text: 'Logout Sucessfully', icons: Icons.logout_rounded, iconsColor: Colors.green);
           } else {
+            EasyLoading.dismiss();
             customSnackbar(
               context: context,
               text: 'Please Upload to Firebase First',
@@ -151,93 +182,7 @@ class _DashboardState extends State<Dashboard> {
           style: kwhiteboldTextStyle,
         ),
         actions: [
-          Padding(
-            padding: EdgeInsets.only(
-              right: 20.0,
-            ),
-            child: PopupMenuButton(
-              onSelected: (value) {
-                _handleMenuItemClick(value, context);
-              },
-              itemBuilder: (BuildContext context) => [
-                PopupMenuItem(
-                  textStyle: kwhiteTextStyle.copyWith(fontWeight: FontWeight.bold),
-                  value: 'Options:',
-                  child: Row(
-                    children: [
-                      Text('Options:'),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  textStyle: kwhiteTextStyle,
-                  value: 'Upload to cloud',
-                  child: Row(
-                    children: [
-                      Icon(Icons.cloud_done_outlined),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text('Upload to cloud'),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  textStyle: kwhiteTextStyle,
-                  value: 'Retrive from cloud',
-                  child: Row(
-                    children: [
-                      Icon(Icons.downloading_sharp),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text('Retrive from cloud'),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  textStyle: kwhiteTextStyle,
-                  value: 'Update DataBase',
-                  child: Row(
-                    children: [
-                      Icon(Icons.update),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text('Update DataBase'),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  textStyle: kwhiteTextStyle,
-                  value: 'Delete DataBase',
-                  child: Row(
-                    children: [
-                      Icon(Icons.delete_forever_outlined),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text('Delete DataBase'),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  textStyle: kwhiteTextStyle,
-                  value: 'Logout',
-                  child: Row(
-                    children: [
-                      Icon(Icons.logout_outlined),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text('Logout'),
-                    ],
-                  ),
-                ),
-              ],
-              child: Icon(Icons.more_vert),
-            ),
-          ),
+          popupItems(_handleMenuItemClick, context),
           // GestureDetector(
           //     onLongPress: () {
           //       db.deleteAmountDB();
@@ -441,13 +386,104 @@ class _DashboardState extends State<Dashboard> {
                     transactionAccount: db.TransactionList[i][transactionAccountD].toString(),
                     transactionPerson: db.TransactionList[i][transactionPersonD],
                     transactionDescription: db.TransactionList[i][transactionDescriptionD],
-                    iconsName: db.TransactionList[i][transactionIconD] == "shooping" ? Icons.shopping_cart_outlined : Icons.abc,
+                    iconsName: getIconForElement(db.TransactionList[i][transactionTagD]),
+                    // iconsName: db.TransactionList[i][transactionIconD] == "shooping" ? Icons.shopping_cart_outlined : Icons.abc,
                     transactionCreatedDate: db.TransactionList[i][transactionCreatedDateD] ?? "",
                     // Account: db.TransactionList[i]["account"] ?? "Cash",
                   ),
             ],
           ),
         )),
+      ),
+    );
+  }
+
+  Padding popupItems(Future<void> _handleMenuItemClick(String value, BuildContext context), BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        right: 20.0,
+      ),
+      child: PopupMenuButton(
+        onSelected: (value) {
+          _handleMenuItemClick(value, context);
+        },
+        itemBuilder: (BuildContext context) => [
+          PopupMenuItem(
+            textStyle: kwhiteTextStyle.copyWith(fontWeight: FontWeight.bold),
+            value: 'Options:',
+            child: Row(
+              children: [
+                Text('Options:'),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            textStyle: kwhiteTextStyle,
+            value: 'Upload to cloud',
+            child: Row(
+              children: [
+                Icon(Icons.cloud_done_outlined),
+                SizedBox(
+                  width: 5,
+                ),
+                Text('Upload to cloud'),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            textStyle: kwhiteTextStyle,
+            value: 'Retrive from cloud',
+            child: Row(
+              children: [
+                Icon(Icons.downloading_sharp),
+                SizedBox(
+                  width: 5,
+                ),
+                Text('Retrive from cloud'),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            textStyle: kwhiteTextStyle,
+            value: 'Update DataBase',
+            child: Row(
+              children: [
+                Icon(Icons.update),
+                SizedBox(
+                  width: 5,
+                ),
+                Text('Update DataBase'),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            textStyle: kwhiteTextStyle,
+            value: 'Delete DataBase',
+            child: Row(
+              children: [
+                Icon(Icons.delete_forever_outlined),
+                SizedBox(
+                  width: 5,
+                ),
+                Text('Delete DataBase'),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            textStyle: kwhiteTextStyle,
+            value: 'Logout',
+            child: Row(
+              children: [
+                Icon(Icons.logout_outlined),
+                SizedBox(
+                  width: 5,
+                ),
+                Text('Logout'),
+              ],
+            ),
+          ),
+        ],
+        child: Icon(Icons.more_vert),
       ),
     );
   }

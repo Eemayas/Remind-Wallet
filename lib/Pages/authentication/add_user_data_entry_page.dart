@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, unused_import, use_key_in_widget_constructors, prefer_const_literals_to_create_immutables, avoid_print
+// ignore_for_file: prefer_const_constructors, unused_import, use_key_in_widget_constructors, prefer_const_literals_to_create_immutables, avoid_print, use_build_context_synchronously
 
 import 'package:expenses_tracker/API/firebase_databse.dart';
 import 'package:expenses_tracker/Componet/custom_snackbar.dart';
@@ -6,6 +6,7 @@ import 'package:expenses_tracker/Componet/logo_viewer.dart';
 import 'package:expenses_tracker/Pages/check_page.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
@@ -34,16 +35,22 @@ class _AddUserDataPageState extends State<AddUserDataPage> {
   final accountController = TextEditingController();
   Database db = Database();
   FirebaseDatabases fd = FirebaseDatabases();
-  _addUserData() {
+  _addUserData() async {
+    EasyLoading.show(
+      status: 'Adding user data',
+      maskType: EasyLoadingMaskType.black,
+    );
     print("${userNameController.text}  ");
 
     db.addUserDB(
         userName: userNameController.text, userDOB: dateController.text, userEmail: "xyz@example.com", userPhoneNumber: phoneNumberController.text);
     db.getUserDetailDB();
-    fd.saveUserDetailToFirebase(context);
-    customSnackbar(context: context, text: "User Detail was Successful Added", icons: Icons.done_all, iconsColor: Colors.green);
-    Navigator.pop(context);
-    Navigator.pushNamed(context, CheckSignin_outPage.id);
+    if (await fd.saveUserDetailToFirebase(context)) {
+      EasyLoading.dismiss();
+      customSnackbar(context: context, text: "User Detail was Successful Added", icons: Icons.done_all, iconsColor: Colors.green);
+      Navigator.pop(context);
+      Navigator.pushNamed(context, CheckSignin_outPage.id);
+    }
   }
 
   @override
@@ -99,6 +106,7 @@ class _AddUserDataPageState extends State<AddUserDataPage> {
                         controllerss: userNameController,
                         keyboardType: TextInputType.text,
                         labelText: "Name",
+                        textCapitalization: TextCapitalization.words,
                         prefixIcon: Icons.person_2),
                     SizedBox(
                       height: 20,

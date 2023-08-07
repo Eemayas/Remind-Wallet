@@ -60,7 +60,7 @@ class _AddAccountState extends State<AddAccount> {
             style: kwhiteboldTextStyle,
           ),
           actions: [
-            IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),
+            // IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),
           ],
         ),
         body: SingleChildScrollView(

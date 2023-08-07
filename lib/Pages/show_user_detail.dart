@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:expenses_tracker/Componet/custom_drawer.dart';
 import 'package:expenses_tracker/Pages/edit_user_detail.dart';
 import 'package:expenses_tracker/Pages/firebase_all_options.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,7 @@ class ShowUserDetailPage extends StatelessWidget {
       onLongPress: () => Navigator.pushNamed(context, FirebaseAllOptions.id),
       onTap: () => {FocusScope.of(context).requestFocus(FocusNode())},
       child: Scaffold(
+        drawer: CustomDrawer(),
         appBar: AppBar(
           backgroundColor: kBackgroundColorAppBar,
           title: Text(
@@ -44,7 +46,7 @@ class ShowUserDetailPage extends StatelessWidget {
             style: kwhiteboldTextStyle,
           ),
           actions: [
-            IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),
+            // IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),
           ],
         ),
         body: SingleChildScrollView(

@@ -7,6 +7,7 @@ import 'package:expenses_tracker/Pages/authentication/forgot_password.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 
@@ -14,7 +15,6 @@ import '../../API/database.dart';
 import '../../Componet/input_filed.dart';
 import '../../Componet/toggle_button.dart';
 import '../../constant.dart';
-import '../../main.dart';
 
 class LogInSignUpPage extends StatefulWidget {
   static String id = "SignUp Pagess";
@@ -37,12 +37,10 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
 
   Future<void> _logIn(BuildContext context) async {
     print("${emailController.text}  ${passwordController.text}  ");
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-              child: CircularProgressIndicator(),
-            ));
+    EasyLoading.show(
+      status: 'Processing...',
+      maskType: EasyLoadingMaskType.black,
+    );
     try {
       // ignore: unused_local_variable
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -62,11 +60,11 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
       // fd.retrieveAccountsFromFirebase(context);
       // ignore: unused_local_variable
       Future<bool> isSucess = fd.retrieveAllDataFromFirebase(context);
-      // if (await fd.retrieveAllDataFromFirebase(context)) {
-      // customSnackbar(context: context, text: "All datas are received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
-      Navigator.pop(context);
-      Navigator.pushNamed(context, Dashboard.id);
-      // }
+      if (await fd.retrieveAllDataFromFirebase(context)) {
+        // customSnackbar(context: context, text: "All datas are received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
+        Navigator.pop(context);
+        Navigator.pushNamed(context, Dashboard.id);
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         SnackbarFun(context: context, text: 'No user found for that email.');
@@ -79,17 +77,15 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
         print(e);
       }
     }
-    navigatorkey.currentState!.popUntil((route) => route.isFirst);
+    EasyLoading.dismiss();
   }
 
   Future<void> _SignUp(BuildContext context) async {
     print("${emailController.text}  ${passwordController.text}  ${confirmPasswordController.text}  ");
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-              child: CircularProgressIndicator(),
-            ));
+    EasyLoading.show(
+      status: 'Processing...',
+      maskType: EasyLoadingMaskType.black,
+    );
     try {
       // ignore: unused_local_variable
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -105,8 +101,10 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
           print('User is signed in!');
         }
       });
+
       Navigator.pushNamed(context, AddUserDataPage.id);
     } on FirebaseAuthException catch (e) {
+      EasyLoading.dismiss();
       if (e.code == 'user-not-found') {
         SnackbarFun(context: context, text: 'No user found for that email.');
         print('No user found for that email.');
@@ -119,6 +117,7 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
       }
     }
     db.accountInitialized();
+    EasyLoading.dismiss();
     //stopt the loading animation
     // navigatorkey.currentState!.popUntil((route) => route.isFirst);
   }
@@ -185,6 +184,7 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
                       hintText: "",
                       controllerss: emailController,
                       keyboardType: TextInputType.emailAddress,
+                      textCapitalization: TextCapitalization.none,
                       labelText: "Email",
                       prefixIcon: Icons.email_outlined),
                   SizedBox(

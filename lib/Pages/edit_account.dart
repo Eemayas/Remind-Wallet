@@ -61,9 +61,6 @@ class _EditAccountState extends State<EditAccount> {
             "Edit Account",
             style: kwhiteboldTextStyle,
           ),
-          actions: [
-            IconButton(icon: Icon(Icons.more_vert), onPressed: () => {}),
-          ],
         ),
         body: SingleChildScrollView(
           child: SafeArea(

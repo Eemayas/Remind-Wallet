@@ -147,7 +147,7 @@ class _EditTransactionState extends State<EditTransaction> {
                   ),
                   DropDownButton(
                     iconsName: Icons.account_balance_outlined,
-                    lists: Accountlist,
+                    lists: db.getAccountNameListDB(),
                     controllerss: accountController,
                     hintText: "Cash/Esewa/Khalti",
                     labelText: "Account",

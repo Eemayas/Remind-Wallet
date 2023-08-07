@@ -12,10 +12,12 @@ class InputField extends StatefulWidget {
       required this.prefixIcon,
       required this.hintText,
       this.isEnable = true,
+      this.textCapitalization = TextCapitalization.sentences,
       this.isUserDetail = false,
       this.isrequired = false,
       this.isPassword = false});
   final String hintText;
+  final TextCapitalization textCapitalization;
   final TextEditingController controllerss;
   final TextInputType keyboardType;
   final String labelText;
@@ -35,6 +37,7 @@ class _InputFieldState extends State<InputField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      textCapitalization: widget.textCapitalization,
       enabled: widget.isEnable,
       controller: widget.controllerss,
       validator: (value) {

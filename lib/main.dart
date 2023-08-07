@@ -15,6 +15,7 @@ import 'package:expenses_tracker/constant.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'Componet/bottom_navigation_bar.dart';
@@ -43,6 +44,7 @@ Future<void> main() async {
     providers: [ChangeNotifierProvider(create: (_) => ChangedMsg())],
     child: const MyApp(),
   ));
+  configLoading();
 }
 
 final navigatorkey = GlobalKey<NavigatorState>();
@@ -58,6 +60,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       navigatorKey: navigatorkey,
       debugShowCheckedModeBanner: false,
+      builder: EasyLoading.init(),
       title: 'Flutter Demo',
       theme: ThemeData(
           brightness: Brightness.dark,
@@ -67,7 +70,8 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
             ),
           )),
-      initialRoute: Splash_Page.id, //  Tryyy.id,//ShowUserDetailPage.id, // //LogInSignUpPage.id, //  Dashboard.id, //AccountDetailPage.id,
+      initialRoute: Splash_Page.id,
+      // Dashboard.id,  Tryyy.id,//ShowUserDetailPage.id, // //LogInSignUpPage.id, //  Dashboard.id, //AccountDetailPage.id,
       //TranasctionDetailPage.id, // //AddTransaction.id,
       routes: {
         Dashboard.id: (context) => const Dashboard(),
@@ -92,6 +96,42 @@ class MyApp extends StatelessWidget {
         // TranasctionDetailPage.id: (context) => TranasctionDetailPage(),
       },
       // home: const dashBoard()
+    );
+  }
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..indicatorType = EasyLoadingIndicatorType.squareCircle
+    ..loadingStyle = EasyLoadingStyle.dark
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = true
+    ..dismissOnTap = false
+    ..textStyle = kwhiteTextStyle
+    ..customAnimation = CustomAnimation();
+}
+
+class CustomAnimation extends EasyLoadingAnimation {
+  CustomAnimation();
+
+  @override
+  Widget buildWidget(
+    Widget child,
+    AnimationController controller,
+    AlignmentGeometry alignment,
+  ) {
+    return Opacity(
+      opacity: controller.value,
+      child: RotationTransition(
+        turns: controller,
+        child: child,
+      ),
     );
   }
 }
