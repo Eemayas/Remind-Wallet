@@ -27,6 +27,7 @@ samples, guidance on mobile development, and a full API reference.
   title="Optional title"
   width=300px
   style="display: inline-block; margin: 0 auto; max-width: 300px">
+  <br/>
 <img
   src="./assets/ScreenShots/3.jpg"
   alt="Alt text"
@@ -39,6 +40,7 @@ samples, guidance on mobile development, and a full API reference.
   title="Optional title"
   width=300px
   style="display: inline-block; margin: 0 auto; max-width: 300px">
+  
 <img
   src="./assets/ScreenShots/5.jpg"
   alt="Alt text"
