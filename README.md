@@ -14,11 +14,52 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
-![plot](./assets/ScreenShots/1.jpg)
-![plot](./assets/ScreenShots/2.jpg)
-![plot](./assets/ScreenShots/3.jpg)
-![plot](./assets/ScreenShots/4.jpg)
-![plot](./assets/ScreenShots/5.jpg)
-![plot](./assets/ScreenShots/6.jpg)
-![plot](./assets/ScreenShots/7.jpg)
-![plot](./assets/ScreenShots/8.jpg)
+
+<img
+  src="./assets/ScreenShots/1.jpg"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+<img
+  src="./assets/ScreenShots/2.jpg"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+<img
+  src="./assets/ScreenShots/3.jpg"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+<img
+  src="./assets/ScreenShots/4.jpg"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+<img
+  src="./assets/ScreenShots/5.jpg"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+<img
+  src="./assets/ScreenShots/6.jpg"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+<img
+  src="./assets/ScreenShots/7.jpg"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+<img
+  src="./assets/ScreenShots/8.jpg"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
