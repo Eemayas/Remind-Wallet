@@ -27,6 +27,8 @@ samples, guidance on mobile development, and a full API reference.
   title="Optional title"
   width=300px
   style="display: inline-block; margin: 0 auto; max-width: 300px">
+  <br/>
+  <div height=10px></div>
 <img
   src="./assets/ScreenShots/3.jpg"
   alt="Alt text"
@@ -39,6 +41,8 @@ samples, guidance on mobile development, and a full API reference.
   title="Optional title"
   width=300px
   style="display: inline-block; margin: 0 auto; max-width: 300px">
+   <br/>
+  <div height=10px></div>
 <img
   src="./assets/ScreenShots/5.jpg"
   alt="Alt text"
@@ -50,7 +54,8 @@ samples, guidance on mobile development, and a full API reference.
   alt="Alt text"
   title="Optional title"
   width=300px
-  style="display: inline-block; margin: 0 auto; max-width: 300px">
+  style="display: inline-block; margin: 0 auto; max-width: 300px"> <br/>
+  <div height=10px></div>
 <img
   src="./assets/ScreenShots/7.jpg"
   alt="Alt text"
@@ -62,4 +67,5 @@ samples, guidance on mobile development, and a full API reference.
   alt="Alt text"
   title="Optional title"
   width=300px
-  style="display: inline-block; margin: 0 auto; max-width: 300px">
+  style="display: inline-block; margin: 0 auto; max-width: 300px"> <br/>
+  <div height=10px></div>
