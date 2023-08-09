@@ -2,7 +2,7 @@
 
 import 'package:expenses_tracker/Componet/custom_drawer.dart';
 import 'package:expenses_tracker/Pages/edit_user_detail.dart';
-import 'package:expenses_tracker/Pages/firebase_all_options.dart';
+import 'package:expenses_tracker/extras/firebase_all_options.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';

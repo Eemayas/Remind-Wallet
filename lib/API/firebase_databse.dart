@@ -8,7 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../Componet/custom_snackbar.dart';
-import '../Encryption/encryption_decryption.dart';
 import '../Encryption/substitution.dart';
 import './database.dart';
 
@@ -28,7 +27,6 @@ class FirebaseDatabases {
   List transactionList = [];
   Map userDetail = {};
   Database db = Database();
-  EncryptionHelper eh = EncryptionHelper();
   FirebaseDatabases() {
     initUserId();
   }
@@ -79,11 +77,11 @@ class FirebaseDatabases {
           // Convert keys and values to strings
           Map<String, dynamic> transactionMap = {};
           transaction.forEach((key, value) {
-            transactionMap[key.toString()] = SubstitutionCipher.encrypt(value.toString());
+            transactionMap[SubstitutionCipher.encrypt(key.toString())] = SubstitutionCipher.encrypt(value.toString());
           });
 
           // Add the unique identifier to the transaction map
-          transactionMap['uniqueIdentifier'] = uniqueIdentifier;
+          transactionMap[SubstitutionCipher.encrypt('uniqueIdentifier')] = SubstitutionCipher.encrypt(uniqueIdentifier);
 
           // Add the transaction data to Firestore
           await transactionsRef.add(transactionMap);
@@ -94,7 +92,7 @@ class FirebaseDatabases {
         // Convert keys and values to strings
         Map<String, dynamic> userDetailString = {};
         userDetail.forEach((key, value) {
-          userDetailString[key.toString()] = value.toString();
+          userDetailString[SubstitutionCipher.encrypt(key.toString())] = SubstitutionCipher.encrypt(value.toString());
         });
 
         // Get a reference to the Firestore collection for users
@@ -108,7 +106,7 @@ class FirebaseDatabases {
         // Convert keys and values to strings
         Map<String, dynamic> amountsListString = {};
         amountsList.forEach((key, value) {
-          amountsListString[key.toString()] = value.toString();
+          amountsListString[SubstitutionCipher.encrypt(key.toString())] = SubstitutionCipher.encrypt(value.toString());
         });
 
         // Get a reference to the Firestore collection for amounts
@@ -136,11 +134,11 @@ class FirebaseDatabases {
           // Convert keys and values to strings
           Map<String, dynamic> accountMap = {};
           account.forEach((key, value) {
-            accountMap[key.toString()] = value.toString();
+            accountMap[SubstitutionCipher.encrypt(key.toString())] = SubstitutionCipher.encrypt(value.toString());
           });
 
           // Add the unique identifier to the account map
-          accountMap['uniqueIdentifier'] = uniqueIdentifier;
+          accountMap[SubstitutionCipher.encrypt('uniqueIdentifier')] = SubstitutionCipher.encrypt(uniqueIdentifier);
 
           // Add the account data to Firestore
           await accountsRef.add(accountMap);
@@ -161,6 +159,29 @@ class FirebaseDatabases {
 
   // function to retrieve data from Firebase
   Future<bool> retrieveAllDataFromFirebase(BuildContext context) async {
+    String encryptCurrentBalanceD = SubstitutionCipher.encrypt(currentBalanceD);
+    String encryptTotalIncomeD = SubstitutionCipher.encrypt(totalIncomeD);
+    String encryptTotalExpensesD = SubstitutionCipher.encrypt(totalExpensesD);
+    String encryptToPayD = SubstitutionCipher.encrypt(toPayD);
+    String encryptToReceiveD = SubstitutionCipher.encrypt(toReceiveD);
+
+    String encryptTransactionNameD = SubstitutionCipher.encrypt(transationNameD);
+    String encryptTransactionCreatedDateD = SubstitutionCipher.encrypt(transactionCreatedDateD);
+    String encryptTransactionAmountD = SubstitutionCipher.encrypt(transactionAmountD);
+    String encryptTransactionTypeD = SubstitutionCipher.encrypt(transactionTypeD);
+    String encryptTransactionTagD = SubstitutionCipher.encrypt(transactionTagD);
+    String encryptTransactionDateD = SubstitutionCipher.encrypt(transactionDateD);
+    String encryptTransactionPersonD = SubstitutionCipher.encrypt(transactionPersonD);
+    String encryptTransactionDescriptionD = SubstitutionCipher.encrypt(transactionDescriptionD);
+    String encryptTransactionAccountD = SubstitutionCipher.encrypt(transactionAccountD);
+
+    String encryptAccountNameD = SubstitutionCipher.encrypt(accountNameD);
+    String encryptAccountCurrentBalanceD = SubstitutionCipher.encrypt(accountCurrentBalanceD);
+
+    String encryptUserNameD = SubstitutionCipher.encrypt(userNameD);
+    String encryptUserEmailD = SubstitutionCipher.encrypt(userEmailD);
+    String encryptUserPhoneD = SubstitutionCipher.encrypt(userPhoneD);
+    String encryptUserDOBD = SubstitutionCipher.encrypt(userDOBD);
     if (await isInternetAvailable()) {
       try {
         initUserId();
@@ -182,17 +203,17 @@ class FirebaseDatabases {
         db.deleteTransactionDB();
         for (int i = 0; i < transactionList.length; i++) {
           db.addTransactionDB(
-              transactionTitle: SubstitutionCipher.decrypt(transactionList[i][transationNameD]),
-              createdDate: SubstitutionCipher.decrypt(transactionList[i][transactionCreatedDateD]),
-              amount: SubstitutionCipher.decrypt(transactionList[i][transactionAmountD]).runtimeType == String
-                  ? int.tryParse(SubstitutionCipher.decrypt(transactionList[i][transactionAmountD]))
-                  : SubstitutionCipher.decrypt(transactionList[i][transactionAmountD]),
-              transactionType: SubstitutionCipher.decrypt(transactionList[i][transactionTypeD]),
-              transactionTag: SubstitutionCipher.decrypt(transactionList[i][transactionTagD]),
-              transactionDate: SubstitutionCipher.decrypt(transactionList[i][transactionDateD]),
-              transactionPerson: SubstitutionCipher.decrypt(transactionList[i][transactionPersonD]),
-              transactionNote: SubstitutionCipher.decrypt(transactionList[i][transactionDescriptionD]),
-              account: SubstitutionCipher.decrypt(transactionList[i][transactionAmountD]));
+              transactionTitle: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionNameD]),
+              createdDate: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionCreatedDateD]),
+              amount: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionAmountD]).runtimeType == String
+                  ? int.tryParse(SubstitutionCipher.decrypt(transactionList[i][encryptTransactionAmountD]))
+                  : SubstitutionCipher.decrypt(transactionList[i][encryptTransactionAmountD]),
+              transactionType: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionTypeD]),
+              transactionTag: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionTagD]),
+              transactionDate: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionDateD]),
+              transactionPerson: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionPersonD]),
+              transactionNote: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionDescriptionD]),
+              account: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionAccountD]));
         }
         // Retrieve user detail
         // await retrieveUserDetailFromFirebase(context);
@@ -203,11 +224,12 @@ class FirebaseDatabases {
         // Retrieve user detail for the current user
         DocumentSnapshot userSnapshot = await usersRef.doc(_userId).get();
         userDetail = userSnapshot.data() as Map<String, dynamic>;
+
         db.editUserNameDB(
-          updated_userName: userDetail[userNameD],
-          updated_userEmail: userDetail[userEmailD],
-          updated_userPhoneNumber: userDetail[userPhoneD],
-          updated_userDOB: userDetail[userDOBD],
+          updated_userName: SubstitutionCipher.decrypt(userDetail[encryptUserNameD]),
+          updated_userEmail: SubstitutionCipher.decrypt(userDetail[encryptUserEmailD]),
+          updated_userPhoneNumber: SubstitutionCipher.decrypt(userDetail[encryptUserPhoneD]),
+          updated_userDOB: SubstitutionCipher.decrypt(userDetail[encryptUserDOBD]),
         );
         // Retrieve accounts data
         // await retrieveAccountsFromFirebase(context);
@@ -221,10 +243,10 @@ class FirebaseDatabases {
         db.deleteAccountDB();
         for (int i = 0; i < accountsList.length; i++) {
           db.addAccountOnlyDB(
-              accountName: accountsList[i][accountNameD],
-              amount: accountsList[i][accountCurrentBalanceD].runtimeType == String
-                  ? int.tryParse(accountsList[i][accountCurrentBalanceD])
-                  : accountsList[i][accountCurrentBalanceD]);
+              accountName: SubstitutionCipher.decrypt(accountsList[i][encryptAccountNameD]),
+              amount: SubstitutionCipher.decrypt(accountsList[i][encryptAccountCurrentBalanceD]).runtimeType == String
+                  ? int.tryParse(SubstitutionCipher.decrypt(accountsList[i][encryptAccountCurrentBalanceD]))
+                  : SubstitutionCipher.decrypt(accountsList[i][encryptAccountCurrentBalanceD]));
         }
         // Retrieve amounts data
         // await retrieveAmountsFromFirebase(context);
@@ -234,12 +256,13 @@ class FirebaseDatabases {
         // Retrieve amounts for the current user
         DocumentSnapshot amountsSnapshot = await amountsRef.doc(amountsDocumentFD).get();
         amountsList = amountsSnapshot.data() as Map<String, dynamic>;
+
         db.editAmountDB(
-          updated_CurrentBalance: int.tryParse(amountsList[currentBalanceD]),
-          updated_TotalIncome: int.tryParse(amountsList[totalIncomeD]),
-          updated_totalExpenses: int.tryParse(amountsList[totalExpensesD]),
-          updated_TotalToPay: int.tryParse(amountsList[toPayD]),
-          updated_TotalToReceive: int.tryParse(amountsList[toReceiveD]),
+          updated_CurrentBalance: int.tryParse(SubstitutionCipher.decrypt(amountsList[encryptCurrentBalanceD])),
+          updated_TotalIncome: int.tryParse(SubstitutionCipher.decrypt(amountsList[encryptTotalIncomeD])),
+          updated_totalExpenses: int.tryParse(SubstitutionCipher.decrypt(amountsList[encryptTotalExpensesD])),
+          updated_TotalToPay: int.tryParse(SubstitutionCipher.decrypt(amountsList[encryptToPayD])),
+          updated_TotalToReceive: int.tryParse(SubstitutionCipher.decrypt(amountsList[encryptToReceiveD])),
         );
         // Do something with the retrieved data...
         if (transactionList.isNotEmpty &&
@@ -451,7 +474,7 @@ class FirebaseDatabases {
         // Convert keys and values to strings
         Map<String, dynamic> userDetailString = {};
         userDetail.forEach((key, value) {
-          userDetailString[key.toString()] = value.toString();
+          userDetailString[SubstitutionCipher.encrypt(key.toString())] = SubstitutionCipher.encrypt(value.toString());
         });
 
         // Get a reference to the Firestore collection for users

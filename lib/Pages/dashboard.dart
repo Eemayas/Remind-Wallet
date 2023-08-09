@@ -398,7 +398,7 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Padding popupItems(Future<void> _handleMenuItemClick(String value, BuildContext context), BuildContext context) {
+  Padding popupItems(Future<void> Function(String value, BuildContext context) _handleMenuItemClick, BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
         right: 20.0,

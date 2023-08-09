@@ -3,7 +3,7 @@
 import 'package:expenses_tracker/API/firebase_databse.dart';
 import 'package:expenses_tracker/Componet/custom_snackbar.dart';
 import 'package:expenses_tracker/Componet/logo_viewer.dart';
-import 'package:expenses_tracker/Pages/check_page.dart';
+import 'package:expenses_tracker/Pages/starting_pages/check_page.dart';
 import 'package:expenses_tracker/Pages/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';

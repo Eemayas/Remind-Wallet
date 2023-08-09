@@ -6,9 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:hive/hive.dart';
 
-import '../Componet/bottom_navigation_bar.dart';
-import '../Componet/custom_snackbar.dart';
-import 'authentication/signIn_signOut_page.dart';
+import '../../Componet/bottom_navigation_bar.dart';
+import '../../Componet/custom_snackbar.dart';
+import '../authentication/signIn_signOut_page.dart';
 
 // class CheckPage extends StatelessWidget {
 //   static String id = "Check Page";
