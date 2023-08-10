@@ -16,13 +16,13 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 <img
-  src="./assets/ScreenShots/1.jpg"
+  src="./assets/ScreenShots/GooglePixel2XL-1.png"
   alt="Alt text"
   title="Optional title"
   width=300px
   style="display: inline-block; margin: 0 auto; max-width: 300px">
 <img
-  src="./assets/ScreenShots/2.jpg"
+  src="./assets/ScreenShots/GooglePixel2XL-2.png"
   alt="Alt text"
   title="Optional title"
   width=300px
@@ -30,42 +30,100 @@ samples, guidance on mobile development, and a full API reference.
   <br/>
   <div height=10px></div>
 <img
-  src="./assets/ScreenShots/3.jpg"
+  src="./assets/ScreenShots/GooglePixel2XL-3.png"
   alt="Alt text"
   title="Optional title"
   width=300px
   style="display: inline-block; margin: 0 auto; max-width: 300px">
 <img
-  src="./assets/ScreenShots/4.jpg"
+  src="./assets/ScreenShots/GooglePixel2XL-4.png"
   alt="Alt text"
   title="Optional title"
   width=300px
   style="display: inline-block; margin: 0 auto; max-width: 300px">
-   <br/>
+  <br/>
   <div height=10px></div>
 <img
-  src="./assets/ScreenShots/5.jpg"
+  src="./assets/ScreenShots/GooglePixel2XL.png"
   alt="Alt text"
   title="Optional title"
   width=300px
   style="display: inline-block; margin: 0 auto; max-width: 300px">
 <img
-  src="./assets/ScreenShots/6.jpg"
+  src="./assets/ScreenShots/GooglePixel2XL-5.png"
   alt="Alt text"
   title="Optional title"
   width=300px
-  style="display: inline-block; margin: 0 auto; max-width: 300px"> <br/>
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+  <br/>
   <div height=10px></div>
 <img
-  src="./assets/ScreenShots/7.jpg"
+  src="./assets/ScreenShots/GooglePixel2XL-6.png"
   alt="Alt text"
   title="Optional title"
   width=300px
   style="display: inline-block; margin: 0 auto; max-width: 300px">
 <img
-  src="./assets/ScreenShots/8.jpg"
+  src="./assets/ScreenShots/GooglePixel2XL-7.png"
   alt="Alt text"
   title="Optional title"
   width=300px
-  style="display: inline-block; margin: 0 auto; max-width: 300px"> <br/>
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+  <br/>
+  <div height=10px></div>
+<img
+  src="./assets/ScreenShots/GooglePixel2XL-8.png"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+<img
+  src="./assets/ScreenShots/GooglePixel2XL-9.png"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+  <br/>
+  <div height=10px></div>
+<img
+  src="./assets/ScreenShots/GooglePixel2XL-10.png"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+<img
+  src="./assets/ScreenShots/GooglePixel2XL-11.png"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+  <br/>
+  <div height=10px></div>
+<img
+  src="./assets/ScreenShots/GooglePixel2XL-12.png"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+<img
+  src="./assets/ScreenShots/GooglePixel2XL-13.png"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+  <br/>
+  <div height=10px></div>
+<img
+  src="./assets/ScreenShots/GooglePixel2XL-14.png"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+<img
+  src="./assets/ScreenShots/GooglePixel2XL-15.png"
+  alt="Alt text"
+  title="Optional title"
+  width=300px
+  style="display: inline-block; margin: 0 auto; max-width: 300px">
+  <br/>
   <div height=10px></div>
