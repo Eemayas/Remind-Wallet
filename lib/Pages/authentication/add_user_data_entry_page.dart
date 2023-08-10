@@ -4,7 +4,8 @@ import 'package:expenses_tracker/API/firebase_databse.dart';
 import 'package:expenses_tracker/Componet/custom_snackbar.dart';
 import 'package:expenses_tracker/Componet/logo_viewer.dart';
 import 'package:expenses_tracker/Pages/starting_pages/check_page.dart';
-import 'package:expenses_tracker/Pages/dashboard.dart';
+import 'package:expenses_tracker/Pages/home_pages/dashboard.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
@@ -33,6 +34,7 @@ class _AddUserDataPageState extends State<AddUserDataPage> {
   final tagController = TextEditingController();
   final dateController = TextEditingController();
   final accountController = TextEditingController();
+
   Database db = Database();
   FirebaseDatabases fd = FirebaseDatabases();
   _addUserData() async {
@@ -43,8 +45,9 @@ class _AddUserDataPageState extends State<AddUserDataPage> {
     print("${userNameController.text}  ");
 
     db.addUserDB(
-        userName: userNameController.text, userDOB: dateController.text, userEmail: "xyz@example.com", userPhoneNumber: phoneNumberController.text);
+        userName: userNameController.text, userDOB: dateController.text, userEmail: currentEmail, userPhoneNumber: phoneNumberController.text);
     db.getUserDetailDB();
+    print(db.userDetail);
     if (await fd.saveUserDetailToFirebase(context)) {
       EasyLoading.dismiss();
       customSnackbar(context: context, text: "User Detail was Successful Added", icons: Icons.done_all, iconsColor: Colors.green);
@@ -53,8 +56,23 @@ class _AddUserDataPageState extends State<AddUserDataPage> {
     }
   }
 
+  String currentEmail = "xyz@example.com";
+  void getCurrentUserEmail() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    if (user != null) {
+      currentEmail = user.email!;
+      print('Current User Email: $currentEmail');
+    } else {
+      Navigator.pop(context);
+      print('No user is currently logged in.');
+    }
+  }
+
   @override
   void initState() {
+    getCurrentUserEmail();
     super.initState();
     userNameController.addListener(() => setState(() {}));
     titleController.addListener(() => setState(() {}));

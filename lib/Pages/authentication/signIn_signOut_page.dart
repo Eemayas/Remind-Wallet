@@ -4,7 +4,7 @@ import 'package:expenses_tracker/API/firebase_databse.dart';
 import 'package:expenses_tracker/Componet/logo_viewer.dart';
 import 'package:expenses_tracker/Pages/authentication/add_user_data_entry_page.dart';
 import 'package:expenses_tracker/Pages/authentication/forgot_password.dart';
-import 'package:expenses_tracker/Pages/dashboard.dart';
+import 'package:expenses_tracker/Pages/home_pages/dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';

@@ -19,9 +19,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 // import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
-import '../Componet/account_card.dart';
-import '../Componet/transaction.dart';
-import '../Provider/provider.dart';
+import '../../Componet/account_card.dart';
+import '../../Componet/transaction.dart';
+import '../../Provider/provider.dart';
 
 class Dashboard extends StatefulWidget {
   static String id = "DashBoard page";
@@ -63,7 +63,7 @@ class _DashboardState extends State<Dashboard> {
                     title: 'Warning: Database Deletion',
                     titleTextColor: Colors.red,
                     confirmTextColor: Colors.red,
-                    message: 'Are you sure you want to delete the database? This action cannot be undone.',
+                    message: 'Are you sure you want to delete the database? This action cannot be undone.\n You can Upload to cloud before deleting.',
                     onConfirm: () {
                       EasyLoading.show(status: 'Deleting database', maskType: EasyLoadingMaskType.black, dismissOnTap: true);
                       db.deleteAll();
@@ -96,57 +96,99 @@ class _DashboardState extends State<Dashboard> {
         case 'Options:':
           break;
         case 'Upload to cloud':
-          // ignore: unused_local_variable
-          EasyLoading.show(
-            status: 'Uploading to cloud',
-            maskType: EasyLoadingMaskType.black,
-          );
-          Future<bool> isSucess = fd.saveAllDataToFirebase(context);
-          if (await isSucess) {
-            EasyLoading.dismiss();
-          }
-          {
-            EasyLoading.dismiss();
-          }
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CustomAlertDialog(
+                    title: 'Upload to Cloud',
+                    titleTextColor: Colors.white,
+                    confirmTextColor: Colors.white,
+                    message: 'Are you confident in your decision to proceed with the cloud upload?',
+                    onConfirm: () async {
+                      // ignore: unused_local_variable
+                      EasyLoading.show(
+                        status: 'Uploading to cloud',
+                        maskType: EasyLoadingMaskType.black,
+                      );
+                      Future<bool> isSucess = fd.saveAllDataToFirebase(context);
+                      if (await isSucess) {
+                        EasyLoading.dismiss();
+                      }
+                      {
+                        EasyLoading.dismiss();
+                      }
+                      Navigator.pop(context);
+                    });
+              });
+
           break;
         case 'Retrive from cloud':
-          EasyLoading.show(
-            status: 'Retriving from cloud',
-            maskType: EasyLoadingMaskType.black,
-          );
-          // ignore: unused_local_variable
-          Future<bool> isSucess = fd.retrieveAllDataFromFirebase(context);
-          if (await isSucess) {
-            customSnackbar(context: context, text: "All datas are received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
-            db.getAccountDB();
-            db.getAmountDB();
-            db.getTransactionDB();
-            EasyLoading.dismiss();
-            setState(() {});
-          } else {
-            EasyLoading.dismiss();
-          }
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CustomAlertDialog(
+                    title: 'Warning: Data Misplaced',
+                    titleTextColor: Colors.red,
+                    confirmTextColor: Colors.red,
+                    message:
+                        "Before proceeding, please ensure the security of the data in both the cloud and local storage. To accomplish this, initiate the cloud upload first and then return to this page sequentially. Please note that in the absence of proper data safety measures, recovery may not be feasible.",
+                    onConfirm: () async {
+                      EasyLoading.show(
+                        status: 'Retriving from cloud',
+                        maskType: EasyLoadingMaskType.black,
+                      );
+                      // ignore: unused_local_variable
+                      Future<bool> isSucess = fd.retrieveAllDataFromFirebase(context);
+                      if (await isSucess) {
+                        customSnackbar(
+                            context: context, text: "All datas are received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
+                        db.getAccountDB();
+                        db.getAmountDB();
+                        db.getTransactionDB();
+                        EasyLoading.dismiss();
+                        setState(() {});
+                      } else {
+                        EasyLoading.dismiss();
+                      }
+                      Navigator.pop(context);
+                    });
+              });
 
           break;
         case 'Logout':
-          EasyLoading.show(
-            status: 'Processing',
-            maskType: EasyLoadingMaskType.black,
-          );
-          // Future<bool> isSucess = fd.saveAllDataToFirebase(context);
-          if (await fd.saveAllDataToFirebase(context)) {
-            db.deleteAll();
-            db.deleteUserDetailDB();
-            await FirebaseAuth.instance.signOut();
-            EasyLoading.dismiss();
-            customSnackbar(context: context, text: 'Logout Sucessfully', icons: Icons.logout_rounded, iconsColor: Colors.green);
-          } else {
-            EasyLoading.dismiss();
-            customSnackbar(
+          showDialog(
               context: context,
-              text: 'Please Upload to Firebase First',
-            );
-          }
+              builder: (BuildContext context) {
+                return CustomAlertDialog(
+                    title: 'LogOut?',
+                    titleTextColor: Colors.red,
+                    confirmTextColor: Colors.red,
+                    confirmText: "Log out",
+                    message: 'Are you certain about proceeding with the logout?',
+                    onConfirm: () async {
+                      EasyLoading.show(
+                        status: 'Processing',
+                        maskType: EasyLoadingMaskType.black,
+                      );
+                      // Future<bool> isSucess = fd.saveAllDataToFirebase(context);
+                      if (await fd.saveAllDataToFirebase(context)) {
+                        db.deleteAll();
+                        db.deleteUserDetailDB();
+                        await FirebaseAuth.instance.signOut();
+                        EasyLoading.dismiss();
+                        Navigator.pop(context);
+                        customSnackbar(context: context, text: 'Logout Sucessfully', icons: Icons.logout_rounded, iconsColor: Colors.green);
+                      } else {
+                        Navigator.pop(context);
+                        EasyLoading.dismiss();
+                        customSnackbar(
+                          context: context,
+                          text: 'Please Upload to Firebase First',
+                        );
+                      }
+                    });
+              });
+
           break;
       }
     }

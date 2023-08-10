@@ -4,6 +4,7 @@ import 'package:expenses_tracker/Pages/add_account.dart';
 import 'package:expenses_tracker/Pages/add_transaction.dart';
 import 'package:expenses_tracker/Pages/authentication/forgot_password.dart';
 import 'package:expenses_tracker/Pages/edit_user_detail.dart';
+import 'package:expenses_tracker/Pages/terms_condition_page.dart';
 import 'package:expenses_tracker/extras/firebase_all_options.dart';
 import 'package:expenses_tracker/Pages/show_expenses_page.dart';
 import 'package:expenses_tracker/Pages/show_income_page.dart';
@@ -11,17 +12,18 @@ import 'package:expenses_tracker/Pages/starting_pages/splash_screen.dart';
 import 'package:expenses_tracker/Pages/show_to_receive_page.dart';
 import 'package:expenses_tracker/Pages/show_to_pay_page.dart';
 import 'package:expenses_tracker/Pages/authentication/add_user_data_entry_page.dart';
+import 'package:expenses_tracker/Pages/introduction_pages/introduction_pages.dart';
 import 'package:expenses_tracker/constant.dart';
-import 'package:expenses_tracker/Pages/dashboard.dart';
+import 'package:expenses_tracker/Pages/home_pages/dashboard.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
-import 'Componet/bottom_navigation_bar.dart';
+import 'Pages/home_pages/bottom_navigation_bar.dart';
 import 'Pages/starting_pages/check_page.dart';
 import 'Pages/authentication/signIn_signOut_page.dart';
-import 'Pages/show_user_detail.dart';
+import 'Pages/home_pages/show_user_detail.dart';
 import 'Provider/provider.dart';
 import 'firebase_options.dart';
 
@@ -70,7 +72,7 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
             ),
           )),
-      initialRoute: Splash_Page.id,
+      initialRoute: Splash_Page.id, //IntroductionPages.id, //
       // Dashboard.id,  Tryyy.id,//ShowUserDetailPage.id, // //LogInSignUpPage.id, //  Dashboard.id, //AccountDetailPage.id,
       //TranasctionDetailPage.id, // //AddTransaction.id,
       routes: {
@@ -86,11 +88,13 @@ class MyApp extends StatelessWidget {
         CheckSignin_outPage.id: (context) => CheckSignin_outPage(),
         FirebaseAllOptions.id: (context) => FirebaseAllOptions(),
         // CheckPage.id: (context) => CheckPage(),
+        TermsAndConditionsScreen.id: (context) => TermsAndConditionsScreen(),
         LogInSignUpPage.id: (context) => LogInSignUpPage(),
         ForgotPassword.id: (context) => ForgotPassword(),
         EditUserDetail.id: (context) => EditUserDetail(),
         ShowUserDetailPage.id: (context) => ShowUserDetailPage(),
-        BottomNavigationBars.id: (context) => BottomNavigationBars()
+        BottomNavigationBars.id: (context) => BottomNavigationBars(),
+        IntroductionPages.id: (context) => IntroductionPages(),
         // AccountDetailPage.id: (context) => AccountDetailPage(),
         // EditTransaction.id: (context) => EditTransaction(),
         // TranasctionDetailPage.id: (context) => TranasctionDetailPage(),

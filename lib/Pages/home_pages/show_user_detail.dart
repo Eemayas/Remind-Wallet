@@ -6,11 +6,11 @@ import 'package:expenses_tracker/extras/firebase_all_options.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
-import '../API/database.dart';
-import '../Componet/date_input_field.dart';
-import '../Componet/input_filed.dart';
-import '../Componet/logo_viewer.dart';
-import '../constant.dart';
+import '../../API/database.dart';
+import '../../Componet/date_input_field.dart';
+import '../../Componet/input_filed.dart';
+import '../../Componet/logo_viewer.dart';
+import '../../constant.dart';
 
 class ShowUserDetailPage extends StatelessWidget {
   static String id = "show user detail page";

@@ -31,10 +31,12 @@ class CustomAlertDialog extends StatelessWidget {
     return AlertDialog(
       title: Text(
         title,
+        textAlign: TextAlign.center,
         style: kwhiteTextStyle.copyWith(color: titleTextColor, fontWeight: FontWeight.bold),
       ),
       content: Text(
         message,
+        textAlign: TextAlign.center,
         style: kwhiteTextStyle.copyWith(color: msgTextColor),
       ),
       actions: [

@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import '../introduction_pages/introduction_pages.dart';
 import 'check_page.dart';
 
 class Splash_Page extends StatefulWidget {
@@ -26,12 +27,33 @@ class _Splash_PageState extends State<Splash_Page> {
     _navigatetohome(isDataPresent: isDataPresent);
   }
 
+  late SharedPreferences _prefs;
+  bool _isFirstTime = true;
+
+  Future<bool> _checkFirstTime() async {
+    _prefs = await SharedPreferences.getInstance();
+    bool isFirstTime = _prefs.getBool('isFirstTime') ?? true;
+    setState(() {
+      _isFirstTime = isFirstTime;
+      if (isFirstTime) {
+        // If it's the first time, set the flag to false
+        _prefs.setBool('isFirstTime', false);
+      }
+    });
+    return isFirstTime;
+  }
+
   _navigatetohome({isDataPresent}) async {
     var status = await Permission.storage.status;
     await Future.delayed(Duration(milliseconds: 900), () {});
     status.isGranted
-        ? Navigator.of(context)
-            .pushReplacement(PageTransition(type: PageTransitionType.fade, duration: Duration(seconds: 1), child: CheckSignin_outPage()))
+        ? {
+            await _checkFirstTime()
+                ? Navigator.of(context)
+                    .pushReplacement(PageTransition(type: PageTransitionType.fade, duration: Duration(seconds: 1), child: IntroductionPages()))
+                : Navigator.of(context)
+                    .pushReplacement(PageTransition(type: PageTransitionType.fade, duration: Duration(seconds: 1), child: CheckSignin_outPage()))
+          }
         : Navigator.of(context)
             .pushReplacement(PageTransition(type: PageTransitionType.fade, duration: Duration(seconds: 1), child: AskStoragePermission()));
   }
