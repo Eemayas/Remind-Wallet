@@ -33,9 +33,9 @@ By downloading or using the app, these terms will automatically apply to you –
               // Link to third-party Terms and Conditions
               GestureDetector(
                 onTap: () {
-                  _launchURL('https://policies.google.com/terms');
+                  _launchURL(Uri(scheme: 'https', host: 'policies.google.com', path: '/terms'));
                 },
-                child: longText(
+                child: linkText(
                   'Link to Terms and Conditions of third-party service providers used by the app',
                 ),
               ),
@@ -89,12 +89,22 @@ These terms and conditions are effective as of 2023-08-10'''),
     );
   }
 
+  Text linkText(String text) {
+    return Text(
+      text,
+      style: kwhiteTextStyle.copyWith(
+        color: Colors.blue,
+        decoration: TextDecoration.underline,
+      ),
+    );
+  }
+
   // Function to open URLs in the default browser
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+  _launchURL(Uri uri) async {
+    if (await launchUrl(uri)) {
+      await launchUrl(uri);
     } else {
-      throw 'Could not launch $url';
+      throw 'Could not launch ${uri.toString()}';
     }
   }
 }

@@ -4,7 +4,7 @@ import 'package:expenses_tracker/Pages/add_account.dart';
 import 'package:expenses_tracker/Pages/add_transaction.dart';
 import 'package:expenses_tracker/Pages/authentication/forgot_password.dart';
 import 'package:expenses_tracker/Pages/edit_user_detail.dart';
-import 'package:expenses_tracker/Pages/terms_condition_page.dart';
+import 'package:expenses_tracker/Pages/introduction_pages/terms_condition_page.dart';
 import 'package:expenses_tracker/extras/firebase_all_options.dart';
 import 'package:expenses_tracker/Pages/show_expenses_page.dart';
 import 'package:expenses_tracker/Pages/show_income_page.dart';
@@ -72,9 +72,9 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
             ),
           )),
-      initialRoute: Splash_Page.id, //IntroductionPages.id, //
-      // Dashboard.id,  Tryyy.id,//ShowUserDetailPage.id, // //LogInSignUpPage.id, //  Dashboard.id, //AccountDetailPage.id,
-      //TranasctionDetailPage.id, // //AddTransaction.id,
+      initialRoute: Splash_Page.id, //TermsAndConditionsScreen.id, //IntroductionPages.id, //
+      // Dashboard.id,  Tryyy.id,//ShowUserDetailPage.id,  //LogInSignUpPage.id, //  Dashboard.id, //AccountDetailPage.id,
+      //TranasctionDetailPage.id,
       routes: {
         Dashboard.id: (context) => const Dashboard(),
         IncomePage.id: (context) => const IncomePage(),

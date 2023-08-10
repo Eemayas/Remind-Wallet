@@ -2,7 +2,6 @@
 import 'package:expenses_tracker/Componet/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lottie/lottie.dart';
 import 'package:rive/rive.dart';
 
 class StateMachineMuscot extends StatefulWidget {

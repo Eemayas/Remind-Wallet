@@ -28,13 +28,11 @@ class _Splash_PageState extends State<Splash_Page> {
   }
 
   late SharedPreferences _prefs;
-  bool _isFirstTime = true;
 
   Future<bool> _checkFirstTime() async {
     _prefs = await SharedPreferences.getInstance();
     bool isFirstTime = _prefs.getBool('isFirstTime') ?? true;
     setState(() {
-      _isFirstTime = isFirstTime;
       if (isFirstTime) {
         // If it's the first time, set the flag to false
         _prefs.setBool('isFirstTime', false);

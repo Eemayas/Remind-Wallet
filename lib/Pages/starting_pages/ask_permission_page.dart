@@ -1,16 +1,13 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously, prefer_const_literals_to_create_immutables
 
-import 'package:expenses_tracker/Pages/introduction_pages/introduction_pages.dart';
 import 'package:expenses_tracker/Pages/starting_pages/splash_screen.dart';
 import 'package:expenses_tracker/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import '../../Componet/riv_animation.dart';
-import 'check_page.dart';
 
 class AskStoragePermission extends StatefulWidget {
   const AskStoragePermission({super.key});
@@ -21,14 +18,6 @@ class AskStoragePermission extends StatefulWidget {
 }
 
 class _AskStoragePermissionState extends State<AskStoragePermission> {
-  // @override
-  // void initState() async {
-  //   final box = Hive.box("expenses_tracker");
-  //   isDataPresent = box.isNotEmpty;
-  //   super.initState();
-  // }
-
-  // bool isDataPresent = true;
   Future<void> requestStoragePermission(BuildContext context) async {
     var status = await Permission.storage.status;
     if (status.isGranted) {
@@ -37,11 +26,6 @@ class _AskStoragePermissionState extends State<AskStoragePermission> {
       PermissionStatus newStatus = await Permission.storage.request();
       if (newStatus.isGranted) {
         Navigator.of(context).pushReplacement(PageTransition(type: PageTransitionType.fade, duration: Duration(seconds: 1), child: Splash_Page()));
-        // isDataPresent
-        //     ? Navigator.of(context)
-        //         .pushReplacement(PageTransition(type: PageTransitionType.fade, duration: Duration(seconds: 1), child: CheckSignin_outPage()))
-        //     : Navigator.of(context)
-        //         .pushReplacement(PageTransition(type: PageTransitionType.fade, duration: Duration(seconds: 1), child: IntroductionPages()));
       } else if (newStatus.isPermanentlyDenied) {
         openAppSettings();
         Navigator.of(context).pushReplacement(PageTransition(type: PageTransitionType.fade, duration: Duration(seconds: 1), child: Splash_Page()));
@@ -53,7 +37,6 @@ class _AskStoragePermissionState extends State<AskStoragePermission> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        // child: StateMachineMuscot(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

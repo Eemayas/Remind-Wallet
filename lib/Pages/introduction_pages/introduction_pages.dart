@@ -1,13 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:expenses_tracker/Pages/terms_condition_page.dart';
+import 'package:expenses_tracker/Pages/introduction_pages/terms_condition_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../../Componet/custom_alert_dialog.dart';
 import '../../constant.dart';
 import '../starting_pages/check_page.dart';
 import 'pages_list.dart';
@@ -76,7 +75,7 @@ class _IntroductionPagesState extends State<IntroductionPages> {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: Text(
-                                    "Terms and Conditions",
+                                    "Agree to terms and Conditions",
                                     textAlign: TextAlign.center,
                                     style: kwhiteTextStyle.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                                   ),
