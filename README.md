@@ -43,12 +43,7 @@ samples, guidance on mobile development, and a full API reference.
   style="display: inline-block; margin: 0 auto; max-width: 300px">
   <br/>
   <div height=10px></div>
-<img
-  src="./assets/ScreenShots/GooglePixel2XL.png"
-  alt="Alt text"
-  title="Optional title"
-  width=300px
-  style="display: inline-block; margin: 0 auto; max-width: 300px">
+
 <img
   src="./assets/ScreenShots/GooglePixel2XL-5.png"
   alt="Alt text"
@@ -119,11 +114,6 @@ samples, guidance on mobile development, and a full API reference.
   title="Optional title"
   width=300px
   style="display: inline-block; margin: 0 auto; max-width: 300px">
-<img
-  src="./assets/ScreenShots/GooglePixel2XL-15.png"
-  alt="Alt text"
-  title="Optional title"
-  width=300px
-  style="display: inline-block; margin: 0 auto; max-width: 300px">
+
   <br/>
   <div height=10px></div>
