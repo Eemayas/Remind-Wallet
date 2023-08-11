@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:expenses_tracker/API/database.dart';
+
 import 'dashboard.dart';
 import 'show_user_detail.dart';
 import 'package:expenses_tracker/constant.dart';
@@ -23,6 +25,16 @@ class _BottomNavigationBarsState extends State<BottomNavigationBars> {
     Dashboard(), ShowUserDetailPage(),
     // FirebaseAllOptions(),
   ];
+  Database db = Database();
+  @override
+  void initState() {
+    super.initState();
+    db.getTransactionDB();
+    db.getAmountDB();
+    db.getAccountDB();
+    db.getUserDetailDB();
+    db.getAccountNameListDB();
+  }
 
   @override
   Widget build(BuildContext context) {

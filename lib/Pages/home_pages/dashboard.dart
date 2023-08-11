@@ -18,10 +18,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 // import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Componet/account_card.dart';
 import '../../Componet/transaction.dart';
 import '../../Provider/provider.dart';
+import '../starting_pages/check_page.dart';
 
 class Dashboard extends StatefulWidget {
   static String id = "DashBoard page";
@@ -34,17 +36,30 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
-    // EasyLoading.show(dismissOnTap: true);
     db.getTransactionDB();
     db.getAmountDB();
     db.getAccountDB();
     db.getUserDetailDB();
     db.getAccountNameListDB();
-    // db.deleteUserName();
-    // db.deleteAmountDB();
-    // db.deleteTransaction();
-    // db.deleteAccountDB();
+    // checkLogInStatus();
     super.initState();
+  }
+
+  Future<void> checkLogInStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLogin = prefs.getBool('isLogIn') ?? false;
+    if (isLogin) {
+      EasyLoading.show(
+        status: 'Updating database',
+        maskType: EasyLoadingMaskType.black,
+      );
+      if (await fd.retrieveAllDataFromFirebase(context)) {
+        setState(() {});
+      }
+      EasyLoading.dismiss();
+      prefs.setBool('isLogIn', false);
+      EasyLoading.dismiss();
+    }
   }
 
   Database db = Database();
@@ -52,6 +67,7 @@ class _DashboardState extends State<Dashboard> {
   var changed = "";
   @override
   Widget build(BuildContext context) {
+    checkLogInStatus();
     Future<void> _handleMenuItemClick(String value, BuildContext context) async {
       // Implement the logic for each option here
       switch (value) {
@@ -145,6 +161,7 @@ class _DashboardState extends State<Dashboard> {
                         db.getAccountDB();
                         db.getAmountDB();
                         db.getTransactionDB();
+                        db.getUserDetailDB();
                         EasyLoading.dismiss();
                         setState(() {});
                       } else {
@@ -179,7 +196,7 @@ class _DashboardState extends State<Dashboard> {
                         Navigator.pop(context);
                         customSnackbar(context: context, text: 'Logout Sucessfully', icons: Icons.logout_rounded, iconsColor: Colors.green);
                       } else {
-                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(context, CheckSignin_outPage.id);
                         EasyLoading.dismiss();
                         customSnackbar(
                           context: context,
@@ -254,7 +271,7 @@ class _DashboardState extends State<Dashboard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("Hi,", style: kwhiteTextStyle.copyWith(fontSize: 20)),
-              Text("${db.userDetail[userNameD]},", style: kwhiteTextStyle.copyWith(fontSize: 30, fontWeight: FontWeight.bold)),
+              Text("${Database.userDetail[userNameD]},", style: kwhiteTextStyle.copyWith(fontSize: 30, fontWeight: FontWeight.bold)),
               SizedBox(
                 height: 30,
               ),
@@ -264,7 +281,7 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   BalanceCard(
                     cardName: "CURRENT BALANCE",
-                    cardBalanceAmt: db.amountsList["currentBalance"].toString(),
+                    cardBalanceAmt: Database.amountsList["currentBalance"].toString(),
                   ),
                   SizedBox(
                     height: 10,
@@ -274,7 +291,7 @@ class _DashboardState extends State<Dashboard> {
                     children: [
                       Cards(
                         cardName: "TOTAL INCOME",
-                        amount: db.amountsList["totalIncome"].toString(),
+                        amount: Database.amountsList["totalIncome"].toString(),
                         boxShadowColor: kBoxShadowIncome,
                         color: kBackgroundColorCard,
                         icons: Icon(
@@ -287,7 +304,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       Cards(
                         cardName: "TOTAL EXPENSES",
-                        amount: db.amountsList["totalExpenses"].toString(),
+                        amount: Database.amountsList["totalExpenses"].toString(),
                         boxShadowColor: kBoxShadowExpenses,
                         color: kBackgroundColorCard,
                         icons: Icon(Icons.arrow_upward, color: kColorExpenses),
@@ -305,7 +322,7 @@ class _DashboardState extends State<Dashboard> {
                     children: [
                       Cards(
                         cardName: "TO RECEIVE",
-                        amount: db.amountsList["toReceive"].toString(),
+                        amount: Database.amountsList["toReceive"].toString(),
                         boxShadowColor: kBoxShadowIncome,
                         color: kBackgroundColorCard,
                         icons: Icon(
@@ -318,7 +335,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                       Cards(
                         cardName: "TO PAY",
-                        amount: db.amountsList["toPay"].toString(),
+                        amount: Database.amountsList["toPay"].toString(),
                         boxShadowColor: kBoxShadowExpenses,
                         color: kBackgroundColorCard,
                         icons: Icon(Icons.arrow_upward, color: kColorExpenses),
@@ -348,12 +365,12 @@ class _DashboardState extends State<Dashboard> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    for (int i = 0; i < db.AccountsList.length; i++)
+                    for (int i = 0; i < Database.AccountsList.length; i++)
                       Row(
                         children: [
                           AccountCard(
-                            accountName: db.AccountsList[i][accountNameD],
-                            amount: db.AccountsList[i][accountCurrentBalanceD].toString(),
+                            accountName: Database.AccountsList[i][accountNameD],
+                            amount: Database.AccountsList[i][accountCurrentBalanceD].toString(),
                           ),
                           SizedBox(
                             width: 20,
@@ -408,29 +425,29 @@ class _DashboardState extends State<Dashboard> {
                 "Recent Transactions",
                 style: kwhiteTextStyle.copyWith(fontSize: 20),
               ),
-              for (int i = db.TransactionList.length - 1; i >= 0; i--)
-                if (db.TransactionList[i][transationNameD] != null &&
+              for (int i = Database.TransactionList.length - 1; i >= 0; i--)
+                if (Database.TransactionList[i][transationNameD] != null &&
                     // ignore: unnecessary_null_comparison
-                    db.TransactionList[i][transactionAmountD].toString() != null &&
-                    db.TransactionList[i][transactionTypeD] != "0" &&
-                    db.TransactionList[i][transactionTagD] != null &&
-                    db.TransactionList[i][transactionDateD] != null &&
-                    db.TransactionList[i][transactionAccountD] != null &&
-                    db.TransactionList[i][transactionPersonD] != null &&
-                    db.TransactionList[i][transactionCreatedDateD] != null &&
-                    db.TransactionList[i][transactionDescriptionD] != null)
+                    Database.TransactionList[i][transactionAmountD].toString() != null &&
+                    Database.TransactionList[i][transactionTypeD] != "0" &&
+                    Database.TransactionList[i][transactionTagD] != null &&
+                    Database.TransactionList[i][transactionDateD] != null &&
+                    Database.TransactionList[i][transactionAccountD] != null &&
+                    Database.TransactionList[i][transactionPersonD] != null &&
+                    Database.TransactionList[i][transactionCreatedDateD] != null &&
+                    Database.TransactionList[i][transactionDescriptionD] != null)
                   TranactionCard(
-                    transationName: db.TransactionList[i][transationNameD],
-                    transactionAmount: db.TransactionList[i][transactionAmountD].toString(),
-                    transactionType: db.TransactionList[i][transactionTypeD],
-                    transactionTag: db.TransactionList[i][transactionTagD],
-                    transactionDate: db.TransactionList[i][transactionDateD],
-                    transactionAccount: db.TransactionList[i][transactionAccountD].toString(),
-                    transactionPerson: db.TransactionList[i][transactionPersonD],
-                    transactionDescription: db.TransactionList[i][transactionDescriptionD],
-                    iconsName: getIconForElement(db.TransactionList[i][transactionTagD]),
+                    transationName: Database.TransactionList[i][transationNameD],
+                    transactionAmount: Database.TransactionList[i][transactionAmountD].toString(),
+                    transactionType: Database.TransactionList[i][transactionTypeD],
+                    transactionTag: Database.TransactionList[i][transactionTagD],
+                    transactionDate: Database.TransactionList[i][transactionDateD],
+                    transactionAccount: Database.TransactionList[i][transactionAccountD].toString(),
+                    transactionPerson: Database.TransactionList[i][transactionPersonD],
+                    transactionDescription: Database.TransactionList[i][transactionDescriptionD],
+                    iconsName: getIconForElement(Database.TransactionList[i][transactionTagD]),
                     // iconsName: db.TransactionList[i][transactionIconD] == "shooping" ? Icons.shopping_cart_outlined : Icons.abc,
-                    transactionCreatedDate: db.TransactionList[i][transactionCreatedDateD] ?? "",
+                    transactionCreatedDate: Database.TransactionList[i][transactionCreatedDateD] ?? "",
                     // Account: db.TransactionList[i]["account"] ?? "Cash",
                   ),
             ],

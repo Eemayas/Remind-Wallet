@@ -8,8 +8,10 @@ import 'package:expenses_tracker/Pages/home_pages/dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/database.dart';
 import '../../Componet/input_filed.dart';
@@ -30,7 +32,6 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-
   _forgotPassword() {
     Navigator.pushNamed(context, ForgotPassword.id);
   }
@@ -47,7 +48,8 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-
+      // Future<bool> isSucess = fd.retrieveAllDataFromFirebase(context);
+      // if (await isSucess) {
       // Add a listener to handle user authentication state changes
       FirebaseAuth.instance.authStateChanges().listen((User? user) {
         if (user == null) {
@@ -56,15 +58,11 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
           print('User is signed in!');
         }
       });
-
+      // customSnackbar(context: context, text: "All datas are received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
+      // Navigator.of(context).pushReplacement(PageTransition(type: PageTransitionType.fade, duration: Duration(seconds: 2), child: Dashboard()));
+      // }
       // fd.retrieveAccountsFromFirebase(context);
       // ignore: unused_local_variable
-      Future<bool> isSucess = fd.retrieveAllDataFromFirebase(context);
-      if (await fd.retrieveAllDataFromFirebase(context)) {
-        // customSnackbar(context: context, text: "All datas are received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
-        Navigator.pop(context);
-        Navigator.pushNamed(context, Dashboard.id);
-      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         SnackbarFun(context: context, text: 'No user found for that email.');
@@ -82,6 +80,8 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
 
   Future<void> _SignUp(BuildContext context) async {
     print("${emailController.text}  ${passwordController.text}  ${confirmPasswordController.text}  ");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLogIn', false);
     EasyLoading.show(
       status: 'Processing...',
       maskType: EasyLoadingMaskType.black,
@@ -128,6 +128,12 @@ class _LogInSignUpPageState extends State<LogInSignUpPage> {
     super.initState();
     emailController.addListener(() => setState(() {}));
     passwordController.addListener(() => setState(() {}));
+    changeloginStatus();
+  }
+
+  Future<void> changeloginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLogIn', true);
   }
 
   final _formKey = GlobalKey<FormState>();

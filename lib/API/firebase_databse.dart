@@ -47,10 +47,10 @@ class FirebaseDatabases {
       db.getAmountDB();
       db.getTransactionDB();
       db.getUserDetailDB();
-      transactionList = db.TransactionList;
-      accountsList = db.AccountsList;
-      userDetail = db.userDetail;
-      amountsList = db.amountsList;
+      transactionList = Database.TransactionList;
+      accountsList = Database.AccountsList;
+      userDetail = Database.userDetail;
+      amountsList = Database.amountsList;
       try {
         // Check if user is authenticated
         if (_userId == null) {
@@ -268,10 +268,10 @@ class FirebaseDatabases {
         if (transactionList.isNotEmpty &&
             userDetail.isNotEmpty &&
             amountsList.isNotEmpty &&
-            db.TransactionList.isNotEmpty &&
-            db.userDetail.isNotEmpty &&
-            db.amountsList.isNotEmpty &&
-            db.AccountsList.isNotEmpty) {
+            Database.TransactionList.isNotEmpty &&
+            Database.userDetail.isNotEmpty &&
+            Database.amountsList.isNotEmpty &&
+            Database.AccountsList.isNotEmpty) {
           print('Transaction Data: $transactionList');
           print('User Data: $userDetail');
           print('Amount Data: $amountsList');
@@ -358,7 +358,7 @@ class FirebaseDatabases {
   Future<bool> saveTransactionDataToFirebase(BuildContext context) async {
     if (await isInternetAvailable()) {
       db.getTransactionDB();
-      transactionList = db.TransactionList;
+      transactionList = Database.TransactionList;
       try {
         // Check if user is authenticated
         if (_userId == null) {
@@ -411,7 +411,7 @@ class FirebaseDatabases {
     if (await isInternetAvailable()) {
       // initUserId();
       db.getAccountDB();
-      accountsList = db.AccountsList;
+      accountsList = Database.AccountsList;
       try {
         // Check if user is authenticated
         if (_userId == null) {
@@ -463,7 +463,7 @@ class FirebaseDatabases {
   Future<bool> saveUserDetailToFirebase(BuildContext context) async {
     if (await isInternetAvailable()) {
       db.getUserDetailDB();
-      userDetail = db.userDetail;
+      userDetail = Database.userDetail;
       try {
         // Check if user is authenticated
         if (_userId == null) {
@@ -499,7 +499,7 @@ class FirebaseDatabases {
   Future<bool> saveAmountsToFirebase(BuildContext context) async {
     if (await isInternetAvailable()) {
       db.getAmountDB();
-      amountsList = db.amountsList;
+      amountsList = Database.amountsList;
       try {
         // Check if user is authenticated
         if (_userId == null) {
@@ -569,7 +569,7 @@ class FirebaseDatabases {
               transactionNote: transactionList[i][transactionDescriptionD],
               account: transactionList[i][transactionAmountD]);
         }
-        if (transactionList.isNotEmpty && db.TransactionList.isNotEmpty) {
+        if (transactionList.isNotEmpty && Database.TransactionList.isNotEmpty) {
           customSnackbar(context: context, text: "Transactions is received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
           return true;
         } else {
@@ -649,7 +649,7 @@ class FirebaseDatabases {
           updated_TotalToReceive: int.tryParse(amountsList[toReceiveD]),
         );
         print(amountsList);
-        print(db.amountsList);
+        print(Database.amountsList);
         customSnackbar(context: context, text: "Amounts is received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
         return true;
       } catch (e) {
@@ -689,7 +689,7 @@ class FirebaseDatabases {
                   ? int.tryParse(accountsList[i][accountCurrentBalanceD])
                   : accountsList[i][accountCurrentBalanceD]);
         }
-        if (accountsList.isNotEmpty && db.AccountsList.isNotEmpty) {
+        if (accountsList.isNotEmpty && Database.AccountsList.isNotEmpty) {
           print(accountsList);
           customSnackbar(context: context, text: "Accounts is received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
           return true;
@@ -711,7 +711,7 @@ class FirebaseDatabases {
 // Save transaction data to Firebase Firestore for the current user
   Future<void> saveSingleTransactionDataToFirebase(BuildContext context) async {
     db.getTransactionDB();
-    transactionList = db.TransactionList;
+    transactionList = Database.TransactionList;
     try {
       // Check if user is authenticated
       if (_userId == null) {
@@ -754,7 +754,7 @@ class FirebaseDatabases {
   Future<void> saveSingleAccountsToFirebase(BuildContext context) async {
     // initUserId();
     db.getAccountDB();
-    accountsList = db.AccountsList;
+    accountsList = Database.AccountsList;
     try {
       // Check if user is authenticated
       if (_userId == null) {

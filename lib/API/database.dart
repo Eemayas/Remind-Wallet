@@ -5,10 +5,10 @@ import 'package:intl/intl.dart';
 import '../constant.dart';
 
 class Database {
-  List AccountsList = [];
-  Map amountsList = {};
-  List TransactionList = [];
-  Map userDetail = {};
+  static List AccountsList = [];
+  static Map amountsList = {};
+  static List TransactionList = [];
+  static Map userDetail = {};
   final _account = Hive.box("expenses_tracker");
 
   void accountInitialized() {

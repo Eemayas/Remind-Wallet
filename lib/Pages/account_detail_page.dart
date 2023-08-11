@@ -36,7 +36,8 @@ class _AccountDetailPageState extends State<ShowAccountDetailPage> {
               context,
               MaterialPageRoute(
                   builder: (context) => EditAccount(
-                      accountName: db.AccountsList[index][accountNameD], amount: db.AccountsList[index][accountCurrentBalanceD].toString())));
+                      accountName: Database.AccountsList[index][accountNameD],
+                      amount: Database.AccountsList[index][accountCurrentBalanceD].toString())));
           db.getAccountDB();
           db.getAmountDB();
           db.getTransactionDB();
@@ -73,13 +74,13 @@ class _AccountDetailPageState extends State<ShowAccountDetailPage> {
                 iconsData: Icons.account_balance_outlined,
                 title: 'Title',
                 isNote: true,
-                data: db.AccountsList[index][accountNameD],
+                data: Database.AccountsList[index][accountNameD],
                 // data: widget.transactionTitle,
               ),
               DetailField(
                 iconsData: Icons.money,
                 title: 'Amount',
-                data: "RS ${db.AccountsList[index][accountCurrentBalanceD]}",
+                data: "RS ${Database.AccountsList[index][accountCurrentBalanceD]}",
                 // data: "RS ${widget.amount}",
               ),
               SizedBox(

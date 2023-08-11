@@ -46,10 +46,10 @@ class _EditUserDetailState extends State<EditUserDetail> {
     emailController.addListener(() => setState(() {}));
     phoneNumberController.addListener(() => setState(() {}));
     db.getUserDetailDB();
-    userNameController.text = db.userDetail[userNameD];
-    dateController.text = db.userDetail[userDOBD];
-    phoneNumberController.text = db.userDetail[userPhoneD];
-    emailController.text = db.userDetail[userEmailD];
+    userNameController.text = Database.userDetail[userNameD];
+    dateController.text = Database.userDetail[userDOBD];
+    phoneNumberController.text = Database.userDetail[userPhoneD];
+    emailController.text = Database.userDetail[userEmailD];
     // db.deleteAll();
   }
 

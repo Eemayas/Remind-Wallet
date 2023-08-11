@@ -16,6 +16,7 @@ import '../../API/database.dart';
 import '../../Componet/date_input_field.dart';
 import '../../Componet/input_filed.dart';
 import '../../constant.dart';
+import '../home_pages/bottom_navigation_bar.dart';
 
 class AddUserDataPage extends StatefulWidget {
   static String id = "user_data_entry";
@@ -47,12 +48,11 @@ class _AddUserDataPageState extends State<AddUserDataPage> {
     db.addUserDB(
         userName: userNameController.text, userDOB: dateController.text, userEmail: currentEmail, userPhoneNumber: phoneNumberController.text);
     db.getUserDetailDB();
-    print(db.userDetail);
+    print(Database.userDetail);
     if (await fd.saveUserDetailToFirebase(context)) {
       EasyLoading.dismiss();
       customSnackbar(context: context, text: "User Detail was Successful Added", icons: Icons.done_all, iconsColor: Colors.green);
-      Navigator.pop(context);
-      Navigator.pushNamed(context, CheckSignin_outPage.id);
+      Navigator.pushReplacementNamed(context, BottomNavigationBars.id);
     }
   }
 

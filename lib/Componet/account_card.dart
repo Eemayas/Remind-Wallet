@@ -24,7 +24,7 @@ class _AccountCardState extends State<AccountCard> {
     return GestureDetector(
       onTap: () {
         db.getAccountDB();
-        final index = db.AccountsList.indexWhere(
+        final index = Database.AccountsList.indexWhere(
             (element) => element[accountNameD] == widget.accountName && element[accountCurrentBalanceD].toString() == widget.amount);
         print(index);
         Navigator.push(
