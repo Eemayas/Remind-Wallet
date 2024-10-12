@@ -1,5 +1,5 @@
 // firebase_database.dart
-// ignore_for_file: avoid_print, use_build_context_synchronously
+// ignore_for_file: avoid_print, use_build_context_synchronously, unnecessary_null_comparison
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expenses_tracker/Componet/check_internet_connection.dart';
@@ -61,7 +61,10 @@ class FirebaseDatabases {
         // Save transaction data
         // saveTransactionDataToFirebase(context);
         // Get a reference to the Firestore collection for transactions
-        CollectionReference transactionsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(transactionsFD);
+        CollectionReference transactionsRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(transactionsFD);
 
         // Delete existing transaction data
         var existingTransactions = await transactionsRef.get();
@@ -77,11 +80,13 @@ class FirebaseDatabases {
           // Convert keys and values to strings
           Map<String, dynamic> transactionMap = {};
           transaction.forEach((key, value) {
-            transactionMap[SubstitutionCipher.encrypt(key.toString())] = SubstitutionCipher.encrypt(value.toString());
+            transactionMap[SubstitutionCipher.encrypt(key.toString())] =
+                SubstitutionCipher.encrypt(value.toString());
           });
 
           // Add the unique identifier to the transaction map
-          transactionMap[SubstitutionCipher.encrypt('uniqueIdentifier')] = SubstitutionCipher.encrypt(uniqueIdentifier);
+          transactionMap[SubstitutionCipher.encrypt('uniqueIdentifier')] =
+              SubstitutionCipher.encrypt(uniqueIdentifier);
 
           // Add the transaction data to Firestore
           await transactionsRef.add(transactionMap);
@@ -92,11 +97,15 @@ class FirebaseDatabases {
         // Convert keys and values to strings
         Map<String, dynamic> userDetailString = {};
         userDetail.forEach((key, value) {
-          userDetailString[SubstitutionCipher.encrypt(key.toString())] = SubstitutionCipher.encrypt(value.toString());
+          userDetailString[SubstitutionCipher.encrypt(key.toString())] =
+              SubstitutionCipher.encrypt(value.toString());
         });
 
         // Get a reference to the Firestore collection for users
-        CollectionReference usersRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(userDetailsFD);
+        CollectionReference usersRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(userDetailsFD);
 
         // Save user detail document for the current user
         await usersRef.doc(_userId).set(userDetailString);
@@ -106,11 +115,15 @@ class FirebaseDatabases {
         // Convert keys and values to strings
         Map<String, dynamic> amountsListString = {};
         amountsList.forEach((key, value) {
-          amountsListString[SubstitutionCipher.encrypt(key.toString())] = SubstitutionCipher.encrypt(value.toString());
+          amountsListString[SubstitutionCipher.encrypt(key.toString())] =
+              SubstitutionCipher.encrypt(value.toString());
         });
 
         // Get a reference to the Firestore collection for amounts
-        CollectionReference amountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(amountsFD);
+        CollectionReference amountsRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(amountsFD);
 
         // Save amounts document for the current user
         await amountsRef.doc(amountsDocumentFD).set(amountsListString);
@@ -118,7 +131,10 @@ class FirebaseDatabases {
         // Save accounts data
         // saveAccountsToFirebase(context);
         // Get a reference to the Firestore collection for accounts
-        CollectionReference accountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(accountsFD);
+        CollectionReference accountsRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(accountsFD);
 
         // Delete existing account data
         var existingAccounts = await accountsRef.get();
@@ -134,25 +150,35 @@ class FirebaseDatabases {
           // Convert keys and values to strings
           Map<String, dynamic> accountMap = {};
           account.forEach((key, value) {
-            accountMap[SubstitutionCipher.encrypt(key.toString())] = SubstitutionCipher.encrypt(value.toString());
+            accountMap[SubstitutionCipher.encrypt(key.toString())] =
+                SubstitutionCipher.encrypt(value.toString());
           });
 
           // Add the unique identifier to the account map
-          accountMap[SubstitutionCipher.encrypt('uniqueIdentifier')] = SubstitutionCipher.encrypt(uniqueIdentifier);
+          accountMap[SubstitutionCipher.encrypt('uniqueIdentifier')] =
+              SubstitutionCipher.encrypt(uniqueIdentifier);
 
           // Add the account data to Firestore
           await accountsRef.add(accountMap);
         }
 
-        customSnackbar(context: context, text: "All Data is saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
+        customSnackbar(
+            context: context,
+            text: "All Data is saved to Firebase Cloud",
+            icons: Icons.done_all,
+            iconsColor: Colors.green);
         return true;
       } catch (e) {
-        customSnackbar(context: context, text: 'Error saving data to Firebase: \n$e');
+        customSnackbar(
+            context: context, text: 'Error saving data to Firebase: \n$e');
         print('Error saving data to Firebase: $e');
         return false;
       }
     } else {
-      customSnackbar(context: context, text: "No Internet Available", icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
+      customSnackbar(
+          context: context,
+          text: "No Internet Available",
+          icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
       return false;
     }
   }
@@ -165,18 +191,27 @@ class FirebaseDatabases {
     String encryptToPayD = SubstitutionCipher.encrypt(toPayD);
     String encryptToReceiveD = SubstitutionCipher.encrypt(toReceiveD);
 
-    String encryptTransactionNameD = SubstitutionCipher.encrypt(transationNameD);
-    String encryptTransactionCreatedDateD = SubstitutionCipher.encrypt(transactionCreatedDateD);
-    String encryptTransactionAmountD = SubstitutionCipher.encrypt(transactionAmountD);
-    String encryptTransactionTypeD = SubstitutionCipher.encrypt(transactionTypeD);
+    String encryptTransactionNameD =
+        SubstitutionCipher.encrypt(transationNameD);
+    String encryptTransactionCreatedDateD =
+        SubstitutionCipher.encrypt(transactionCreatedDateD);
+    String encryptTransactionAmountD =
+        SubstitutionCipher.encrypt(transactionAmountD);
+    String encryptTransactionTypeD =
+        SubstitutionCipher.encrypt(transactionTypeD);
     String encryptTransactionTagD = SubstitutionCipher.encrypt(transactionTagD);
-    String encryptTransactionDateD = SubstitutionCipher.encrypt(transactionDateD);
-    String encryptTransactionPersonD = SubstitutionCipher.encrypt(transactionPersonD);
-    String encryptTransactionDescriptionD = SubstitutionCipher.encrypt(transactionDescriptionD);
-    String encryptTransactionAccountD = SubstitutionCipher.encrypt(transactionAccountD);
+    String encryptTransactionDateD =
+        SubstitutionCipher.encrypt(transactionDateD);
+    String encryptTransactionPersonD =
+        SubstitutionCipher.encrypt(transactionPersonD);
+    String encryptTransactionDescriptionD =
+        SubstitutionCipher.encrypt(transactionDescriptionD);
+    String encryptTransactionAccountD =
+        SubstitutionCipher.encrypt(transactionAccountD);
 
     String encryptAccountNameD = SubstitutionCipher.encrypt(accountNameD);
-    String encryptAccountCurrentBalanceD = SubstitutionCipher.encrypt(accountCurrentBalanceD);
+    String encryptAccountCurrentBalanceD =
+        SubstitutionCipher.encrypt(accountCurrentBalanceD);
 
     String encryptUserNameD = SubstitutionCipher.encrypt(userNameD);
     String encryptUserEmailD = SubstitutionCipher.encrypt(userEmailD);
@@ -194,22 +229,35 @@ class FirebaseDatabases {
         // Retrieve transaction data
         // await retrieveTransactionsFromFirebase(context);
         // Get a reference to the Firestore collection for transactions
-        CollectionReference transactionsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(transactionsFD);
+        CollectionReference transactionsRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(transactionsFD);
 
         // Retrieve transaction data for the current user
         QuerySnapshot transactionSnapshot = await transactionsRef.get();
         List<DocumentSnapshot> transactionDocuments = transactionSnapshot.docs;
-        transactionList = transactionDocuments.map((transaction) => transaction.data() as Map<String, dynamic>).toList();
+        transactionList = transactionDocuments
+            .map((transaction) => transaction.data() as Map<String, dynamic>)
+            .toList();
         db.deleteTransactionDB();
         for (int i = 0; i < transactionList.length; i++) {
           db.addTransactionDB(
-              transactionTitle: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionNameD]),
-              createdDate: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionCreatedDateD]),
-              amount: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionAmountD]).runtimeType == String
-                  ? int.tryParse(SubstitutionCipher.decrypt(transactionList[i][encryptTransactionAmountD]))
-                  : SubstitutionCipher.decrypt(transactionList[i][encryptTransactionAmountD]),
-              transactionType: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionTypeD]),
-              transactionTag: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionTagD]),
+              transactionTitle: SubstitutionCipher.decrypt(
+                  transactionList[i][encryptTransactionNameD]),
+              createdDate: SubstitutionCipher.decrypt(
+                  transactionList[i][encryptTransactionCreatedDateD]),
+              amount: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionAmountD])
+                          .runtimeType ==
+                      String
+                  ? int.tryParse(SubstitutionCipher.decrypt(
+                      transactionList[i][encryptTransactionAmountD]))
+                  : SubstitutionCipher.decrypt(
+                      transactionList[i][encryptTransactionAmountD]),
+              transactionType: SubstitutionCipher.decrypt(
+                  transactionList[i][encryptTransactionTypeD]),
+              transactionTag: SubstitutionCipher.decrypt(
+                  transactionList[i][encryptTransactionTagD]),
               transactionDate: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionDateD]),
               transactionPerson: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionPersonD]),
               transactionNote: SubstitutionCipher.decrypt(transactionList[i][encryptTransactionDescriptionD]),
@@ -219,50 +267,71 @@ class FirebaseDatabases {
         // await retrieveUserDetailFromFirebase(context);
         // Get a reference to the Firestore collection for users
         // CollectionReference usersRef = FirebaseFirestore.instance.collection(usersFD);
-        CollectionReference usersRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(userDetailsFD);
+        CollectionReference usersRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(userDetailsFD);
 
         // Retrieve user detail for the current user
         DocumentSnapshot userSnapshot = await usersRef.doc(_userId).get();
         userDetail = userSnapshot.data() as Map<String, dynamic>;
 
         db.editUserNameDB(
-          updated_userName: SubstitutionCipher.decrypt(userDetail[encryptUserNameD]),
-          updated_userEmail: SubstitutionCipher.decrypt(userDetail[encryptUserEmailD]),
-          updated_userPhoneNumber: SubstitutionCipher.decrypt(userDetail[encryptUserPhoneD]),
-          updated_userDOB: SubstitutionCipher.decrypt(userDetail[encryptUserDOBD]),
+          updated_userName:
+              SubstitutionCipher.decrypt(userDetail[encryptUserNameD]),
+          updated_userEmail:
+              SubstitutionCipher.decrypt(userDetail[encryptUserEmailD]),
+          updated_userPhoneNumber:
+              SubstitutionCipher.decrypt(userDetail[encryptUserPhoneD]),
+          updated_userDOB:
+              SubstitutionCipher.decrypt(userDetail[encryptUserDOBD]),
         );
         // Retrieve accounts data
         // await retrieveAccountsFromFirebase(context);
         // Get a reference to the Firestore collection for accounts
-        CollectionReference accountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(accountsFD);
+        CollectionReference accountsRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(accountsFD);
 
         // Retrieve accounts for the current user
         QuerySnapshot accountSnapshot = await accountsRef.get();
         List<DocumentSnapshot> accountDocuments = accountSnapshot.docs;
-        accountsList = accountDocuments.map((account) => account.data() as Map<String, dynamic>).toList();
+        accountsList = accountDocuments
+            .map((account) => account.data() as Map<String, dynamic>)
+            .toList();
         db.deleteAccountDB();
         for (int i = 0; i < accountsList.length; i++) {
           db.addAccountOnlyDB(
-              accountName: SubstitutionCipher.decrypt(accountsList[i][encryptAccountNameD]),
-              amount: SubstitutionCipher.decrypt(accountsList[i][encryptAccountCurrentBalanceD]).runtimeType == String
-                  ? int.tryParse(SubstitutionCipher.decrypt(accountsList[i][encryptAccountCurrentBalanceD]))
-                  : SubstitutionCipher.decrypt(accountsList[i][encryptAccountCurrentBalanceD]));
+              accountName: SubstitutionCipher.decrypt(
+                  accountsList[i][encryptAccountNameD]),
+              amount: int.tryParse(SubstitutionCipher.decrypt(
+                  accountsList[i][encryptAccountCurrentBalanceD])));
         }
         // Retrieve amounts data
         // await retrieveAmountsFromFirebase(context);
         // Get a reference to the Firestore collection for amounts
-        CollectionReference amountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(amountsFD);
+        CollectionReference amountsRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(amountsFD);
 
         // Retrieve amounts for the current user
-        DocumentSnapshot amountsSnapshot = await amountsRef.doc(amountsDocumentFD).get();
+        DocumentSnapshot amountsSnapshot =
+            await amountsRef.doc(amountsDocumentFD).get();
         amountsList = amountsSnapshot.data() as Map<String, dynamic>;
 
         db.editAmountDB(
-          updated_CurrentBalance: int.tryParse(SubstitutionCipher.decrypt(amountsList[encryptCurrentBalanceD])),
-          updated_TotalIncome: int.tryParse(SubstitutionCipher.decrypt(amountsList[encryptTotalIncomeD])),
-          updated_totalExpenses: int.tryParse(SubstitutionCipher.decrypt(amountsList[encryptTotalExpensesD])),
-          updated_TotalToPay: int.tryParse(SubstitutionCipher.decrypt(amountsList[encryptToPayD])),
-          updated_TotalToReceive: int.tryParse(SubstitutionCipher.decrypt(amountsList[encryptToReceiveD])),
+          updated_CurrentBalance: int.tryParse(
+              SubstitutionCipher.decrypt(amountsList[encryptCurrentBalanceD])),
+          updated_TotalIncome: int.tryParse(
+              SubstitutionCipher.decrypt(amountsList[encryptTotalIncomeD])),
+          updated_totalExpenses: int.tryParse(
+              SubstitutionCipher.decrypt(amountsList[encryptTotalExpensesD])),
+          updated_TotalToPay: int.tryParse(
+              SubstitutionCipher.decrypt(amountsList[encryptToPayD])),
+          updated_TotalToReceive: int.tryParse(
+              SubstitutionCipher.decrypt(amountsList[encryptToReceiveD])),
         );
         // Do something with the retrieved data...
         if (transactionList.isNotEmpty &&
@@ -276,10 +345,18 @@ class FirebaseDatabases {
           print('User Data: $userDetail');
           print('Amount Data: $amountsList');
           print('Accounts Data: $accountsList');
-          customSnackbar(context: context, text: "All datas are received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
+          customSnackbar(
+              context: context,
+              text: "All datas are received from Firebase cloud",
+              icons: Icons.done_all,
+              iconsColor: Colors.green);
           return true;
         } else {
-          customSnackbar(context: context, text: "All datas are empty in Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
+          customSnackbar(
+              context: context,
+              text: "All datas are empty in Firebase cloud",
+              icons: Icons.done_all,
+              iconsColor: Colors.green);
           return false;
         }
       } catch (e) {
@@ -288,16 +365,23 @@ class FirebaseDatabases {
         return false;
       }
     } else {
-      customSnackbar(context: context, text: "No Internet Available", icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
+      customSnackbar(
+          context: context,
+          text: "No Internet Available",
+          icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
       return false;
     }
   }
 
-  Future<bool> deleteAllDocumentsFromCollection(BuildContext context, String collectionName) async {
+  Future<bool> deleteAllDocumentsFromCollection(
+      BuildContext context, String collectionName) async {
     if (await isInternetAvailable()) {
       try {
         // Get a reference to the Firestore collection
-        CollectionReference collectionRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(collectionName);
+        CollectionReference collectionRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(collectionName);
         // CollectionReference collectionAmtRef = FirebaseFirestore.instance.collection(collectionName);
 
         // Query for all documents in the collection
@@ -308,7 +392,8 @@ class FirebaseDatabases {
         for (var doc in querySnapshot.docs) {
           await doc.reference.delete();
         }
-        print('All documents in $collectionName collection deleted successfully');
+        print(
+            'All documents in $collectionName collection deleted successfully');
         // customSnackbar(
         //     context: context,
         //     text: 'All documents in $collectionName collection deleted successfully',
@@ -316,12 +401,16 @@ class FirebaseDatabases {
         //     iconsColor: Colors.green);
         return true;
       } catch (e) {
-        customSnackbar(context: context, text: 'Error deleting documents: \n$e');
+        customSnackbar(
+            context: context, text: 'Error deleting documents: \n$e');
         print('Error deleting documents: $e');
         return false;
       }
     } else {
-      customSnackbar(context: context, text: "No Internet Available", icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
+      customSnackbar(
+          context: context,
+          text: "No Internet Available",
+          icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
       return false;
     }
   }
@@ -343,14 +432,21 @@ class FirebaseDatabases {
 
         // Add more collections to delete if needed
         customSnackbar(
-            context: context, text: "All data is deleted from Firebase Cloud", icons: Icons.delete_forever_outlined, iconsColor: Colors.green);
+            context: context,
+            text: "All data is deleted from Firebase Cloud",
+            icons: Icons.delete_forever_outlined,
+            iconsColor: Colors.green);
         print('All data in Firestore deleted successfully');
       } catch (e) {
-        customSnackbar(context: context, text: 'Error deleting data from Firestore: \n$e');
+        customSnackbar(
+            context: context, text: 'Error deleting data from Firestore: \n$e');
         print('Error deleting data from Firestore: $e');
       }
     } else {
-      customSnackbar(context: context, text: "No Internet Available", icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
+      customSnackbar(
+          context: context,
+          text: "No Internet Available",
+          icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
     }
   }
 
@@ -367,7 +463,10 @@ class FirebaseDatabases {
         }
 
         // Get a reference to the Firestore collection for transactions
-        CollectionReference transactionsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(transactionsFD);
+        CollectionReference transactionsRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(transactionsFD);
 
         // Delete existing transaction data
         var existingTransactions = await transactionsRef.get();
@@ -393,15 +492,23 @@ class FirebaseDatabases {
           await transactionsRef.add(transactionMap);
         }
 
-        customSnackbar(context: context, text: "Transactions are saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
+        customSnackbar(
+            context: context,
+            text: "Transactions are saved to Firebase Cloud",
+            icons: Icons.done_all,
+            iconsColor: Colors.green);
         return true;
       } catch (e) {
-        customSnackbar(context: context, text: 'Error saving transaction data: \n$e');
+        customSnackbar(
+            context: context, text: 'Error saving transaction data: \n$e');
         print('Error saving transaction data: $e');
         return false;
       }
     } else {
-      customSnackbar(context: context, text: "No Internet Available", icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
+      customSnackbar(
+          context: context,
+          text: "No Internet Available",
+          icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
       return false;
     }
   }
@@ -420,7 +527,10 @@ class FirebaseDatabases {
         }
 
         // Get a reference to the Firestore collection for accounts
-        CollectionReference accountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(accountsFD);
+        CollectionReference accountsRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(accountsFD);
 
         // Delete existing account data
         var existingAccounts = await accountsRef.get();
@@ -446,7 +556,11 @@ class FirebaseDatabases {
           await accountsRef.add(accountMap);
         }
 
-        customSnackbar(context: context, text: "Accounts are saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
+        customSnackbar(
+            context: context,
+            text: "Accounts are saved to Firebase Cloud",
+            icons: Icons.done_all,
+            iconsColor: Colors.green);
         return true;
       } catch (e) {
         customSnackbar(context: context, text: 'Error saving accounts: \n$e');
@@ -454,7 +568,10 @@ class FirebaseDatabases {
         return false;
       }
     } else {
-      customSnackbar(context: context, text: "No Internet Available", icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
+      customSnackbar(
+          context: context,
+          text: "No Internet Available",
+          icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
       return false;
     }
   }
@@ -474,23 +591,35 @@ class FirebaseDatabases {
         // Convert keys and values to strings
         Map<String, dynamic> userDetailString = {};
         userDetail.forEach((key, value) {
-          userDetailString[SubstitutionCipher.encrypt(key.toString())] = SubstitutionCipher.encrypt(value.toString());
+          userDetailString[SubstitutionCipher.encrypt(key.toString())] =
+              SubstitutionCipher.encrypt(value.toString());
         });
 
         // Get a reference to the Firestore collection for users
-        CollectionReference usersRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(userDetailsFD);
+        CollectionReference usersRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(userDetailsFD);
 
         // Save user detail document for the current user
         await usersRef.doc(_userId).set(userDetailString);
-        customSnackbar(context: context, text: "UserData is saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
+        customSnackbar(
+            context: context,
+            text: "UserData is saved to Firebase Cloud",
+            icons: Icons.done_all,
+            iconsColor: Colors.green);
         return true;
       } catch (e) {
-        customSnackbar(context: context, text: 'Error saving user detail: \n$e');
+        customSnackbar(
+            context: context, text: 'Error saving user detail: \n$e');
         print('Error saving user detail: $e');
         return false;
       }
     } else {
-      customSnackbar(context: context, text: "No Internet Available", icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
+      customSnackbar(
+          context: context,
+          text: "No Internet Available",
+          icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
       return false;
     }
   }
@@ -514,11 +643,18 @@ class FirebaseDatabases {
         });
 
         // Get a reference to the Firestore collection for amounts
-        CollectionReference amountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(amountsFD);
+        CollectionReference amountsRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(amountsFD);
 
         // Save amounts document for the current user
         await amountsRef.doc(amountsDocumentFD).set(amountsListString);
-        customSnackbar(context: context, text: "Ammount is saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
+        customSnackbar(
+            context: context,
+            text: "Ammount is saved to Firebase Cloud",
+            icons: Icons.done_all,
+            iconsColor: Colors.green);
         return true;
       } catch (e) {
         customSnackbar(context: context, text: 'Error saving amounts: \n$e');
@@ -526,7 +662,10 @@ class FirebaseDatabases {
         return false;
       }
     } else {
-      customSnackbar(context: context, text: "No Internet Available", icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
+      customSnackbar(
+          context: context,
+          text: "No Internet Available",
+          icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
       return false;
     }
   }
@@ -548,20 +687,26 @@ class FirebaseDatabases {
         }
 
         // Get a reference to the Firestore collection for transactions
-        CollectionReference transactionsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(transactionsFD);
+        CollectionReference transactionsRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(transactionsFD);
 
         // Retrieve transaction data for the current user
         QuerySnapshot transactionSnapshot = await transactionsRef.get();
         List<DocumentSnapshot> transactionDocuments = transactionSnapshot.docs;
-        transactionList = transactionDocuments.map((transaction) => transaction.data() as Map<String, dynamic>).toList();
+        transactionList = transactionDocuments
+            .map((transaction) => transaction.data() as Map<String, dynamic>)
+            .toList();
         db.deleteTransactionDB();
         for (int i = 0; i < transactionList.length; i++) {
           db.addTransactionDB(
               transactionTitle: transactionList[i][transationNameD],
               createdDate: transactionList[i][transactionCreatedDateD],
-              amount: transactionList[i][transactionAmountD].runtimeType == String
-                  ? int.tryParse(transactionList[i][transactionAmountD])
-                  : transactionList[i][transactionAmountD],
+              amount:
+                  transactionList[i][transactionAmountD].runtimeType == String
+                      ? int.tryParse(transactionList[i][transactionAmountD])
+                      : transactionList[i][transactionAmountD],
               transactionType: transactionList[i][transactionTypeD],
               transactionTag: transactionList[i][transactionTagD],
               transactionDate: transactionList[i][transactionDateD],
@@ -570,19 +715,27 @@ class FirebaseDatabases {
               account: transactionList[i][transactionAmountD]);
         }
         if (transactionList.isNotEmpty && Database.TransactionList.isNotEmpty) {
-          customSnackbar(context: context, text: "Transactions is received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
+          customSnackbar(
+              context: context,
+              text: "Transactions is received from Firebase cloud",
+              icons: Icons.done_all,
+              iconsColor: Colors.green);
           return true;
         } else {
           return false;
         }
       } catch (e) {
-        customSnackbar(context: context, text: 'Error retrieving transactions: \n$e');
+        customSnackbar(
+            context: context, text: 'Error retrieving transactions: \n$e');
         print('Error retrieving transactions: $e');
         transactionList = [];
         return false;
       }
     } else {
-      customSnackbar(context: context, text: "No Internet Available", icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
+      customSnackbar(
+          context: context,
+          text: "No Internet Available",
+          icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
       return false;
     }
   }
@@ -599,7 +752,10 @@ class FirebaseDatabases {
 
         // Get a reference to the Firestore collection for users
         // CollectionReference usersRef = FirebaseFirestore.instance.collection(usersFD);
-        CollectionReference usersRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(userDetailsFD);
+        CollectionReference usersRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(userDetailsFD);
 
         // Retrieve user detail for the current user
         DocumentSnapshot userSnapshot = await usersRef.doc(_userId).get();
@@ -611,16 +767,24 @@ class FirebaseDatabases {
           updated_userDOB: userDetail[userDOBD],
         );
         print(userDetail);
-        customSnackbar(context: context, text: "UserDetails is received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
+        customSnackbar(
+            context: context,
+            text: "UserDetails is received from Firebase cloud",
+            icons: Icons.done_all,
+            iconsColor: Colors.green);
         return true;
       } catch (e) {
-        customSnackbar(context: context, text: 'Error retrieving user detail: \n$e');
+        customSnackbar(
+            context: context, text: 'Error retrieving user detail: \n$e');
         print('Error retrieving user detail: $e');
         userDetail = {};
         return false;
       }
     } else {
-      customSnackbar(context: context, text: "No Internet Available", icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
+      customSnackbar(
+          context: context,
+          text: "No Internet Available",
+          icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
       return false;
     }
   }
@@ -636,10 +800,14 @@ class FirebaseDatabases {
         }
 
         // Get a reference to the Firestore collection for amounts
-        CollectionReference amountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(amountsFD);
+        CollectionReference amountsRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(amountsFD);
 
         // Retrieve amounts for the current user
-        DocumentSnapshot amountsSnapshot = await amountsRef.doc(amountsDocumentFD).get();
+        DocumentSnapshot amountsSnapshot =
+            await amountsRef.doc(amountsDocumentFD).get();
         amountsList = amountsSnapshot.data() as Map<String, dynamic>;
         db.editAmountDB(
           updated_CurrentBalance: int.tryParse(amountsList[currentBalanceD]),
@@ -650,16 +818,24 @@ class FirebaseDatabases {
         );
         print(amountsList);
         print(Database.amountsList);
-        customSnackbar(context: context, text: "Amounts is received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
+        customSnackbar(
+            context: context,
+            text: "Amounts is received from Firebase cloud",
+            icons: Icons.done_all,
+            iconsColor: Colors.green);
         return true;
       } catch (e) {
-        customSnackbar(context: context, text: 'Error retrieving amounts: \n$e');
+        customSnackbar(
+            context: context, text: 'Error retrieving amounts: \n$e');
         print('Error retrieving amounts: $e');
         amountsList = {};
         return false;
       }
     } else {
-      customSnackbar(context: context, text: "No Internet Available", icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
+      customSnackbar(
+          context: context,
+          text: "No Internet Available",
+          icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
       return false;
     }
   }
@@ -675,35 +851,49 @@ class FirebaseDatabases {
         }
 
         // Get a reference to the Firestore collection for accounts
-        CollectionReference accountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(accountsFD);
+        CollectionReference accountsRef = FirebaseFirestore.instance
+            .collection(usersFD)
+            .doc(_userId)
+            .collection(accountsFD);
 
         // Retrieve accounts for the current user
         QuerySnapshot accountSnapshot = await accountsRef.get();
         List<DocumentSnapshot> accountDocuments = accountSnapshot.docs;
-        accountsList = accountDocuments.map((account) => account.data() as Map<String, dynamic>).toList();
+        accountsList = accountDocuments
+            .map((account) => account.data() as Map<String, dynamic>)
+            .toList();
         db.deleteAccountDB();
         for (int i = 0; i < accountsList.length; i++) {
           db.addAccountDB(
               accountName: accountsList[i][accountNameD],
-              amount: accountsList[i][accountCurrentBalanceD].runtimeType == String
-                  ? int.tryParse(accountsList[i][accountCurrentBalanceD])
-                  : accountsList[i][accountCurrentBalanceD]);
+              amount:
+                  accountsList[i][accountCurrentBalanceD].runtimeType == String
+                      ? int.tryParse(accountsList[i][accountCurrentBalanceD])
+                      : accountsList[i][accountCurrentBalanceD]);
         }
         if (accountsList.isNotEmpty && Database.AccountsList.isNotEmpty) {
           print(accountsList);
-          customSnackbar(context: context, text: "Accounts is received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
+          customSnackbar(
+              context: context,
+              text: "Accounts is received from Firebase cloud",
+              icons: Icons.done_all,
+              iconsColor: Colors.green);
           return true;
         } else {
           return false;
         }
       } catch (e) {
-        customSnackbar(context: context, text: 'Error retrieving accounts: \n$e');
+        customSnackbar(
+            context: context, text: 'Error retrieving accounts: \n$e');
         print('Error retrieving accounts: $e');
         accountsList = [];
         return false;
       }
     } else {
-      customSnackbar(context: context, text: "No Internet Available", icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
+      customSnackbar(
+          context: context,
+          text: "No Internet Available",
+          icons: Icons.signal_wifi_statusbar_connected_no_internet_4);
       return false;
     }
   }
@@ -720,7 +910,10 @@ class FirebaseDatabases {
       }
 
       // Get a reference to the Firestore collection for transactions
-      CollectionReference transactionsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(transactionsFD);
+      CollectionReference transactionsRef = FirebaseFirestore.instance
+          .collection(usersFD)
+          .doc(_userId)
+          .collection(transactionsFD);
 
       // Save each transaction separately
       for (var transaction in transactionList) {
@@ -737,15 +930,22 @@ class FirebaseDatabases {
         transactionMap['uniqueIdentifier'] = uniqueIdentifier;
 
         // Check if the transaction with the same unique identifier exists
-        var query = await transactionsRef.where("uniqueIdentifier", isNotEqualTo: uniqueIdentifier).get();
+        var query = await transactionsRef
+            .where("uniqueIdentifier", isNotEqualTo: uniqueIdentifier)
+            .get();
         if (query.docs.isEmpty) {
           await transactionsRef.add(transactionMap);
         }
       }
 
-      customSnackbar(context: context, text: "Transactions are saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
+      customSnackbar(
+          context: context,
+          text: "Transactions are saved to Firebase Cloud",
+          icons: Icons.done_all,
+          iconsColor: Colors.green);
     } catch (e) {
-      customSnackbar(context: context, text: 'Error saving transaction data: \n$e');
+      customSnackbar(
+          context: context, text: 'Error saving transaction data: \n$e');
       print('Error saving transaction data: $e');
     }
   }
@@ -763,7 +963,10 @@ class FirebaseDatabases {
       }
 
       // Get a reference to the Firestore collection for accounts
-      CollectionReference accountsRef = FirebaseFirestore.instance.collection(usersFD).doc(_userId).collection(accountsFD);
+      CollectionReference accountsRef = FirebaseFirestore.instance
+          .collection(usersFD)
+          .doc(_userId)
+          .collection(accountsFD);
 
       // Save each account separately
       for (var account in accountsList) {
@@ -780,13 +983,19 @@ class FirebaseDatabases {
         accountMap['uniqueIdentifier'] = uniqueIdentifier;
 
         // Check if the account with the same unique identifier exists
-        var query = await accountsRef.where("uniqueIdentifier", isEqualTo: uniqueIdentifier).get();
+        var query = await accountsRef
+            .where("uniqueIdentifier", isEqualTo: uniqueIdentifier)
+            .get();
         if (query.docs.isEmpty) {
           await accountsRef.add(accountMap);
         }
       }
 
-      customSnackbar(context: context, text: "Accounts are saved to Firebase Cloud", icons: Icons.done_all, iconsColor: Colors.green);
+      customSnackbar(
+          context: context,
+          text: "Accounts are saved to Firebase Cloud",
+          icons: Icons.done_all,
+          iconsColor: Colors.green);
     } catch (e) {
       customSnackbar(context: context, text: 'Error saving accounts: \n$e');
       print('Error saving accounts: $e');

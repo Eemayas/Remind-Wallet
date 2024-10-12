@@ -23,11 +23,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   _resetPassword() async {
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text);
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: emailController.text);
       customSnackbar(
-          context: context, text: "Email Send \nPlease Check Email:\n${emailController.text}", icons: Icons.done, iconsColor: Colors.green);
+          context: context,
+          text: "Email Send \nPlease Check Email:\n${emailController.text}",
+          icons: Icons.done,
+          iconsColor: Colors.green);
     } on FirebaseAuthException catch (e) {
-      customSnackbar(context: context, text: "Something went wrong: \n${e.code}");
+      customSnackbar(
+          context: context, text: "Something went wrong: \n${e.code}");
     }
     Navigator.pop(context);
   }
@@ -42,7 +47,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {print("${emailController.text} "), FocusScope.of(context).requestFocus(FocusNode())},
+      onTap: () => {
+        print("${emailController.text} "),
+        FocusScope.of(context).requestFocus(FocusNode())
+      },
       child: Scaffold(
         body: SingleChildScrollView(
           child: SafeArea(
@@ -88,8 +96,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           icon: Icon(Icons.restore, color: Colors.white),
                           color: Colors.deepPurple.shade500,
                         ),
-                        ButtonState.loading: IconedButton(text: "Loading", color: Colors.deepPurple.shade700),
-                        ButtonState.fail: IconedButton(text: "Failed", icon: Icon(Icons.cancel, color: Colors.white), color: Colors.red.shade300),
+                        ButtonState.loading: IconedButton(
+                            text: "Loading", color: Colors.deepPurple.shade700),
+                        ButtonState.fail: IconedButton(
+                            text: "Failed",
+                            icon: Icon(Icons.cancel, color: Colors.white),
+                            color: Colors.red.shade300),
                         ButtonState.success: IconedButton(
                             text: "Success",
                             icon: Icon(

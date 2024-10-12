@@ -125,6 +125,15 @@ class _EditUserDetailState extends State<EditUserDetail> {
                       labelText: "Date of Birth",
                       prefixIcon: Icons.date_range_outlined,
                       hintText: "YYYY-MM-DD",
+                       dateinput: dateController.text.isEmpty
+                        ? DateTime.now()
+                        : DateTime(
+                            int.parse(
+                                dateController.text.split('-')[0]), // Year
+                            int.parse(
+                                dateController.text.split('-')[1]), // Month
+                            int.parse(dateController.text.split('-')[2]), // Day
+                          ),
                     ),
                     SizedBox(
                       height: 20,

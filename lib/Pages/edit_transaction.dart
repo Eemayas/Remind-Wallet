@@ -66,7 +66,7 @@ class _EditTransactionState extends State<EditTransaction> {
     tranasctionTypeController.text = widget.transactionType;
     accountController.text = widget.Account;
     // tagController.text = widget.transactionTag;
-    // dateController.text = widget.transactionDate;
+    dateController.text = widget.transactionDate;
     toFromController.text = widget.transactionPerson;
     noteController.text = widget.transactionNote;
     // Database db = Database();
@@ -161,6 +161,15 @@ class _EditTransactionState extends State<EditTransaction> {
                     labelText: "When",
                     prefixIcon: Icons.date_range_outlined,
                     hintText: "YYYY-MM-DD",
+                    dateinput: dateController.text.isEmpty
+                        ? DateTime.now()
+                        : DateTime(
+                            int.parse(
+                                dateController.text.split('-')[0]), // Year
+                            int.parse(
+                                dateController.text.split('-')[1]), // Month
+                            int.parse(dateController.text.split('-')[2]), // Day
+                          ),
                   ),
                   SizedBox(
                     height: 20,
@@ -196,8 +205,12 @@ class _EditTransactionState extends State<EditTransaction> {
                           icon: Icon(Icons.edit, color: Colors.white),
                           color: Colors.deepPurple.shade500,
                         ),
-                        ButtonState.loading: IconedButton(text: "Loading", color: Colors.deepPurple.shade700),
-                        ButtonState.fail: IconedButton(text: "Failed", icon: Icon(Icons.cancel, color: Colors.white), color: Colors.red.shade300),
+                        ButtonState.loading: IconedButton(
+                            text: "Loading", color: Colors.deepPurple.shade700),
+                        ButtonState.fail: IconedButton(
+                            text: "Failed",
+                            icon: Icon(Icons.cancel, color: Colors.white),
+                            color: Colors.red.shade300),
                         ButtonState.success: IconedButton(
                             text: "Success",
                             icon: Icon(
@@ -221,7 +234,8 @@ class _EditTransactionState extends State<EditTransaction> {
                                           ),
                                           Text(
                                             'Plese Fill the title',
-                                            style: kwhiteTextStyle.copyWith(color: Colors.red),
+                                            style: kwhiteTextStyle.copyWith(
+                                                color: Colors.red),
                                           ),
                                         ],
                                       )),
@@ -268,12 +282,15 @@ class _EditTransactionState extends State<EditTransaction> {
                             else
                               {
                                 db.editTransactionDB(
-                                  updated_transactionTitle: titleController.text,
+                                  updated_transactionTitle:
+                                      titleController.text,
                                   updated_amount: amtController.text,
-                                  updated_transactionType: tranasctionTypeController.text,
+                                  updated_transactionType:
+                                      tranasctionTypeController.text,
                                   updated_transactionTag: tagController.text,
                                   updated_transactionDate: dateController.text,
-                                  updated_transactionPerson: toFromController.text,
+                                  updated_transactionPerson:
+                                      toFromController.text,
                                   updated_transactionNote: noteController.text,
                                   updated_account: accountController.text,
                                   createdDate: widget.createdDate,

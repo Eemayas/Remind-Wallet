@@ -39,7 +39,8 @@ class Database {
 
   void getTransactionDB() {
     TransactionList = _account.get(transactionDatabase) ?? [];
-    TransactionList.sort((a, b) => a[transactionCreatedDateD].compareTo(b[transactionCreatedDateD]));
+    TransactionList.sort((a, b) =>
+        a[transactionCreatedDateD].compareTo(b[transactionCreatedDateD]));
     print(TransactionList);
   }
 
@@ -54,8 +55,13 @@ class Database {
   }
 
   void getUserDetailDB() {
-    userDetail =
-        _account.get(userDataDatabase) ?? {userNameD: "User", userPhoneD: "9800000000", userEmailD: "xyz@example.com", userDOBD: "0000-00-00"};
+    userDetail = _account.get(userDataDatabase) ??
+        {
+          userNameD: "User",
+          userPhoneD: "9800000000",
+          userEmailD: "xyz@example.com",
+          userDOBD: "0000-00-00"
+        };
     print(userDetail);
   }
 
@@ -92,13 +98,19 @@ class Database {
       },
     ];
     getAccountDB();
-    bool isAccountNamePresent = AccountsList.where((account) => account[accountNameD] == accountName).isNotEmpty;
+    bool isAccountNamePresent =
+        AccountsList.where((account) => account[accountNameD] == accountName)
+            .isNotEmpty;
     if (!isAccountNamePresent) {
       AccountsList = AccountsList + inputAccount;
       _account.put(accountDatabase, AccountsList);
       getAmountDB();
-      amountsList[totalIncomeD] = amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] + amount;
-      amountsList[currentBalanceD] = amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + amount;
+      amountsList[totalIncomeD] = amount == null
+          ? amountsList[totalIncomeD]
+          : amountsList[totalIncomeD] + amount;
+      amountsList[currentBalanceD] = amount == null
+          ? amountsList[currentBalanceD]
+          : amountsList[currentBalanceD] + amount;
       _account.put(amountListDatabase, amountsList);
       List inputedTransactionLists = [
         {
@@ -111,7 +123,8 @@ class Database {
           transactionPersonD: "Self",
           transactionDescriptionD: "$accountName account added ",
           transactionIconD: " ",
-          transactionCreatedDateD: DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now()),
+          transactionCreatedDateD:
+              DateFormat('yyyy-MM-dd-HH-mm-ss').format(DateTime.now()),
           // "transactionNote": "$accountName account added",
         },
       ];
@@ -133,7 +146,9 @@ class Database {
       },
     ];
     getAccountDB();
-    bool isAccountNamePresent = AccountsList.where((account) => account[accountNameD] == accountName).isNotEmpty;
+    bool isAccountNamePresent =
+        AccountsList.where((account) => account[accountNameD] == accountName)
+            .isNotEmpty;
     if (!isAccountNamePresent) {
       AccountsList = AccountsList + inputAccount;
       _account.put(accountDatabase, AccountsList);
@@ -144,8 +159,52 @@ class Database {
     }
   }
 
+  void reCalculation() {
+    getTransactionDB();
+    getAccountDB();
+    print("AccountsList: $AccountsList");
+    print("TransactionList:  $TransactionList");
+    for (var account in AccountsList) {
+      account[accountCurrentBalanceD] = "0";
+    }
+    for (var transaction in TransactionList) {
+      var transactionType = transaction['transactionTypeD'];
+      var accountName = transaction['transactionAccountD'];
+      var transactionAmount = transaction['transactionAmountD'];
+
+      // Find the matching account
+      var matchingAccount = AccountsList.firstWhere(
+          (account) => account['accountNameD'] == accountName,
+          orElse: () => null);
+      if (matchingAccount != null) {
+        // Update account balance based on transaction type
+        if (transactionType == incomeT) {
+          // Add transaction amount for income
+          matchingAccount['accountCurrentBalanceD'] =
+              (int.parse(matchingAccount['accountCurrentBalanceD']) +
+                      transactionAmount)
+                  .toString();
+        } else if (transactionType == expensesT) {
+          // Subtract transaction amount for expense
+          matchingAccount['accountCurrentBalanceD'] =
+              (int.parse(matchingAccount['accountCurrentBalanceD']) -
+                      transactionAmount)
+                  .toString();
+        }
+      }
+    }
+  }
+
   void addTransactionDB(
-      {transactionTitle, createdDate, amount, transactionType, transactionTag, transactionDate, transactionPerson, transactionNote, account}) {
+      {transactionTitle,
+      createdDate,
+      amount,
+      transactionType,
+      transactionTag,
+      transactionDate,
+      transactionPerson,
+      transactionNote,
+      account}) {
     List inputedTransactionLists = [
       {
         transationNameD: transactionTitle ?? "",
@@ -161,38 +220,85 @@ class Database {
         // "transactionNote": transactionNote ?? "",// transactionTagD: transactionTag ?? "",
       },
     ];
+    getTransactionDB();
     if (!TransactionList.contains(inputedTransactionLists)) {
-      getTransactionDB();
+      // getTransactionDB();
       TransactionList = TransactionList + inputedTransactionLists;
+      TransactionList.sort((a, b) {
+        DateTime dateA;
+        DateTime dateB;
+
+        if (a['transactionDateD'].length == 10) {
+          // For dates in format "YYYY-MM-DD"
+          dateA = DateTime.parse(a['transactionDateD']);
+          dateB = DateTime.parse(b['transactionDateD']);
+        } else {
+          // For dates in format "YYYY-MM-DD-HH-MM-SS"
+          List<String> datePartsA = a['transactionDateD'].split('-');
+          List<String> datePartsB = b['transactionDateD'].split('-');
+
+          dateA = DateTime(
+              int.parse(datePartsA[0]),
+              int.parse(datePartsA[1]),
+              int.parse(datePartsA[2]),
+              int.parse(datePartsA[3]),
+              int.parse(datePartsA[4]),
+              int.parse(datePartsA[5]));
+          dateB = DateTime(
+              int.parse(datePartsB[0]),
+              int.parse(datePartsB[1]),
+              int.parse(datePartsB[2]),
+              int.parse(datePartsB[3]),
+              int.parse(datePartsB[4]),
+              int.parse(datePartsB[5]));
+        }
+
+        return dateA.compareTo(dateB);
+      });
       _account.put(transactionDatabase, TransactionList);
       getAmountDB();
       getAccountDB();
       int Amount = amount ?? 0;
-      var index = AccountsList.indexWhere((element) => element[accountNameD] == account);
+      var index = AccountsList.indexWhere(
+          (element) => element[accountNameD] == account);
       index = index != -1 ? index : 0;
 
       switch (transactionType) {
         case incomeT:
-          amountsList[totalIncomeD] = amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] + Amount;
-          amountsList[currentBalanceD] = amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] + Amount;
+          amountsList[totalIncomeD] = amount == null
+              ? amountsList[totalIncomeD]
+              : amountsList[totalIncomeD] + Amount;
+          amountsList[currentBalanceD] = amount == null
+              ? amountsList[currentBalanceD]
+              : amountsList[currentBalanceD] + Amount;
 
           //for accounts
-          AccountsList[index][accountCurrentBalanceD] = AccountsList[index][accountCurrentBalanceD] + Amount;
+          AccountsList[index][accountCurrentBalanceD] =
+              AccountsList[index][accountCurrentBalanceD] + Amount;
           break;
 
         case expensesT:
-          amountsList[totalExpensesD] = amount == null ? amountsList[totalExpensesD] : amountsList[totalExpensesD] + Amount;
+          amountsList[totalExpensesD] = amount == null
+              ? amountsList[totalExpensesD]
+              : amountsList[totalExpensesD] + Amount;
           print(amountsList[currentBalanceD]);
-          amountsList[currentBalanceD] = amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - Amount;
+          amountsList[currentBalanceD] = amount == null
+              ? amountsList[currentBalanceD]
+              : amountsList[currentBalanceD] - Amount;
           print(amountsList[currentBalanceD]);
-          AccountsList[index][accountCurrentBalanceD] = AccountsList[index][accountCurrentBalanceD] - Amount;
+          AccountsList[index][accountCurrentBalanceD] =
+              AccountsList[index][accountCurrentBalanceD] - Amount;
           break;
 
         case toPayT:
-          amountsList[toPayD] = amount == null ? amountsList[toPayD] : amountsList[toPayD] + Amount;
+          amountsList[toPayD] = amount == null
+              ? amountsList[toPayD]
+              : amountsList[toPayD] + Amount;
           break;
         case toReceiveT:
-          amountsList[toReceiveD] = amount == null ? amountsList[toReceiveD] : amountsList[toReceiveD] + Amount;
+          amountsList[toReceiveD] = amount == null
+              ? amountsList[toReceiveD]
+              : amountsList[toReceiveD] + Amount;
           break;
       }
       _account.put(accountDatabase, AccountsList);
@@ -223,7 +329,8 @@ class Database {
     createdDate,
   }) {
     getTransactionDB();
-    final index = TransactionList.indexWhere((element) => element[transactionCreatedDateD] == createdDate);
+    final index = TransactionList.indexWhere(
+        (element) => element[transactionCreatedDateD] == createdDate);
     print(index);
     Map updatedTransactionLists = {
       transationNameD: updated_transactionTitle ?? "",
@@ -241,7 +348,8 @@ class Database {
     if (index != -1) {
       getAmountDB();
       getAccountDB();
-      var accountIndex = AccountsList.indexWhere((element) => element[accountNameD] == updated_account);
+      var accountIndex = AccountsList.indexWhere(
+          (element) => element[accountNameD] == updated_account);
       accountIndex = accountIndex != -1 ? accountIndex : 0;
 
       int? prevAmount = TransactionList[index][transactionAmountD];
@@ -279,17 +387,20 @@ class Database {
               case expensesT:
                 amountsList[totalExpensesD] -= prevAmount ?? 0;
                 amountsList[currentBalanceD] += prevAmount ?? 0;
-                AccountsList[accountIndex][accountCurrentBalanceD] += prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] +=
+                    prevAmount ?? 0;
                 break;
               case toPayT:
                 amountsList[toPayD] -= prevAmount ?? 0;
                 amountsList[currentBalanceD] += prevAmount ?? 0;
-                AccountsList[accountIndex][accountCurrentBalanceD] += prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] +=
+                    prevAmount ?? 0;
                 break;
               case toReceiveT:
                 amountsList[toReceiveD] -= prevAmount ?? 0;
                 amountsList[currentBalanceD] += prevAmount ?? 0;
-                AccountsList[accountIndex][accountCurrentBalanceD] += prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] +=
+                    prevAmount ?? 0;
                 break;
             }
             break;
@@ -299,17 +410,20 @@ class Database {
               case incomeT:
                 amountsList[totalIncomeD] -= prevAmount ?? 0;
                 amountsList[currentBalanceD] -= (prevAmount ?? 0) * 2;
-                AccountsList[accountIndex][accountCurrentBalanceD] -= (prevAmount ?? 0) * 2;
+                AccountsList[accountIndex][accountCurrentBalanceD] -=
+                    (prevAmount ?? 0) * 2;
                 break;
               case toPayT:
                 amountsList[toPayD] -= prevAmount ?? 0;
                 amountsList[currentBalanceD] -= prevAmount ?? 0;
-                AccountsList[accountIndex][accountCurrentBalanceD] -= prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] -=
+                    prevAmount ?? 0;
                 break;
               case toReceiveT:
                 amountsList[toReceiveD] -= prevAmount ?? 0;
                 amountsList[currentBalanceD] -= prevAmount ?? 0;
-                AccountsList[accountIndex][accountCurrentBalanceD] -= prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] -=
+                    prevAmount ?? 0;
                 break;
             }
             break;
@@ -320,16 +434,19 @@ class Database {
               case expensesT:
                 amountsList[totalExpensesD] -= prevAmount ?? 0;
                 amountsList[currentBalanceD] += prevAmount ?? 0;
-                AccountsList[accountIndex][accountCurrentBalanceD] += prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] +=
+                    prevAmount ?? 0;
                 break;
               case incomeT:
                 amountsList[totalIncomeD] -= prevAmount ?? 0;
                 amountsList[currentBalanceD] -= prevAmount ?? 0;
-                AccountsList[accountIndex][accountCurrentBalanceD] -= prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] -=
+                    prevAmount ?? 0;
                 break;
               case toReceiveT:
                 amountsList[toReceiveD] -= prevAmount ?? 0;
-                AccountsList[accountIndex][accountCurrentBalanceD] -= prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] -=
+                    prevAmount ?? 0;
                 break;
             }
             break;
@@ -340,16 +457,19 @@ class Database {
               case expensesT:
                 amountsList[totalExpensesD] -= prevAmount ?? 0;
                 amountsList[currentBalanceD] += prevAmount ?? 0;
-                AccountsList[accountIndex][accountCurrentBalanceD] += prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] +=
+                    prevAmount ?? 0;
                 break;
               case incomeT:
                 amountsList[totalIncomeD] -= prevAmount ?? 0;
                 amountsList[currentBalanceD] -= prevAmount ?? 0;
-                AccountsList[accountIndex][accountCurrentBalanceD] -= prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] -=
+                    prevAmount ?? 0;
                 break;
               case toPayT:
                 amountsList[toPayD] -= prevAmount ?? 0;
-                AccountsList[accountIndex][accountCurrentBalanceD] -= prevAmount ?? 0;
+                AccountsList[accountIndex][accountCurrentBalanceD] -=
+                    prevAmount ?? 0;
                 break;
             }
             break;
@@ -361,24 +481,33 @@ class Database {
     _account.put(amountListDatabase, amountsList);
   }
 
-  bool editAccountDB({accountName, amount, updated_accountName, updated_amount}) {
+  bool editAccountDB(
+      {accountName, amount, updated_accountName, updated_amount}) {
     print(accountName + amount + updated_accountName + updated_amount);
     getAccountDB();
     bool isSameAccount = accountName == updated_accountName;
-    bool isAccountNamePresent = AccountsList.where((account) => account[accountNameD] == updated_accountName).isNotEmpty;
+    bool isAccountNamePresent = AccountsList.where(
+        (account) => account[accountNameD] == updated_accountName).isNotEmpty;
 
     if (!isAccountNamePresent || isSameAccount) {
-      final index =
-          AccountsList.indexWhere((element) => element[accountNameD] == accountName && element[accountCurrentBalanceD].toString() == amount);
+      final index = AccountsList.indexWhere((element) =>
+          element[accountNameD] == accountName &&
+          element[accountCurrentBalanceD].toString() == amount);
       print(index);
       AccountsList[index][accountNameD] = updated_accountName;
       AccountsList[index][accountCurrentBalanceD] = updated_amount;
       getAmountDB();
       getAmountDB();
-      amountsList[totalIncomeD] =
-          updated_amount == null ? amountsList[totalIncomeD] : amountsList[totalIncomeD] - int.tryParse(amount) + int.parse(updated_amount);
-      amountsList[currentBalanceD] =
-          updated_amount == null ? amountsList[currentBalanceD] : amountsList[currentBalanceD] - int.tryParse(amount) + int.parse(updated_amount);
+      amountsList[totalIncomeD] = updated_amount == null
+          ? amountsList[totalIncomeD]
+          : amountsList[totalIncomeD] -
+              int.tryParse(amount) +
+              int.parse(updated_amount);
+      amountsList[currentBalanceD] = updated_amount == null
+          ? amountsList[currentBalanceD]
+          : amountsList[currentBalanceD] -
+              int.tryParse(amount) +
+              int.parse(updated_amount);
       _account.put(amountListDatabase, amountsList);
       _account.put(accountDatabase, AccountsList);
       return true;
@@ -387,7 +516,11 @@ class Database {
     }
   }
 
-  void editUserNameDB({updated_userName, updated_userEmail, updated_userPhoneNumber, updated_userDOB}) {
+  void editUserNameDB(
+      {updated_userName,
+      updated_userEmail,
+      updated_userPhoneNumber,
+      updated_userDOB}) {
     getUserDetailDB();
     Map updated_inputUser = {
       userNameD: updated_userName ?? "",
@@ -399,7 +532,12 @@ class Database {
     _account.put(userDataDatabase, userDetail);
   }
 
-  void editAmountDB({updated_CurrentBalance, updated_TotalIncome, updated_totalExpenses, updated_TotalToPay, updated_TotalToReceive}) {
+  void editAmountDB(
+      {updated_CurrentBalance,
+      updated_TotalIncome,
+      updated_totalExpenses,
+      updated_TotalToPay,
+      updated_TotalToReceive}) {
     getAmountDB();
     Map updated_inputAmount = {
       currentBalanceD: updated_CurrentBalance ?? 0,
@@ -424,12 +562,16 @@ class Database {
     createdDate,
   }) {
     getTransactionDB();
-    final index = TransactionList.indexWhere((element) => element[transactionCreatedDateD] == createdDate);
+    final index = TransactionList.indexWhere(
+        (element) => element[transactionCreatedDateD] == createdDate);
     print(index);
     editTransactionDB(
       updated_transactionTitle: TransactionList[index][transationNameD],
       updated_amount: TransactionList[index][transactionAmountD].toString(),
-      updated_transactionType: TransactionList[index][transactionTypeD] == toPayT ? expensesT : incomeT,
+      updated_transactionType:
+          TransactionList[index][transactionTypeD] == toPayT
+              ? expensesT
+              : incomeT,
       updated_transactionTag: TransactionList[index][transactionTagD],
       updated_transactionDate: TransactionList[index][transactionDateD],
       updated_transactionPerson: TransactionList[index][transactionPersonD],

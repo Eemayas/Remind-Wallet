@@ -42,6 +42,39 @@ class _DashboardState extends State<Dashboard> {
     db.getUserDetailDB();
     db.getAccountNameListDB();
     // checkLogInStatus();
+    // Sort the TransactionList based on the transactionCreatedDateD
+    Database.TransactionList.sort((a, b) {
+      DateTime dateA;
+      DateTime dateB;
+
+      if (a['transactionDateD'].length == 10) {
+        // For dates in format "YYYY-MM-DD"
+        dateA = DateTime.parse(a['transactionDateD']);
+        dateB = DateTime.parse(b['transactionDateD']);
+      } else {
+        // For dates in format "YYYY-MM-DD-HH-MM-SS"
+        List<String> datePartsA = a['transactionDateD'].split('-');
+        List<String> datePartsB = b['transactionDateD'].split('-');
+
+        dateA = DateTime(
+            int.parse(datePartsA[0]),
+            int.parse(datePartsA[1]),
+            int.parse(datePartsA[2]),
+            int.parse(datePartsA[3]),
+            int.parse(datePartsA[4]),
+            int.parse(datePartsA[5]));
+        dateB = DateTime(
+            int.parse(datePartsB[0]),
+            int.parse(datePartsB[1]),
+            int.parse(datePartsB[2]),
+            int.parse(datePartsB[3]),
+            int.parse(datePartsB[4]),
+            int.parse(datePartsB[5]));
+      }
+
+      return dateA.compareTo(dateB);
+    });
+    print(Database.TransactionList);
     super.initState();
   }
 
@@ -65,10 +98,44 @@ class _DashboardState extends State<Dashboard> {
   Database db = Database();
   FirebaseDatabases fd = FirebaseDatabases();
   var changed = "";
+
   @override
   Widget build(BuildContext context) {
     checkLogInStatus();
-    Future<void> _handleMenuItemClick(String value, BuildContext context) async {
+    Database.TransactionList.sort((a, b) {
+      DateTime dateA;
+      DateTime dateB;
+
+      if (a['transactionDateD'].length == 10) {
+        // For dates in format "YYYY-MM-DD"
+        dateA = DateTime.parse(a['transactionDateD']);
+        dateB = DateTime.parse(b['transactionDateD']);
+      } else {
+        // For dates in format "YYYY-MM-DD-HH-MM-SS"
+        List<String> datePartsA = a['transactionDateD'].split('-');
+        List<String> datePartsB = b['transactionDateD'].split('-');
+
+        dateA = DateTime(
+            int.parse(datePartsA[0]),
+            int.parse(datePartsA[1]),
+            int.parse(datePartsA[2]),
+            int.parse(datePartsA[3]),
+            int.parse(datePartsA[4]),
+            int.parse(datePartsA[5]));
+        dateB = DateTime(
+            int.parse(datePartsB[0]),
+            int.parse(datePartsB[1]),
+            int.parse(datePartsB[2]),
+            int.parse(datePartsB[3]),
+            int.parse(datePartsB[4]),
+            int.parse(datePartsB[5]));
+      }
+
+      return dateA.compareTo(dateB);
+    });
+    print(Database.TransactionList);
+    Future<void> _handleMenuItemClick(
+        String value, BuildContext context) async {
       // Implement the logic for each option here
       switch (value) {
         case 'Delete DataBase':
@@ -79,9 +146,13 @@ class _DashboardState extends State<Dashboard> {
                     title: 'Warning: Database Deletion',
                     titleTextColor: Colors.red,
                     confirmTextColor: Colors.red,
-                    message: 'Are you sure you want to delete the database? This action cannot be undone.\n You can Upload to cloud before deleting.',
+                    message:
+                        'Are you sure you want to delete the database? This action cannot be undone.\n You can Upload to cloud before deleting.',
                     onConfirm: () {
-                      EasyLoading.show(status: 'Deleting database', maskType: EasyLoadingMaskType.black, dismissOnTap: true);
+                      EasyLoading.show(
+                          status: 'Deleting database',
+                          maskType: EasyLoadingMaskType.black,
+                          dismissOnTap: true);
                       db.deleteAll();
                       Navigator.pop(context);
                       customSnackbar(
@@ -107,7 +178,25 @@ class _DashboardState extends State<Dashboard> {
           db.getTransactionDB();
           EasyLoading.dismiss();
           setState(() {});
-          customSnackbar(context: context, text: 'Database Refresh', icons: Icons.done_all, iconsColor: Colors.green);
+          customSnackbar(
+              context: context,
+              text: 'Database Refresh',
+              icons: Icons.done_all,
+              iconsColor: Colors.green);
+          break;
+        case 'Recalculate DataBase':
+          EasyLoading.show(
+            status: 'Recalculating database',
+            maskType: EasyLoadingMaskType.black,
+          );
+          db.reCalculation();
+          EasyLoading.dismiss();
+          setState(() {});
+          customSnackbar(
+              context: context,
+              text: 'Recalculation done',
+              icons: Icons.done_all,
+              iconsColor: Colors.green);
           break;
         case 'Options:':
           break;
@@ -119,7 +208,8 @@ class _DashboardState extends State<Dashboard> {
                     title: 'Upload to Cloud',
                     titleTextColor: Colors.white,
                     confirmTextColor: Colors.white,
-                    message: 'Are you confident in your decision to proceed with the cloud upload?',
+                    message:
+                        'Are you confident in your decision to proceed with the cloud upload?',
                     onConfirm: () async {
                       // ignore: unused_local_variable
                       EasyLoading.show(
@@ -154,10 +244,14 @@ class _DashboardState extends State<Dashboard> {
                         maskType: EasyLoadingMaskType.black,
                       );
                       // ignore: unused_local_variable
-                      Future<bool> isSucess = fd.retrieveAllDataFromFirebase(context);
+                      Future<bool> isSucess =
+                          fd.retrieveAllDataFromFirebase(context);
                       if (await isSucess) {
                         customSnackbar(
-                            context: context, text: "All datas are received from Firebase cloud", icons: Icons.done_all, iconsColor: Colors.green);
+                            context: context,
+                            text: "All datas are received from Firebase cloud",
+                            icons: Icons.done_all,
+                            iconsColor: Colors.green);
                         db.getAccountDB();
                         db.getAmountDB();
                         db.getTransactionDB();
@@ -181,7 +275,8 @@ class _DashboardState extends State<Dashboard> {
                     titleTextColor: Colors.red,
                     confirmTextColor: Colors.red,
                     confirmText: "Log out",
-                    message: 'Are you certain about proceeding with the logout?',
+                    message:
+                        'Are you certain about proceeding with the logout?',
                     onConfirm: () async {
                       EasyLoading.show(
                         status: 'Processing',
@@ -194,9 +289,14 @@ class _DashboardState extends State<Dashboard> {
                         await FirebaseAuth.instance.signOut();
                         EasyLoading.dismiss();
                         Navigator.pop(context);
-                        customSnackbar(context: context, text: 'Logout Sucessfully', icons: Icons.logout_rounded, iconsColor: Colors.green);
+                        customSnackbar(
+                            context: context,
+                            text: 'Logout Sucessfully',
+                            icons: Icons.logout_rounded,
+                            iconsColor: Colors.green);
                       } else {
-                        Navigator.pushReplacementNamed(context, CheckSignin_outPage.id);
+                        Navigator.pushReplacementNamed(
+                            context, CheckSignin_outPage.id);
                         EasyLoading.dismiss();
                         customSnackbar(
                           context: context,
@@ -271,7 +371,9 @@ class _DashboardState extends State<Dashboard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("Hi,", style: kwhiteTextStyle.copyWith(fontSize: 20)),
-              Text("${Database.userDetail[userNameD]},", style: kwhiteTextStyle.copyWith(fontSize: 30, fontWeight: FontWeight.bold)),
+              Text("${Database.userDetail[userNameD]},",
+                  style: kwhiteTextStyle.copyWith(
+                      fontSize: 30, fontWeight: FontWeight.bold)),
               SizedBox(
                 height: 30,
               ),
@@ -281,7 +383,8 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   BalanceCard(
                     cardName: "CURRENT BALANCE",
-                    cardBalanceAmt: Database.amountsList["currentBalance"].toString(),
+                    cardBalanceAmt:
+                        Database.amountsList["currentBalance"].toString(),
                   ),
                   SizedBox(
                     height: 10,
@@ -299,12 +402,14 @@ class _DashboardState extends State<Dashboard> {
                           color: kColorIncome,
                         ),
                         nextPage: IncomePage.id,
-                        borderColor: Colors.transparent, //Color.fromARGB(168, 105, 240, 175),
+                        borderColor: Colors
+                            .transparent, //Color.fromARGB(168, 105, 240, 175),
                         iconBgColor: Color(0x33008000),
                       ),
                       Cards(
                         cardName: "TOTAL EXPENSES",
-                        amount: Database.amountsList["totalExpenses"].toString(),
+                        amount:
+                            Database.amountsList["totalExpenses"].toString(),
                         boxShadowColor: kBoxShadowExpenses,
                         color: kBackgroundColorCard,
                         icons: Icon(Icons.arrow_upward, color: kColorExpenses),
@@ -329,7 +434,8 @@ class _DashboardState extends State<Dashboard> {
                           Icons.arrow_downward,
                           color: kColorIncome,
                         ),
-                        borderColor: Colors.transparent, //Color.fromARGB(168, 105, 240, 175),
+                        borderColor: Colors
+                            .transparent, //Color.fromARGB(168, 105, 240, 175),
                         iconBgColor: Color(0x33008000),
                         nextPage: ToReceivePage.id,
                       ),
@@ -370,7 +476,9 @@ class _DashboardState extends State<Dashboard> {
                         children: [
                           AccountCard(
                             accountName: Database.AccountsList[i][accountNameD],
-                            amount: Database.AccountsList[i][accountCurrentBalanceD].toString(),
+                            amount: Database.AccountsList[i]
+                                    [accountCurrentBalanceD]
+                                .toString(),
                           ),
                           SizedBox(
                             width: 20,
@@ -379,7 +487,8 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     InkWell(
                       onTap: () async {
-                        final result = await Navigator.pushNamed(context, AddAccount.id);
+                        final result =
+                            await Navigator.pushNamed(context, AddAccount.id);
                         print(result);
                         if (result != null) {
                           db.getAccountDB();
@@ -427,27 +536,43 @@ class _DashboardState extends State<Dashboard> {
               ),
               for (int i = Database.TransactionList.length - 1; i >= 0; i--)
                 if (Database.TransactionList[i][transationNameD] != null &&
-                    // ignore: unnecessary_null_comparison
-                    Database.TransactionList[i][transactionAmountD].toString() != null &&
+                    Database.TransactionList[i][transactionAmountD]
+                            .toString() !=
+                        null &&
                     Database.TransactionList[i][transactionTypeD] != "0" &&
                     Database.TransactionList[i][transactionTagD] != null &&
                     Database.TransactionList[i][transactionDateD] != null &&
                     Database.TransactionList[i][transactionAccountD] != null &&
                     Database.TransactionList[i][transactionPersonD] != null &&
-                    Database.TransactionList[i][transactionCreatedDateD] != null &&
-                    Database.TransactionList[i][transactionDescriptionD] != null)
+                    Database.TransactionList[i][transactionCreatedDateD] !=
+                        null &&
+                    Database.TransactionList[i][transactionDescriptionD] !=
+                        null)
                   TranactionCard(
-                    transationName: Database.TransactionList[i][transationNameD],
-                    transactionAmount: Database.TransactionList[i][transactionAmountD].toString(),
-                    transactionType: Database.TransactionList[i][transactionTypeD],
-                    transactionTag: Database.TransactionList[i][transactionTagD],
-                    transactionDate: Database.TransactionList[i][transactionDateD],
-                    transactionAccount: Database.TransactionList[i][transactionAccountD].toString(),
-                    transactionPerson: Database.TransactionList[i][transactionPersonD],
-                    transactionDescription: Database.TransactionList[i][transactionDescriptionD],
-                    iconsName: getIconForElement(Database.TransactionList[i][transactionTagD]),
+                    transationName: Database.TransactionList[i]
+                        [transationNameD],
+                    transactionAmount: Database.TransactionList[i]
+                            [transactionAmountD]
+                        .toString(),
+                    transactionType: Database.TransactionList[i]
+                        [transactionTypeD],
+                    transactionTag: Database.TransactionList[i]
+                        [transactionTagD],
+                    transactionDate: Database.TransactionList[i]
+                        [transactionDateD],
+                    transactionAccount: Database.TransactionList[i]
+                            [transactionAccountD]
+                        .toString(),
+                    transactionPerson: Database.TransactionList[i]
+                        [transactionPersonD],
+                    transactionDescription: Database.TransactionList[i]
+                        [transactionDescriptionD],
+                    iconsName: getIconForElement(
+                        Database.TransactionList[i][transactionTagD]),
                     // iconsName: db.TransactionList[i][transactionIconD] == "shooping" ? Icons.shopping_cart_outlined : Icons.abc,
-                    transactionCreatedDate: Database.TransactionList[i][transactionCreatedDateD] ?? "",
+                    transactionCreatedDate: Database.TransactionList[i]
+                            [transactionCreatedDateD] ??
+                        "",
                     // Account: db.TransactionList[i]["account"] ?? "Cash",
                   ),
             ],
@@ -457,7 +582,10 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Padding popupItems(Future<void> Function(String value, BuildContext context) _handleMenuItemClick, BuildContext context) {
+  Padding popupItems(
+      Future<void> Function(String value, BuildContext context)
+          _handleMenuItemClick,
+      BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
         right: 20.0,
@@ -525,6 +653,19 @@ class _DashboardState extends State<Dashboard> {
                   width: 5,
                 ),
                 Text('Delete DataBase'),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            textStyle: kwhiteTextStyle,
+            value: 'Recalculate DataBase',
+            child: Row(
+              children: [
+                Icon(Icons.delete_forever_outlined),
+                SizedBox(
+                  width: 5,
+                ),
+                Text('Recalculate DataBase'),
               ],
             ),
           ),
@@ -612,11 +753,15 @@ class Cards extends StatelessWidget {
                 SizedBox(
                   height: 30,
                 ),
-                Text(cardName, style: ksubTextStyle.copyWith(fontSize: 12, fontWeight: FontWeight.w300)),
+                Text(cardName,
+                    style: ksubTextStyle.copyWith(
+                        fontSize: 12, fontWeight: FontWeight.w300)),
                 SizedBox(
                   height: 10,
                 ),
-                Text('Rs $amount ', style: kwhiteTextStyle.copyWith(fontWeight: FontWeight.bold)),
+                Text('Rs $amount ',
+                    style:
+                        kwhiteTextStyle.copyWith(fontWeight: FontWeight.bold)),
               ],
             ),
           ),

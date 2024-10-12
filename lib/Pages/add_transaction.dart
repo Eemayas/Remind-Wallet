@@ -151,6 +151,7 @@ class _AddTransactionState extends State<AddTransaction> {
                     labelText: "When",
                     prefixIcon: Icons.date_range_outlined,
                     hintText: "YYYY-MM-DD",
+                     dateinput: DateTime.now(),
                   ),
                   SizedBox(
                     height: 20,

@@ -112,6 +112,16 @@ class ShowUserDetailPage extends StatelessWidget {
                       labelText: "Date of Birth",
                       prefixIcon: Icons.date_range_outlined,
                       hintText: "YYYY-MM-DD",
+                      dateinput: dateController.text.isEmpty
+                          ? DateTime.now()
+                          : DateTime(
+                              int.parse(
+                                  dateController.text.split('-')[0]), // Year
+                              int.parse(
+                                  dateController.text.split('-')[1]), // Month
+                              int.parse(
+                                  dateController.text.split('-')[2]), // Day
+                            ),
                     ),
                     SizedBox(
                       height: 20,
@@ -163,8 +173,12 @@ class CustomButton extends StatelessWidget {
             icon: Icon(icons, color: iconColor),
             color: Colors.deepPurple.shade500,
           ),
-          ButtonState.loading: IconedButton(text: "Loading", color: Colors.deepPurple.shade700),
-          ButtonState.fail: IconedButton(text: "Failed", icon: Icon(Icons.cancel, color: Colors.white), color: Colors.red.shade300),
+          ButtonState.loading:
+              IconedButton(text: "Loading", color: Colors.deepPurple.shade700),
+          ButtonState.fail: IconedButton(
+              text: "Failed",
+              icon: Icon(Icons.cancel, color: Colors.white),
+              color: Colors.red.shade300),
           ButtonState.success: IconedButton(
               text: "Success",
               icon: Icon(

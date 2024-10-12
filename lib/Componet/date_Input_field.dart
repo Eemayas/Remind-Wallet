@@ -15,6 +15,7 @@ class DateInputField extends StatelessWidget {
     this.isUserDetail = false,
     required this.prefixIcon,
     required this.hintText,
+    required this.dateinput,
   });
   final String hintText;
   final TextEditingController controllerss;
@@ -22,12 +23,12 @@ class DateInputField extends StatelessWidget {
   final String labelText;
   final bool isEnable;
   final bool isUserDetail;
-
+  final DateTime dateinput;
   final IconData prefixIcon;
 
   @override
   Widget build(BuildContext context) {
-    controllerss.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    controllerss.text = DateFormat('yyyy-MM-dd').format(dateinput);
     return TextField(
       enabled: isEnable,
       controller: controllerss,
@@ -36,8 +37,13 @@ class DateInputField extends StatelessWidget {
       keyboardType: keyboardType,
       readOnly: true,
       onTap: () => {
-        showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(1950), lastDate: DateTime(3000))
-            .then((value) => controllerss.text = DateFormat('yyyy-MM-dd').format(value ?? DateTime.now())),
+        showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(1950),
+                lastDate: DateTime(3000))
+            .then((value) => controllerss.text =
+                DateFormat('yyyy-MM-dd').format(value ?? DateTime.now())),
       },
       decoration: InputDecoration(
         labelStyle: kwhiteTextStyle,

@@ -146,6 +146,7 @@ class _AddUserDataPageState extends State<AddUserDataPage> {
                       labelText: "Date of Birth",
                       prefixIcon: Icons.date_range_outlined,
                       hintText: "YYYY-MM-DD",
+                       dateinput: DateTime.now(),
                     ),
                     SizedBox(
                       height: 20,

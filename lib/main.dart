@@ -72,7 +72,8 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
             ),
           )),
-      initialRoute: Splash_Page.id, //TermsAndConditionsScreen.id, //IntroductionPages.id, //
+      initialRoute: Splash_Page
+          .id, //TermsAndConditionsScreen.id, //IntroductionPages.id, //
       // Dashboard.id,  Tryyy.id,//ShowUserDetailPage.id,  //LogInSignUpPage.id, //  Dashboard.id, //AccountDetailPage.id,
       //TranasctionDetailPage.id,
       routes: {
