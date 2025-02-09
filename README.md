@@ -59,7 +59,6 @@
 Remind-Wallet is an innovative expense-tracking and budget management tool designed to help users monitor their financial activities and achieve their savings goals. The project features a mobile-first interface for usability across various screen sizes, and supports categories like “to pay,” “to receive,” “expenses,” and “income,” along with account types such as "bank" and "wallet." Users can also create custom categories for more personalized tracking. Firebase is used for encrypted cloud storage, while Hive ensures offline updates through local storage. The project was built using Flutter, Firebase, Dart, and Hive for seamless and secure financial management.
 
 # Table of Content
-
 - [Project Overview](#project-overview)
 - [Key Features](#key-features)
 - [Folder Structure](#folder-structure)
@@ -279,6 +278,11 @@ Before you begin, make sure you have the following installed:
 
    Make sure the necessary Hive dependencies are included in your `pubspec.yaml`. The default setup should work, but verify it as per the [Hive setup documentation](https://pub.dev/packages/hive).
 
+5. **Install the APK (for Android users)**:
+
+   If you prefer to install the app directly on your Android device, you can download the `app-release.apk` from the releases section on the [GitHub repository](https://github.com/Eemayas/Remind-Wallet/blob/main/app-release.apk). Once downloaded, enable **Install from Unknown Sources** in your device's settings and install the APK.
+
+
 ## Running the Project
 
 1. **Run on Android/iOS**:
@@ -413,4 +417,3 @@ Once your PR is reviewed and approved, it will be merged into the main branch.
 # License
 
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
-
