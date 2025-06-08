@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1082766596246",
+    "project_id": "remindwallet",
+    "storage_bucket": "remindwallet.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082766596246:android:5d18f3be329e0aefe0cab7",
+        "android_client_info": {
+          "package_name": "com.example.expenses_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxZ2oDEIN_tfwcqye59j1JbplqFRGU3-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082766596246:android:cef142292be46876e0cab7",
+        "android_client_info": {
+          "package_name": "com.example.remind_wallet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxZ2oDEIN_tfwcqye59j1JbplqFRGU3-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
