@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import '../constant.dart';
+import 'package:remind_wallet/constant.dart';
 
 class InputField extends StatefulWidget {
   const InputField(

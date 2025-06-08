@@ -5,13 +5,13 @@ import 'package:intl/intl.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:provider/provider.dart';
+import 'package:remind_wallet/API/database.dart';
+import 'package:remind_wallet/Componet/date_input_field.dart';
+import 'package:remind_wallet/Componet/dropdown_button.dart';
+import 'package:remind_wallet/Componet/input_filed.dart';
+import 'package:remind_wallet/Provider/provider.dart';
+import 'package:remind_wallet/constant.dart';
 
-import '../API/database.dart';
-import '../Componet/date_input_field.dart';
-import '../Componet/dropdown_button.dart';
-import '../Componet/input_filed.dart';
-import '../Provider/provider.dart';
-import '../constant.dart';
 
 class AddTransaction extends StatefulWidget {
   static String id = "Add Transaction page";
@@ -151,7 +151,7 @@ class _AddTransactionState extends State<AddTransaction> {
                     labelText: "When",
                     prefixIcon: Icons.date_range_outlined,
                     hintText: "YYYY-MM-DD",
-                     dateinput: DateTime.now(),
+                    dateinput: DateTime.now(),
                   ),
                   SizedBox(
                     height: 20,
@@ -187,8 +187,12 @@ class _AddTransactionState extends State<AddTransaction> {
                           icon: Icon(Icons.add, color: Colors.white),
                           color: Colors.deepPurple.shade500,
                         ),
-                        ButtonState.loading: IconedButton(text: "Loading", color: Colors.deepPurple.shade700),
-                        ButtonState.fail: IconedButton(text: "Failed", icon: Icon(Icons.cancel, color: Colors.white), color: Colors.red.shade300),
+                        ButtonState.loading: IconedButton(
+                            text: "Loading", color: Colors.deepPurple.shade700),
+                        ButtonState.fail: IconedButton(
+                            text: "Failed",
+                            icon: Icon(Icons.cancel, color: Colors.white),
+                            color: Colors.red.shade300),
                         ButtonState.success: IconedButton(
                             text: "Success",
                             icon: Icon(
@@ -212,7 +216,8 @@ class _AddTransactionState extends State<AddTransaction> {
                                           ),
                                           Text(
                                             'Plese Fill the title',
-                                            style: kwhiteTextStyle.copyWith(color: Colors.red),
+                                            style: kwhiteTextStyle.copyWith(
+                                                color: Colors.red),
                                           ),
                                         ],
                                       )),

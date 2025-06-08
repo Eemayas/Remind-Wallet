@@ -1,8 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print, unused_local_variable
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
-
-import '../constant.dart';
+import 'package:remind_wallet/constant.dart';
 
 class Database {
   static List AccountsList = [];

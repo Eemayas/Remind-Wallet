@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-
-import '../constant.dart';
+import 'package:remind_wallet/constant.dart';
 
 List TransactionList = [
   {

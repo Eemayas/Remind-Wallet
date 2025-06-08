@@ -5,10 +5,10 @@ import 'package:hive/hive.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:remind_wallet/Componet/logo_viewer.dart';
+import 'package:remind_wallet/Pages/introduction_pages/introduction_pages.dart';
 import 'package:remind_wallet/Pages/starting_pages/ask_permission_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../introduction_pages/introduction_pages.dart';
 import 'check_page.dart';
 
 class Splash_Page extends StatefulWidget {

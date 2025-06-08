@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
-import '../constant.dart';
+import 'package:remind_wallet/constant.dart';
 
 class Account {
   List AccountsList = [];

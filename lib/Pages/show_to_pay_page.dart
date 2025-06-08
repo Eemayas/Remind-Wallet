@@ -2,10 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:remind_wallet/API/database.dart';
-
-import '../Componet/balance_card.dart';
-import '../Componet/transaction.dart';
-import '../constant.dart';
+import 'package:remind_wallet/Componet/balance_card.dart';
+import 'package:remind_wallet/Componet/transaction.dart';
+import 'package:remind_wallet/constant.dart';
 
 class ToPayPage extends StatelessWidget {
   static String id = "ToPay page";
@@ -63,10 +62,6 @@ class ToPayPage extends StatelessWidget {
               ),
               for (int i = Database.TransactionList.length - 1; i >= 0; i--)
                 if (Database.TransactionList[i][transationNameD] != null &&
-                    // ignore: unnecessary_null_comparison
-                    Database.TransactionList[i][transactionAmountD]
-                            .toString() !=
-                        null &&
                     Database.TransactionList[i][transactionTypeD] != "0" &&
                     Database.TransactionList[i][transactionTagD] != null &&
                     Database.TransactionList[i][transactionDateD] != null &&

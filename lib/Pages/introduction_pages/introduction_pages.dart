@@ -6,10 +6,9 @@ import 'package:page_transition/page_transition.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:remind_wallet/Pages/introduction_pages/terms_condition_page.dart';
+import 'package:remind_wallet/Pages/starting_pages/check_page.dart';
+import 'package:remind_wallet/constant.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
-import '../../constant.dart';
-import '../starting_pages/check_page.dart';
 import 'pages_list.dart';
 
 class IntroductionPages extends StatefulWidget {

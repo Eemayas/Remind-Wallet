@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constant.dart';
+import 'package:remind_wallet/constant.dart';
 
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> customSnackbar({
   required BuildContext context,
@@ -65,13 +65,10 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> customSnackbarPart2({
   );
 }
 
-
-
 // // ignore_for_file: prefer_const_constructors
 
 // import 'package:flutter/material.dart';
-
-// import '../constant.dart';
+// import 'package:remind_wallet/constant.dart';
 
 // ScaffoldFeatureController<SnackBar, SnackBarClosedReason> customSnackbar({
 //   required BuildContext context,

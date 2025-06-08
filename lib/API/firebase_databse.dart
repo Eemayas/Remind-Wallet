@@ -4,13 +4,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:remind_wallet/API/database.dart';
 import 'package:remind_wallet/Componet/check_internet_connection.dart';
+import 'package:remind_wallet/Componet/custom_snackbar.dart';
+import 'package:remind_wallet/Encryption/substitution.dart';
 import 'package:remind_wallet/constant.dart';
 import 'package:uuid/uuid.dart';
 
-import '../Componet/custom_snackbar.dart';
-import '../Encryption/substitution.dart';
-import './database.dart';
 
 const String transactionsFD = 'transactions';
 const String usersFD = 'users';

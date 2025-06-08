@@ -2,8 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-
-import '../../constant.dart';
+import 'package:remind_wallet/constant.dart';
 
 List<Widget> pagesList = [
   //page 1
@@ -33,7 +32,12 @@ class PageFormat extends StatelessWidget {
   final String labelText;
   final String subLabelText;
 
-  const PageFormat({super.key, required this.animationPath, this.buttonText = "Next", required this.labelText, required this.subLabelText});
+  const PageFormat(
+      {super.key,
+      required this.animationPath,
+      this.buttonText = "Next",
+      required this.labelText,
+      required this.subLabelText});
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +49,18 @@ class PageFormat extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: SizedBox(
                 height: MediaQuery.of(context).size.height * 0.3,
-                child: ClipRRect(borderRadius: BorderRadius.circular(30), child: Lottie.asset(animationPath))),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Lottie.asset(animationPath))),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30, top: 30, bottom: 30),
+            padding:
+                const EdgeInsets.only(left: 30, right: 30, top: 30, bottom: 30),
             child: Text(
               labelText,
               textAlign: TextAlign.center,
-              style: kwhiteTextStyle.copyWith(fontWeight: FontWeight.bold, fontSize: 30),
+              style: kwhiteTextStyle.copyWith(
+                  fontWeight: FontWeight.bold, fontSize: 30),
             ),
           ),
           Padding(

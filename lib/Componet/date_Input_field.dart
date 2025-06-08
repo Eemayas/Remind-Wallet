@@ -2,8 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import '../constant.dart';
+import 'package:remind_wallet/constant.dart';
 
 class DateInputField extends StatelessWidget {
   const DateInputField({

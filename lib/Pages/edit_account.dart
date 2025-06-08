@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:provider/provider.dart';
-
-import '../API/database.dart';
-import '../Componet/custom_snackbar.dart';
-import '../Componet/input_filed.dart';
-import '../Provider/provider.dart';
-import '../constant.dart';
+import 'package:remind_wallet/API/database.dart';
+import 'package:remind_wallet/Componet/custom_snackbar.dart';
+import 'package:remind_wallet/Componet/input_filed.dart';
+import 'package:remind_wallet/Provider/provider.dart';
+import 'package:remind_wallet/constant.dart';
 
 class EditAccount extends StatefulWidget {
-  const EditAccount({super.key, required this.accountName, required this.amount});
+  const EditAccount(
+      {super.key, required this.accountName, required this.amount});
   final String accountName;
   final String amount;
 
@@ -26,7 +26,10 @@ class _EditAccountState extends State<EditAccount> {
   Database db = Database();
   void _editAccount() {
     bool isSucessfull = db.editAccountDB(
-        accountName: widget.accountName, amount: widget.amount, updated_accountName: accountNameController.text, updated_amount: amtController.text);
+        accountName: widget.accountName,
+        amount: widget.amount,
+        updated_accountName: accountNameController.text,
+        updated_amount: amtController.text);
     context.read<ChangedMsg>().changed();
     Navigator.pop(context, "here i am");
     if (isSucessfull) {
@@ -37,7 +40,9 @@ class _EditAccountState extends State<EditAccount> {
         iconsColor: Colors.green,
       );
     } else {
-      customSnackbar(context: context, text: "Error:Account is not added. \nTry changing the name");
+      customSnackbar(
+          context: context,
+          text: "Error:Account is not added. \nTry changing the name");
     }
   }
 
@@ -53,7 +58,10 @@ class _EditAccountState extends State<EditAccount> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {print("${accountNameController.text}  ${amtController.text} "), FocusScope.of(context).requestFocus(FocusNode())},
+      onTap: () => {
+        print("${accountNameController.text}  ${amtController.text} "),
+        FocusScope.of(context).requestFocus(FocusNode())
+      },
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: kBackgroundColorAppBar,
@@ -101,8 +109,12 @@ class _EditAccountState extends State<EditAccount> {
                           icon: Icon(Icons.edit, color: Colors.white),
                           color: Colors.deepPurple.shade500,
                         ),
-                        ButtonState.loading: IconedButton(text: "Loading", color: Colors.deepPurple.shade700),
-                        ButtonState.fail: IconedButton(text: "Failed", icon: Icon(Icons.cancel, color: Colors.white), color: Colors.red.shade300),
+                        ButtonState.loading: IconedButton(
+                            text: "Loading", color: Colors.deepPurple.shade700),
+                        ButtonState.fail: IconedButton(
+                            text: "Failed",
+                            icon: Icon(Icons.cancel, color: Colors.white),
+                            color: Colors.red.shade300),
                         ButtonState.success: IconedButton(
                             text: "Success",
                             icon: Icon(
@@ -126,7 +138,8 @@ class _EditAccountState extends State<EditAccount> {
                                           ),
                                           Text(
                                             'Plese Fill the Account Name',
-                                            style: kwhiteTextStyle.copyWith(color: Colors.red),
+                                            style: kwhiteTextStyle.copyWith(
+                                                color: Colors.red),
                                           ),
                                         ],
                                       )),

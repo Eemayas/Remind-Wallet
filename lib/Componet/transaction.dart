@@ -6,9 +6,9 @@ import 'package:progress_state_button/progress_button.dart';
 import 'package:provider/provider.dart';
 import 'package:remind_wallet/API/database.dart';
 import 'package:remind_wallet/Pages/transaction_detail_page.dart';
+import 'package:remind_wallet/Provider/provider.dart';
+import 'package:remind_wallet/constant.dart';
 
-import '../Provider/provider.dart';
-import '../constant.dart';
 
 class TranactionCard extends StatelessWidget {
   // final Color boxShadowColor;

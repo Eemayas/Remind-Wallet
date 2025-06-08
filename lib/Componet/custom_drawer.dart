@@ -2,8 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:remind_wallet/Componet/menu_clicked_action.dart';
-
-import '../constant.dart';
+import 'package:remind_wallet/constant.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});

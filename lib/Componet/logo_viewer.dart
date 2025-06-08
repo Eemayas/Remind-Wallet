@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-
-import '../constant.dart';
+import 'package:remind_wallet/constant.dart';
 
 class LogoViewer extends StatelessWidget {
   final double side;
@@ -33,7 +32,9 @@ class LogoViewer extends StatelessWidget {
             ),
           ],
           // image: DecorationImage(image: NetworkImage('https://docs.flutter.dev/assets/images/dash/dash-fainting.gif')),
-          image: DecorationImage(image: AssetImage("assets/Logo/png/logo-white.png"), fit: BoxFit.fill),
+          image: DecorationImage(
+              image: AssetImage("assets/Logo/png/logo-white.png"),
+              fit: BoxFit.fill),
         ),
       ),
     );

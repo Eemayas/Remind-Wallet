@@ -7,23 +7,23 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:remind_wallet/API/database.dart';
 import 'package:remind_wallet/API/firebase_databse.dart';
+import 'package:remind_wallet/Componet/account_card.dart';
 import 'package:remind_wallet/Componet/balance_card.dart';
 import 'package:remind_wallet/Componet/custom_alert_dialog.dart';
 import 'package:remind_wallet/Componet/custom_drawer.dart';
 import 'package:remind_wallet/Componet/custom_snackbar.dart';
+import 'package:remind_wallet/Componet/transaction.dart';
 import 'package:remind_wallet/Pages/add_account.dart';
 import 'package:remind_wallet/Pages/add_transaction.dart';
 import 'package:remind_wallet/Pages/show_expenses_page.dart';
 import 'package:remind_wallet/Pages/show_income_page.dart';
 import 'package:remind_wallet/Pages/show_to_pay_page.dart';
 import 'package:remind_wallet/Pages/show_to_receive_page.dart';
+import 'package:remind_wallet/Pages/starting_pages/check_page.dart';
+import 'package:remind_wallet/Provider/provider.dart';
 import 'package:remind_wallet/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../Componet/account_card.dart';
-import '../../Componet/transaction.dart';
-import '../../Provider/provider.dart';
-import '../starting_pages/check_page.dart';
 
 class Dashboard extends StatefulWidget {
   static String id = "DashBoard page";

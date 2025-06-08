@@ -4,12 +4,13 @@
 // import 'package:remind_wallet/Pages/authentication/add_user_data_entry_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:remind_wallet/Componet/custom_snackbar.dart';
+import 'package:remind_wallet/Pages/authentication/signIn_signOut_page.dart';
+import 'package:remind_wallet/Pages/home_pages/bottom_navigation_bar.dart';
 
-import '../../Componet/custom_snackbar.dart';
-import '../authentication/signIn_signOut_page.dart';
+
 // import 'package:hive/hive.dart';
 
-import '../home_pages/bottom_navigation_bar.dart';
 
 // class CheckPage extends StatelessWidget {
 //   static String id = "Check Page";

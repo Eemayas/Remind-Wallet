@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:provider/provider.dart';
-
-import '../API/database.dart';
-import '../Componet/date_input_field.dart';
-import '../Componet/dropdown_button.dart';
-import '../Componet/input_filed.dart';
-import '../Provider/provider.dart';
-import '../constant.dart';
+import 'package:remind_wallet/API/database.dart';
+import 'package:remind_wallet/Componet/date_input_field.dart';
+import 'package:remind_wallet/Componet/dropdown_button.dart';
+import 'package:remind_wallet/Componet/input_filed.dart';
+import 'package:remind_wallet/Provider/provider.dart';
+import 'package:remind_wallet/constant.dart';
 
 class EditTransaction extends StatefulWidget {
   static String id = "Add Transaction page";

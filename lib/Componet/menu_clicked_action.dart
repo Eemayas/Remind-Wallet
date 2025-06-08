@@ -6,8 +6,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:remind_wallet/API/database.dart';
 import 'package:remind_wallet/API/firebase_databse.dart';
+import 'package:remind_wallet/Provider/provider.dart';
 
-import '../Provider/provider.dart';
 import 'custom_alert_dialog.dart';
 import 'custom_snackbar.dart';
 

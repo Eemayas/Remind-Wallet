@@ -1,10 +1,10 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:remind_wallet/API/database.dart';
+import 'package:remind_wallet/Pages/account_detail_page.dart';
+import 'package:remind_wallet/constant.dart';
 
-import '../API/database.dart';
-import '../Pages/account_detail_page.dart';
-import '../constant.dart';
 
 class AccountCard extends StatefulWidget {
   final String amount;

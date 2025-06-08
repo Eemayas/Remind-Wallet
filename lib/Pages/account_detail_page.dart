@@ -1,11 +1,10 @@
 // ignore_for_file: prefer_const_constructors, avoid_print, unused_local_variable
 
 import 'package:flutter/material.dart';
+import 'package:remind_wallet/API/database.dart';
 import 'package:remind_wallet/Pages/edit_account.dart';
 import 'package:remind_wallet/Pages/transaction_detail_page.dart';
-
-import '../API/database.dart';
-import '../constant.dart';
+import 'package:remind_wallet/constant.dart';
 
 class ShowAccountDetailPage extends StatefulWidget {
   final int index;

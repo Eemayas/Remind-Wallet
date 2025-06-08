@@ -2,8 +2,7 @@
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-
-import '../constant.dart';
+import 'package:remind_wallet/constant.dart';
 
 class DropDownButton extends StatelessWidget {
   final TextEditingController controllerss;

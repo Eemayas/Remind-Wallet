@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-
-import '../constant.dart';
+import 'package:remind_wallet/constant.dart';
 
 class BalanceCard extends StatelessWidget {
   const BalanceCard(

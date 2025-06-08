@@ -1,11 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-
-import '../API/database.dart';
-import '../Componet/balance_card.dart';
-import '../Componet/transaction.dart';
-import '../constant.dart';
+import 'package:remind_wallet/API/database.dart';
+import 'package:remind_wallet/Componet/balance_card.dart';
+import 'package:remind_wallet/Componet/transaction.dart';
+import 'package:remind_wallet/constant.dart';
 
 class ExpensePage extends StatelessWidget {
   static String id = "Expense page";
@@ -47,7 +46,8 @@ class ExpensePage extends StatelessWidget {
                 children: [
                   BalanceCard(
                     cardName: "TOTAL EXPENSES",
-                    cardBalanceAmt: Database.amountsList[totalExpensesD].toString(),
+                    cardBalanceAmt:
+                        Database.amountsList[totalExpensesD].toString(),
                   ),
                 ],
               ),
@@ -63,28 +63,40 @@ class ExpensePage extends StatelessWidget {
               ),
               for (int i = Database.TransactionList.length - 1; i >= 0; i--)
                 if (Database.TransactionList[i][transationNameD] != null &&
-                    // ignore: unnecessary_null_comparison
-                    Database.TransactionList[i][transactionAmountD].toString() != null &&
                     Database.TransactionList[i][transactionTypeD] != null &&
                     Database.TransactionList[i][transactionTagD] != null &&
                     Database.TransactionList[i][transactionDateD] != null &&
                     Database.TransactionList[i][transactionAccountD] != null &&
                     Database.TransactionList[i][transactionPersonD] != null &&
-                    Database.TransactionList[i][transactionCreatedDateD] != null &&
-                    Database.TransactionList[i][transactionDescriptionD] != null &&
+                    Database.TransactionList[i][transactionCreatedDateD] !=
+                        null &&
+                    Database.TransactionList[i][transactionDescriptionD] !=
+                        null &&
                     Database.TransactionList[i][transactionTypeD] == expensesT)
                   TranactionCard(
-                    transationName: Database.TransactionList[i][transationNameD],
-                    transactionAmount: Database.TransactionList[i][transactionAmountD].toString(),
-                    transactionType: Database.TransactionList[i][transactionTypeD],
-                    transactionTag: Database.TransactionList[i][transactionTagD],
-                    transactionDate: Database.TransactionList[i][transactionDateD],
-                    transactionAccount: Database.TransactionList[i][transactionAccountD],
-                    transactionPerson: Database.TransactionList[i][transactionPersonD],
-                    transactionDescription: Database.TransactionList[i][transactionDescriptionD],
-                    iconsName: getIconForElement(Database.TransactionList[i][transactionTagD]),
+                    transationName: Database.TransactionList[i]
+                        [transationNameD],
+                    transactionAmount: Database.TransactionList[i]
+                            [transactionAmountD]
+                        .toString(),
+                    transactionType: Database.TransactionList[i]
+                        [transactionTypeD],
+                    transactionTag: Database.TransactionList[i]
+                        [transactionTagD],
+                    transactionDate: Database.TransactionList[i]
+                        [transactionDateD],
+                    transactionAccount: Database.TransactionList[i]
+                        [transactionAccountD],
+                    transactionPerson: Database.TransactionList[i]
+                        [transactionPersonD],
+                    transactionDescription: Database.TransactionList[i]
+                        [transactionDescriptionD],
+                    iconsName: getIconForElement(
+                        Database.TransactionList[i][transactionTagD]),
                     // iconsName: db.TransactionList[i][transactionIconD] == "shooping" ? Icons.shopping_cart_outlined : Icons.abc,
-                    transactionCreatedDate: Database.TransactionList[i][transactionCreatedDateD] ?? "",
+                    transactionCreatedDate: Database.TransactionList[i]
+                            [transactionCreatedDateD] ??
+                        "",
                     // Account: db.TransactionList[i]["account"] ?? "Cash",
                   ),
             ],

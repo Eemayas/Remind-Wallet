@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
+import 'package:remind_wallet/API/database.dart';
 import 'package:remind_wallet/API/firebase_databse.dart';
+import 'package:remind_wallet/Componet/input_filed.dart';
 import 'package:remind_wallet/Componet/logo_viewer.dart';
+import 'package:remind_wallet/Componet/toggle_button.dart';
 import 'package:remind_wallet/Pages/authentication/add_user_data_entry_page.dart';
 import 'package:remind_wallet/Pages/authentication/forgot_password.dart';
+import 'package:remind_wallet/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../API/database.dart';
-import '../../Componet/input_filed.dart';
-import '../../Componet/toggle_button.dart';
-import '../../constant.dart';
 
 class LogInSignUpPage extends StatefulWidget {
   static String id = "SignUp Pagess";

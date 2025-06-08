@@ -5,10 +5,9 @@ import 'package:page_transition/page_transition.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
+import 'package:remind_wallet/Componet/riv_animation.dart';
 import 'package:remind_wallet/Pages/starting_pages/splash_screen.dart';
 import 'package:remind_wallet/constant.dart';
-
-import '../../Componet/riv_animation.dart';
 
 class AskStoragePermission extends StatefulWidget {
   const AskStoragePermission({super.key});
