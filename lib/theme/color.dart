@@ -52,7 +52,8 @@ class AppColors {
       Color(0xFF1E88E5); // Selection handle color
   static const Color inputFillColor =
       Color(0xFF2C2C2C); // Input field background
-  static const Color inputBorderColor = Color(0xFF404040); // Input field border
+  static const Color inputBorderColor =
+      Color.fromARGB(255, 117, 114, 114); // Input field border
   static const Color inputFocusedBorderColor =
       Color(0xFF1E88E5); // Focused input border
   static const Color inputErrorBorderColor =
@@ -92,7 +93,7 @@ class AppColors {
   static const Color cardElevatedColor =
       Color(0xFF353535); // Elevated card background
   static const Color bottomSheetColor =
-      Color(0xFF2C2C2C); // Bottom sheet background
+      Color.fromARGB(255, 29, 28, 28); // Bottom sheet background
   static const Color dialogColor = Color(0xFF2C2C2C); // Dialog background
   static const Color snackBarColor = Color(0xFF323232); // Snackbar background
 

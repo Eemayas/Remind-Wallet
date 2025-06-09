@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum TransactionType { income, expenses }
+enum TransactionType { income, expenses, account }
 
 class TransactionIcon {
   final IconData icon;
@@ -14,7 +14,7 @@ class TransactionIcon {
   });
 }
 
-final List<TransactionIcon> dummyIcons = [
+final List<TransactionIcon> categoryIcons = [
   TransactionIcon(
       icon: Icons.attach_money,
       color: Colors.green,
@@ -176,4 +176,37 @@ final List<TransactionIcon> dummyIcons = [
       icon: Icons.subscriptions,
       color: Colors.cyan.shade700,
       type: TransactionType.expenses), // recurring bills
+];
+
+final List<TransactionIcon> accountIcons = [
+  TransactionIcon(
+    icon: Icons.account_balance, // Bank account
+    color: Colors.blue,
+    type: TransactionType.account,
+  ),
+  TransactionIcon(
+    icon: Icons.account_circle, // Personal/Checking account
+    color: Colors.green,
+    type: TransactionType.account,
+  ),
+  TransactionIcon(
+    icon: Icons.savings, // Savings
+    color: Colors.purple,
+    type: TransactionType.account,
+  ),
+  TransactionIcon(
+    icon: Icons.credit_card, // Credit account
+    color: Colors.red,
+    type: TransactionType.account,
+  ),
+  TransactionIcon(
+    icon: Icons.show_chart, // Investment account
+    color: Colors.orange,
+    type: TransactionType.account,
+  ),
+  TransactionIcon(
+    icon: Icons.wallet, // Wallet / digital account
+    color: Colors.teal,
+    type: TransactionType.account,
+  ),
 ];

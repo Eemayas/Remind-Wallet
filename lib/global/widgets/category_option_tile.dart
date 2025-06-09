@@ -41,12 +41,15 @@ class CategoryOptionTile extends StatelessWidget {
             ),
             if (isLabelVisible) ...[
               const SizedBox(height: 8),
-              Text(
-                name!,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                textAlign: TextAlign.center,
+              Expanded(
+                child: Text(
+                  overflow: TextOverflow.ellipsis,
+                  name!,
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ],
           ],

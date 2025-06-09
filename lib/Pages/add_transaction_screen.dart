@@ -3,9 +3,11 @@ import 'package:remind_wallet/Componet/input_filed.dart';
 import 'package:remind_wallet/constant.dart';
 import 'package:remind_wallet/global/widgets/category_option_tile.dart';
 import 'package:remind_wallet/global/widgets/custom_button.dart';
+import 'package:remind_wallet/global/widgets/date_time_picker.dart';
 import 'package:remind_wallet/global/widgets/option_picker_field.dart';
 import 'package:remind_wallet/model/TransactionIcon.dart';
 import 'package:remind_wallet/theme/color.dart';
+import 'package:remind_wallet/theme/typography.dart';
 
 class Category {
   final String name;
@@ -28,7 +30,12 @@ class ExpenseScreenState extends State<ExpenseScreen> {
   String notes = '';
   int selectedTab = 1;
 
+  final TextEditingController titleController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
+  final TextEditingController accountInitialAmount = TextEditingController();
+  final TextEditingController accountName = TextEditingController();
+
+  DateTime selectedDateTime = DateTime.now();
 
   void _onNumberPressed(String number) {
     setState(() {
@@ -159,6 +166,142 @@ class ExpenseScreenState extends State<ExpenseScreen> {
     });
   }
 
+  void _showAddAccountForm() {
+    final TextEditingController categoryNameController =
+        TextEditingController();
+
+    final List<TransactionIcon> availableIcons = accountIcons;
+
+    IconData? selectedIcon;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: AppColors.bottomSheetColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              titlePadding: const EdgeInsets.only(
+                  top: 20, left: 20, right: 20, bottom: 10),
+              title: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Add New Account',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Divider(
+                    color: Colors.white24,
+                    thickness: 1,
+                    indent: 10,
+                    endIndent: 10,
+                  ),
+                ],
+              ),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ClearableInputField(
+                      hintText: "Cash / Bank Account ",
+                      controller: accountName,
+                      keyboardType: TextInputType.text,
+                      labelText: "Account Name",
+                      prefixIcon: Icons.account_balance_outlined,
+                    ),
+                    SizedBox(height: 20),
+                    ClearableInputField(
+                      hintText: "Initial Amount",
+                      controller: accountInitialAmount,
+                      keyboardType: TextInputType.number,
+                      labelText: "Initial Amount",
+                      prefixIcon: Icons.money,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      "Pick an Icon",
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.inputFillColor,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: EdgeInsets.all(8),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: List.generate(
+                            availableIcons.length,
+                            (index) {
+                              IconData icon = availableIcons[index].icon;
+                              Color iconColor = availableIcons[index].color;
+
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 6.0),
+                                child: CategoryOptionTile(
+                                  iconData: icon,
+                                  iconBackgroundColor: iconColor,
+                                  isLabelVisible: false,
+                                  containerColor: selectedIcon == icon
+                                      ? Theme.of(context)
+                                          .colorScheme
+                                          .primary
+                                          .withAlpha((0.5 * 255).round())
+                                      : Colors.transparent,
+                                  onTap: () {
+                                    setState(() => selectedIcon = icon);
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                CustomElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedIcon = null;
+                      categoryNameController.clear();
+                    });
+                    Navigator.pop(context);
+                  },
+                  icon: Icons.cancel,
+                  label: 'Cancel',
+                ),
+                CustomElevatedButton(
+                  onPressed: () {
+                    if (categoryNameController.text.isNotEmpty &&
+                        selectedIcon != null) {
+                      // Add logic to store the new category
+                      Navigator.pop(context);
+                    }
+                  },
+                  icon: Icons.check,
+                  label: 'Save',
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   void _showAccountPicker() {
     Map<String, double> accounts = {
       'Cash': 1200.0,
@@ -169,43 +312,67 @@ class ExpenseScreenState extends State<ExpenseScreen> {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: Color(0xFF3D3D3D),
+      backgroundColor: AppColors.bottomSheetColor,
       builder: (context) {
         return Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.5,
+          ),
           padding: EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Select Account',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              Center(
+                child: Text(
+                  'Select Account',
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
               SizedBox(height: 20),
               ...accounts.entries.map(
-                (entry) => ListTile(
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(entry.key, style: TextStyle(color: Colors.white)),
-                      Text(
-                        '\$${entry.value.toStringAsFixed(2)}',
-                        style: TextStyle(
-                          color: entry.value >= 0 ? Colors.green : Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                (entry) => Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.inputFillColor,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.inputBorderColor),
                   ),
-                  onTap: () {
-                    setState(() {
-                      selectedAccount = entry.key;
-                    });
-                    Navigator.pop(context);
-                  },
+                  margin: EdgeInsets.symmetric(vertical: 5),
+                  child: ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(entry.key,
+                            style: Theme.of(context).textTheme.bodyMedium),
+                        Text(
+                          '\$${entry.value.toStringAsFixed(2)}',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: entry.value >= 0
+                                        ? Colors.green
+                                        : Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      setState(() {
+                        selectedAccount = entry.key;
+                      });
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Center(
+                child: CustomElevatedButton(
+                  label: "Add New Account",
+                  onPressed: _showAddAccountForm,
+                  icon: Icons.add,
                 ),
               ),
             ],
@@ -219,11 +386,11 @@ class ExpenseScreenState extends State<ExpenseScreen> {
     final TextEditingController categoryNameController =
         TextEditingController();
 
-    final List<TransactionIcon> incomeIcons = dummyIcons
+    final List<TransactionIcon> incomeIcons = categoryIcons
         .where((icon) => icon.type == TransactionType.income)
         .toList();
 
-    final List<TransactionIcon> expenseIcons = dummyIcons
+    final List<TransactionIcon> expenseIcons = categoryIcons
         .where((icon) => icon.type == TransactionType.expenses)
         .toList();
 
@@ -237,7 +404,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              backgroundColor: const Color(0xFF3D3D3D),
+              backgroundColor: AppColors.bottomSheetColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
@@ -272,7 +439,6 @@ class ExpenseScreenState extends State<ExpenseScreen> {
                       keyboardType: TextInputType.text,
                       labelText: "Category Name",
                     ),
-                 
                     SizedBox(height: 20),
                     Text(
                       "Pick an Icon",
@@ -523,7 +689,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.cardColor,
+      backgroundColor: AppColors.bottomSheetColor,
       isScrollControlled: true,
       builder: (context) {
         return Container(
@@ -576,33 +742,6 @@ class ExpenseScreenState extends State<ExpenseScreen> {
     );
   }
 
-  // Widget _buildCalculatorButton(
-  //   String text, {
-  //   Color? color,
-  //   VoidCallback? onPressed,
-  // }) {
-  //   return Expanded(
-  //     child: Container(
-  //       margin: EdgeInsets.all(4),
-  //       child: ElevatedButton(
-  //         onPressed: onPressed,
-  //         style: ElevatedButton.styleFrom(
-  //           backgroundColor: color ?? Color(0xFF4D4D4D),
-  //           foregroundColor: Colors.white,
-  //           padding: EdgeInsets.all(20),
-  //           shape: RoundedRectangleBorder(
-  //             borderRadius: BorderRadius.circular(8),
-  //           ),
-  //         ),
-  //         child: Text(
-  //           text,
-  //           style: TextStyle(fontSize: 24, fontWeight: FontWeight.w400),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget _buildCalculatorRow(List<String> buttons) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -638,11 +777,11 @@ class ExpenseScreenState extends State<ExpenseScreen> {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: kBackgroundColorCard,
+        backgroundColor: AppColors.inputFillColor,
         padding: EdgeInsets.symmetric(vertical: 20),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
-          side: BorderSide(color: Colors.grey),
+          side: BorderSide(color: AppColors.inputBorderColor),
         ),
       ),
       child: Text(text, style: kwhiteTextStyle.copyWith(fontSize: 20)),
@@ -701,7 +840,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
 
           // Account and Category selectors
           Padding(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
                 Expanded(
@@ -727,6 +866,25 @@ class ExpenseScreenState extends State<ExpenseScreen> {
             ),
           ),
 
+          SizedBox(
+            height: 16,
+          ),
+
+          // Name section
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: ClearableInputField(
+              hintText: "Shopping at the mall / Grocery shopping",
+              controller: titleController,
+              keyboardType: TextInputType.text,
+              labelText: "Title",
+              prefixIcon: Icons.title_sharp,
+            ),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+
           // Notes section
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
@@ -738,85 +896,76 @@ class ExpenseScreenState extends State<ExpenseScreen> {
               maxLines: 2,
             ),
           ),
+          SizedBox(
+            height: 16,
+          ),
 
-          // // Amount display
-          // Container(
-          //   padding: EdgeInsets.all(20),
-          //   child: Container(
-          //     padding: EdgeInsets.all(20),
-          //     decoration: BoxDecoration(
-          //       color: kBackgroundColorCard,
-          //       border: Border.all(color: Colors.grey),
-          //       borderRadius: BorderRadius.circular(8),
-          //     ),
-          //     child: Row(
-          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //       children: [
-          //         Expanded(
-          //           child: Text(
-          //             currentAmount,
-          //             style: kwhiteTextStyle.copyWith(
-          //               fontSize: 32,
-          //               fontWeight: FontWeight.w300,
-          //             ),
-          //             textAlign: TextAlign.left,
-          //           ),
-          //         ),
-          //         GestureDetector(
-          //           onTap: _deleteLastDigit,
-          //           child: Container(
-          //             padding: EdgeInsets.all(8),
-          //             decoration: BoxDecoration(
-          //               color: Colors.grey[700],
-          //               borderRadius: BorderRadius.circular(4),
-          //             ),
-          //             child: Icon(
-          //               Icons.backspace,
-          //               color: Colors.white,
-          //               size: 20,
-          //             ),
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-
-          // // Calculator grid
-          // Expanded(
-          //   child: Padding(
-          //     padding: EdgeInsets.all(16),
-          //     child: Column(
-          //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //       children: [
-          //         _buildCalculatorRow(['+', '7', '8', '9']),
-          //         _buildCalculatorRow(['-', '4', '5', '6']),
-          //         _buildCalculatorRow(['x', '1', '2', '3']),
-          //         _buildCalculatorRow(['÷', '0', '.', '=']),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-
-          // // Date and time
-          // Container(
-          //   padding: EdgeInsets.all(20),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     children: [
-          //       Text(
-          //         'Jun 09, 2025',
-          //         style: TextStyle(color: Colors.grey, fontSize: 16),
-          //       ),
-          //       Text(
-          //         '${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}',
-          //         style: TextStyle(color: Colors.grey, fontSize: 16),
-          //       ),
-          //     ],
-          //   ),
-          // ),
+          // Amount display
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.inputFillColor,
+                border: Border.all(color: AppColors.inputBorderColor),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Text(
+                      currentAmount,
+                      style: AppTextStyles.headlineLarge,
+                      textAlign: TextAlign.right,
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  GestureDetector(
+                    onTap: _deleteLastDigit,
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      child: Icon(
+                        Icons.backspace_outlined,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          // Calculator grid
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                spacing: 5,
+                children: [
+                  _buildCalculatorRow(['+', '7', '8', '9']),
+                  _buildCalculatorRow(['-', '4', '5', '6']),
+                  _buildCalculatorRow(['x', '1', '2', '3']),
+                  _buildCalculatorRow(['÷', '0', '.', '=']),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
+      persistentFooterButtons: [
+        DateTimePickerRow(
+          selectedDateTime: selectedDateTime,
+          onChanged: (newDateTime) {
+            setState(() {
+              selectedDateTime = newDateTime;
+            });
+          },
+        ),
+      ],
     );
   }
 
@@ -840,7 +989,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
             title,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: isSelected ? Colors.white : Colors.grey,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                 ),
           ),
         ],

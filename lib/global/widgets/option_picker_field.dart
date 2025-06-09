@@ -36,12 +36,11 @@ class BaseDropdownPickerField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = style ?? Theme.of(context).textTheme.labelLarge;
+    final textStyle = style ?? Theme.of(context).textTheme.bodyMedium;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(labelText,
-            style: labelStyle ?? Theme.of(context).textTheme.labelLarge),
+        Text(labelText, style: labelStyle ?? textStyle),
         const SizedBox(height: 8),
         GestureDetector(
           onTap: isEnabled ? onTap : null,
@@ -51,7 +50,7 @@ class BaseDropdownPickerField extends StatelessWidget {
             decoration: BoxDecoration(
               color: fillColor ?? AppColors.inputFillColor,
               borderRadius: BorderRadius.circular(borderRadius),
-              border: Border.all(color: Colors.grey),
+              border: Border.all(color: AppColors.inputBorderColor),
             ),
             child: Row(
               children: [
