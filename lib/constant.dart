@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -17,10 +15,15 @@ const Color kMainBoxBorderColor = Color.fromARGB(168, 105, 240, 175);
 const Color kBoxShadowMainBoxBolor = Color.fromARGB(168, 105, 240, 175);
 
 TextStyle kwhiteTextStyle = GoogleFonts.quicksand(
-  textStyle: const TextStyle(letterSpacing: 1, fontSize: 15, color: Color(0xffF2F2F2)),
+  textStyle:
+      const TextStyle(letterSpacing: 1, fontSize: 15, color: Color(0xffF2F2F2)),
 );
 TextStyle kwhiteboldTextStyle = GoogleFonts.quicksand(
-  textStyle: const TextStyle(letterSpacing: 1, fontSize: 15, color: Color(0xffF2F2F2), fontWeight: FontWeight.bold),
+  textStyle: const TextStyle(
+      letterSpacing: 1,
+      fontSize: 15,
+      color: Color(0xffF2F2F2),
+      fontWeight: FontWeight.bold),
 );
 
 TextStyle ksubTextStyle = GoogleFonts.quicksand(

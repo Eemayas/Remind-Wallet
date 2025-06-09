@@ -29,7 +29,8 @@ class _AskStoragePermissionState extends State<AskStoragePermission> {
           child: Splash_Page()));
     } else if (status.isDenied || status.isPermanentlyDenied) {
       print("Permission Denied");
-      PermissionStatus newStatus = await Permission.storage.request();
+      PermissionStatus newStatus =
+          await Permission.manageExternalStorage.request();
       if (newStatus.isGranted) {
         Navigator.of(context).pushReplacement(PageTransition(
             type: PageTransitionType.fade,

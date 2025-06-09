@@ -13,7 +13,7 @@ import 'check_page.dart';
 
 class Splash_Page extends StatefulWidget {
   static String id = "Splash Page";
-  const Splash_Page({Key? key}) : super(key: key);
+  const Splash_Page({super.key});
 
   @override
   State<Splash_Page> createState() => _Splash_PageState();
@@ -44,6 +44,7 @@ class _Splash_PageState extends State<Splash_Page> {
 
   _navigatetohome({isDataPresent}) async {
     var status = await Permission.manageExternalStorage.status;
+    print("Permission status: ${status.isGranted}");
     await Future.delayed(Duration(milliseconds: 900), () {});
     status.isGranted
         ? {

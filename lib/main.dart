@@ -7,6 +7,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:remind_wallet/Pages/add_account.dart';
 import 'package:remind_wallet/Pages/add_transaction.dart';
+import 'package:remind_wallet/Pages/add_transaction_screen.dart';
 import 'package:remind_wallet/Pages/authentication/add_user_data_entry_page.dart';
 import 'package:remind_wallet/Pages/authentication/forgot_password.dart';
 import 'package:remind_wallet/Pages/edit_user_detail.dart';
@@ -20,6 +21,7 @@ import 'package:remind_wallet/Pages/show_to_receive_page.dart';
 import 'package:remind_wallet/Pages/starting_pages/splash_screen.dart';
 import 'package:remind_wallet/constant.dart';
 import 'package:remind_wallet/extras/firebase_all_options.dart';
+import 'package:remind_wallet/theme/theme.dart';
 
 import 'Pages/authentication/signIn_signOut_page.dart';
 import 'Pages/home_pages/bottom_navigation_bar.dart';
@@ -29,26 +31,25 @@ import 'Provider/provider.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
+  //Firebase Initialization
   WidgetsFlutterBinding.ensureInitialized();
-
-  // ✅ Prevent duplicate initialization
-  if (Firebase.apps.isEmpty) {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  }
-
-  await Hive.initFlutter();
-  await Hive.openBox("expenses_tracker");
-
-  configLoading(); // move this up if it doesn't require context
-
-  runApp(
-    MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => ChangedMsg())],
-      child: const MyApp(),
-    ),
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  //* initialize hive
+  await Hive.initFlutter();
+
+  //open the box
+  var box = await Hive.openBox("expenses_tracker");
+
+  //Provider Initialization
+  runApp(MultiProvider(
+    //List of Provider used in the app
+    providers: [ChangeNotifierProvider(create: (_) => ChangedMsg())],
+    child: const MyApp(),
+  ));
+  configLoading();
 }
 
 final navigatorkey = GlobalKey<NavigatorState>();
@@ -65,19 +66,19 @@ class MyApp extends StatelessWidget {
       navigatorKey: navigatorkey,
       debugShowCheckedModeBanner: false,
       builder: EasyLoading.init(),
-      title: 'Flutter Demo',
-      theme: ThemeData(
-          brightness: Brightness.dark,
-          scaffoldBackgroundColor: kBackgroundColor,
-          textTheme: TextTheme(
-            bodyLarge: TextStyle(
-              color: Colors.white,
-            ),
-          )),
-      initialRoute: Splash_Page
-          .id, //TermsAndConditionsScreen.id, //IntroductionPages.id, //
-      // Dashboard.id,  Tryyy.id,//ShowUserDetailPage.id,  //LogInSignUpPage.id, //  Dashboard.id, //AccountDetailPage.id,
-      //TranasctionDetailPage.id,
+      title: 'Remind Wallet',
+      // theme: ThemeData(
+      //   brightness: Brightness.dark,
+      //   scaffoldBackgroundColor: kBackgroundColor,
+      //   textTheme: TextTheme(
+      //     bodyLarge: TextStyle(
+      //       color: Colors.white,
+      //     ),
+      //   ),
+      // ),
+      theme: AppTheme.darkTheme(),
+      home: ExpenseScreen(),
+      // initialRoute: Splash_Page.id,
       routes: {
         Dashboard.id: (context) => const Dashboard(),
         IncomePage.id: (context) => const IncomePage(),
@@ -117,7 +118,7 @@ void configLoading() {
     ..backgroundColor = Colors.green
     ..indicatorColor = Colors.yellow
     ..textColor = Colors.yellow
-    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..maskColor = Colors.blue.withAlpha((0.5 * 255).round())
     ..userInteractions = true
     ..dismissOnTap = false
     ..textStyle = kwhiteTextStyle
