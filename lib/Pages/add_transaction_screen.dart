@@ -9,6 +9,8 @@ import 'package:remind_wallet/model/TransactionIcon.dart';
 import 'package:remind_wallet/theme/color.dart';
 import 'package:remind_wallet/theme/typography.dart';
 
+enum TransactionType { income, expense, toPay, toReceive, transfer }
+
 class Category {
   final String name;
   final TransactionIcon icon;
@@ -25,6 +27,7 @@ class ExpenseScreen extends StatefulWidget {
 
 class ExpenseScreenState extends State<ExpenseScreen> {
   String currentAmount = '0';
+  String selectedTransactionType = TransactionType.expense.name;
   String selectedAccount = 'Account';
   String selectedCategory = 'Category';
   String notes = '';
@@ -129,12 +132,6 @@ class ExpenseScreenState extends State<ExpenseScreen> {
       }
     }
     return result;
-  }
-
-  void _clearAmount() {
-    setState(() {
-      currentAmount = '0';
-    });
   }
 
   void _deleteLastDigit() {
@@ -391,10 +388,14 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         .toList();
 
     final List<TransactionIcon> expenseIcons = categoryIcons
-        .where((icon) => icon.type == TransactionType.expenses)
+        .where((icon) => icon.type == TransactionType.expense)
         .toList();
 
-    final List<TransactionIcon> availableIcons = incomeIcons;
+    final List<TransactionIcon> availableIcons =
+        selectedTransactionType == TransactionType.income.name ||
+                selectedTransactionType == TransactionType.toReceive.name
+            ? incomeIcons
+            : expenseIcons;
 
     IconData? selectedIcon;
 
@@ -538,7 +539,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.baby_changing_station,
           color: Colors.brown,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -546,7 +547,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.spa,
           color: Colors.pink,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -554,7 +555,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.receipt,
           color: Colors.grey,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -562,7 +563,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.directions_car,
           color: Colors.purple,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -570,7 +571,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.checkroom,
           color: Colors.orange,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -578,7 +579,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.school,
           color: Colors.blue,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -586,7 +587,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.devices,
           color: Colors.teal,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -594,7 +595,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.movie,
           color: Colors.indigo,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -602,7 +603,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.restaurant,
           color: Colors.red,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -610,7 +611,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.favorite,
           color: Colors.deepOrange,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -618,7 +619,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.home,
           color: Colors.pinkAccent,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -626,7 +627,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.verified_user,
           color: Colors.orangeAccent,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -634,7 +635,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.shopping_cart,
           color: Colors.blue,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -642,7 +643,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.group,
           color: Colors.green,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -650,7 +651,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.sports_tennis,
           color: Colors.lightGreen,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -658,7 +659,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.request_quote,
           color: Colors.deepOrange,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -666,7 +667,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.phone,
           color: Colors.lime,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
       Category(
@@ -682,7 +683,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         icon: TransactionIcon(
           icon: Icons.directions_bus,
           color: Colors.indigo,
-          type: TransactionType.expenses,
+          type: TransactionType.expense,
         ),
       ),
     ];
@@ -825,15 +826,15 @@ class ExpenseScreenState extends State<ExpenseScreen> {
               mainAxisAlignment:
                   MainAxisAlignment.spaceEvenly, // ⬅️ Equal space between tabs
               children: [
-                _buildTab('INCOME', 0),
+                _buildTab(TransactionType.income.name, 0),
                 _buildDivider(),
-                _buildTab('EXPENSE', 1),
+                _buildTab(TransactionType.expense.name, 1),
                 _buildDivider(),
-                _buildTab('TO PAY', 3),
+                _buildTab(TransactionType.toPay.name, 2),
                 _buildDivider(),
-                _buildTab('TO RECEIVE', 4),
+                _buildTab(TransactionType.toReceive.name, 3),
                 _buildDivider(),
-                _buildTab('TRANSFER', 5),
+                _buildTab(TransactionType.transfer.name, 4),
               ],
             ),
           ),
@@ -986,7 +987,13 @@ class ExpenseScreenState extends State<ExpenseScreen> {
                 color: AppColors.optionSelectedColor, size: 15),
           if (isSelected) SizedBox(width: 5),
           Text(
-            title,
+            // Convert camelCase or lowerCamelCase to ALL CAPS with spaces
+            title
+                .replaceAllMapped(
+                  RegExp(r'([a-z])([A-Z])'),
+                  (match) => '${match.group(1)} ${match.group(2)}',
+                )
+                .toUpperCase(),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: isSelected ? Colors.white : Colors.grey,
                   fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,

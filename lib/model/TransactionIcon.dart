@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-
-enum TransactionType { income, expenses, account }
+import 'package:remind_wallet/Pages/add_transaction_screen.dart';
 
 class TransactionIcon {
   final IconData icon;
   final Color color;
-  final TransactionType type;
+  final TransactionType? type;
 
   TransactionIcon({
     required this.icon,
     required this.color,
-    required this.type,
+    this.type,
   });
 }
 
@@ -99,114 +98,108 @@ final List<TransactionIcon> categoryIcons = [
   TransactionIcon(
       icon: Icons.shopping_cart,
       color: Colors.indigo,
-      type: TransactionType.expenses), // shopping
+      type: TransactionType.expense), // shopping
   TransactionIcon(
       icon: Icons.money_off,
       color: Colors.red,
-      type: TransactionType.expenses), // loss
+      type: TransactionType.expense), // loss
   TransactionIcon(
       icon: Icons.receipt,
       color: Colors.blueGrey,
-      type: TransactionType.expenses), // bill
+      type: TransactionType.expense), // bill
   TransactionIcon(
       icon: Icons.fastfood,
       color: Colors.deepOrange,
-      type: TransactionType.expenses), // food
+      type: TransactionType.expense), // food
   TransactionIcon(
       icon: Icons.local_gas_station,
       color: Colors.amber.shade800,
-      type: TransactionType.expenses), // fuel
+      type: TransactionType.expense), // fuel
   TransactionIcon(
       icon: Icons.home,
       color: Colors.brown,
-      type: TransactionType.expenses), // rent/mortgage
+      type: TransactionType.expense), // rent/mortgage
   TransactionIcon(
       icon: Icons.phone_android,
       color: Colors.lightBlue,
-      type: TransactionType.expenses), // mobile expense
+      type: TransactionType.expense), // mobile expense
   TransactionIcon(
       icon: Icons.credit_card,
       color: Colors.teal,
-      type: TransactionType.expenses), // credit card payments
+      type: TransactionType.expense), // credit card payments
   TransactionIcon(
       icon: Icons.flight_takeoff,
       color: Colors.blue,
-      type: TransactionType.expenses), // travel
+      type: TransactionType.expense), // travel
   TransactionIcon(
       icon: Icons.healing,
       color: Colors.pinkAccent,
-      type: TransactionType.expenses), // medical
+      type: TransactionType.expense), // medical
   TransactionIcon(
       icon: Icons.theater_comedy,
       color: Colors.deepPurple,
-      type: TransactionType.expenses), // entertainment
+      type: TransactionType.expense), // entertainment
   TransactionIcon(
       icon: Icons.school,
       color: Colors.orange,
-      type: TransactionType.expenses), // education
+      type: TransactionType.expense), // education
   TransactionIcon(
       icon: Icons.coffee,
       color: Colors.brown.shade400,
-      type: TransactionType.expenses), // coffee/snacks
+      type: TransactionType.expense), // coffee/snacks
   TransactionIcon(
       icon: Icons.pets,
       color: Colors.teal.shade300,
-      type: TransactionType.expenses), // pet care
+      type: TransactionType.expense), // pet care
   TransactionIcon(
       icon: Icons.sports_soccer,
       color: Colors.green.shade700,
-      type: TransactionType.expenses), // sports
+      type: TransactionType.expense), // sports
   TransactionIcon(
       icon: Icons.style,
       color: Colors.purpleAccent,
-      type: TransactionType.expenses), // fashion
+      type: TransactionType.expense), // fashion
   TransactionIcon(
       icon: Icons.wifi,
       color: Colors.indigoAccent,
-      type: TransactionType.expenses), // internet
+      type: TransactionType.expense), // internet
   TransactionIcon(
       icon: Icons.lightbulb,
       color: Colors.yellow.shade700,
-      type: TransactionType.expenses), // electricity
+      type: TransactionType.expense), // electricity
   TransactionIcon(
       icon: Icons.laptop_mac,
       color: Colors.grey.shade800,
-      type: TransactionType.expenses), // gadgets
+      type: TransactionType.expense), // gadgets
   TransactionIcon(
       icon: Icons.subscriptions,
       color: Colors.cyan.shade700,
-      type: TransactionType.expenses), // recurring bills
+      type: TransactionType.expense), // recurring bills
 ];
 
 final List<TransactionIcon> accountIcons = [
   TransactionIcon(
     icon: Icons.account_balance, // Bank account
     color: Colors.blue,
-    type: TransactionType.account,
   ),
   TransactionIcon(
     icon: Icons.account_circle, // Personal/Checking account
     color: Colors.green,
-    type: TransactionType.account,
   ),
   TransactionIcon(
     icon: Icons.savings, // Savings
     color: Colors.purple,
-    type: TransactionType.account,
   ),
   TransactionIcon(
     icon: Icons.credit_card, // Credit account
     color: Colors.red,
-    type: TransactionType.account,
   ),
   TransactionIcon(
     icon: Icons.show_chart, // Investment account
     color: Colors.orange,
-    type: TransactionType.account,
   ),
   TransactionIcon(
     icon: Icons.wallet, // Wallet / digital account
     color: Colors.teal,
-    type: TransactionType.account,
   ),
 ];
