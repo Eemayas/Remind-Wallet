@@ -5,7 +5,7 @@ import 'package:remind_wallet/global/widgets/category_option_tile.dart';
 import 'package:remind_wallet/global/widgets/custom_button.dart';
 import 'package:remind_wallet/global/widgets/date_time_picker.dart';
 import 'package:remind_wallet/global/widgets/option_picker_field.dart';
-import 'package:remind_wallet/model/TransactionIcon.dart';
+import 'package:remind_wallet/models/transaction_icon.dart';
 import 'package:remind_wallet/theme/color.dart';
 import 'package:remind_wallet/theme/typography.dart';
 
