@@ -1,14 +1,15 @@
 import 'package:equatable/equatable.dart';
+
 import '../models/account_model.dart';
-import '../models/transaction_model.dart';
 import '../models/amount_summary_model.dart';
+import '../models/transaction_model.dart';
 import '../models/user_model.dart';
 
 enum ExpenseStatus { initial, loading, success, failure }
 
 class ExpenseState extends Equatable {
   final ExpenseStatus status;
-  final List<Account> accounts;
+  final List<AccountModel> accounts;
   final List<Transaction> transactions;
   final AmountSummary amountSummary;
   final User user;
@@ -25,7 +26,7 @@ class ExpenseState extends Equatable {
 
   ExpenseState copyWith({
     ExpenseStatus? status,
-    List<Account>? accounts,
+    List<AccountModel>? accounts,
     List<Transaction>? transactions,
     AmountSummary? amountSummary,
     User? user,
@@ -51,7 +52,3 @@ class ExpenseState extends Equatable {
         errorMessage,
       ];
 }
-
-// ===== BLOC =====
-
-// bloc/expense_bloc.dart

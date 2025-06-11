@@ -11,18 +11,18 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
   ExpenseBloc({required ExpenseRepository repository})
       : _repository = repository,
         super(const ExpenseState()) {
-    on<LoadExpenseData>(_onLoadExpenseData);
-    on<AddAccount>(_onAddAccount);
-    on<AddTransaction>(_onAddTransaction);
-    on<UpdateTransaction>(_onUpdateTransaction);
-    on<UpdateUser>(_onUpdateUser);
-    on<DeleteAllData>(_onDeleteAllData);
-    on<RecalculateBalances>(_onRecalculateBalances);
-    on<CompleteTransaction>(_onCompleteTransaction);
+    on<LoadExpenseDataEvent>(_onLoadExpenseData);
+    on<AddAccountEvent>(_onAddAccount);
+    on<AddTransactionEvent>(_onAddTransaction);
+    on<UpdateTransactionEvent>(_onUpdateTransaction);
+    on<ModifyUserEvent>(_onUpdateUser);
+    on<DeleteAllDataEvent>(_onDeleteAllData);
+    on<RecalculateBalancesEvent>(_onRecalculateBalances);
+    on<CompleteTransactionEvent>(_onCompleteTransaction);
   }
 
   Future<void> _onLoadExpenseData(
-    LoadExpenseData event,
+    LoadExpenseDataEvent event,
     Emitter<ExpenseState> emit,
   ) async {
     emit(state.copyWith(status: ExpenseStatus.loading));
@@ -48,12 +48,12 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
   }
 
   Future<void> _onAddAccount(
-    AddAccount event,
+    AddAccountEvent event,
     Emitter<ExpenseState> emit,
   ) async {
     try {
       await _repository.addAccount(event.account);
-      add(LoadExpenseData());
+      add(LoadExpenseDataEvent());
     } catch (e) {
       emit(state.copyWith(
         status: ExpenseStatus.failure,
@@ -63,12 +63,12 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
   }
 
   Future<void> _onAddTransaction(
-    AddTransaction event,
+    AddTransactionEvent event,
     Emitter<ExpenseState> emit,
   ) async {
     try {
       await _repository.addTransaction(event.transaction);
-      add(LoadExpenseData());
+      add(LoadExpenseDataEvent());
     } catch (e) {
       emit(state.copyWith(
         status: ExpenseStatus.failure,
@@ -78,12 +78,12 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
   }
 
   Future<void> _onUpdateTransaction(
-    UpdateTransaction event,
+    UpdateTransactionEvent event,
     Emitter<ExpenseState> emit,
   ) async {
     try {
       await _repository.updateTransaction(event.transaction);
-      add(LoadExpenseData());
+      add(LoadExpenseDataEvent());
     } catch (e) {
       emit(state.copyWith(
         status: ExpenseStatus.failure,
@@ -93,12 +93,12 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
   }
 
   Future<void> _onUpdateUser(
-    UpdateUser event,
+    ModifyUserEvent event,
     Emitter<ExpenseState> emit,
   ) async {
     try {
       await _repository.updateUser(event.user);
-      add(LoadExpenseData());
+      add(LoadExpenseDataEvent());
     } catch (e) {
       emit(state.copyWith(
         status: ExpenseStatus.failure,
@@ -108,12 +108,12 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
   }
 
   Future<void> _onDeleteAllData(
-    DeleteAllData event,
+    DeleteAllDataEvent event,
     Emitter<ExpenseState> emit,
   ) async {
     try {
       await _repository.deleteAllData();
-      add(LoadExpenseData());
+      add(LoadExpenseDataEvent());
     } catch (e) {
       emit(state.copyWith(
         status: ExpenseStatus.failure,
@@ -123,12 +123,12 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
   }
 
   Future<void> _onRecalculateBalances(
-    RecalculateBalances event,
+    RecalculateBalancesEvent event,
     Emitter<ExpenseState> emit,
   ) async {
     try {
       await _repository.recalculateBalances();
-      add(LoadExpenseData());
+      add(LoadExpenseDataEvent());
     } catch (e) {
       emit(state.copyWith(
         status: ExpenseStatus.failure,
@@ -138,7 +138,7 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
   }
 
   Future<void> _onCompleteTransaction(
-    CompleteTransaction event,
+    CompleteTransactionEvent event,
     Emitter<ExpenseState> emit,
   ) async {
     try {
@@ -153,7 +153,7 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
       );
 
       await _repository.updateTransaction(updatedTransaction);
-      add(LoadExpenseData());
+      add(LoadExpenseDataEvent());
     } catch (e) {
       emit(state.copyWith(
         status: ExpenseStatus.failure,
