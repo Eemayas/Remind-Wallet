@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:remind_wallet/Pages/add_transaction_screen.dart';
+import 'package:remind_wallet/models/transaction_model.dart';
 
 class TransactionIcon {
   final IconData icon;

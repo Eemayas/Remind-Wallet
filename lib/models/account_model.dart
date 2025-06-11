@@ -1,21 +1,21 @@
 import 'package:equatable/equatable.dart';
 
-class Account extends Equatable {
+class AccountModel extends Equatable {
+  final int? iconIndex;
   final String name;
   final int currentBalance;
 
-  const Account({
+  const AccountModel({
     required this.name,
     required this.currentBalance,
+    this.iconIndex,
   });
 
-  Account copyWith({
-    String? name,
-    int? currentBalance,
-  }) {
-    return Account(
+  AccountModel copyWith({String? name, int? currentBalance, int? iconIndex}) {
+    return AccountModel(
       name: name ?? this.name,
       currentBalance: currentBalance ?? this.currentBalance,
+      iconIndex: iconIndex ?? this.iconIndex,
     );
   }
 
@@ -23,16 +23,18 @@ class Account extends Equatable {
     return {
       'accountNameD': name,
       'accountCurrentBalanceD': currentBalance,
+      'accountIconIndexD': iconIndex,
     };
   }
 
-  factory Account.fromJson(Map<String, dynamic> json) {
-    return Account(
+  factory AccountModel.fromJson(Map<String, dynamic> json) {
+    return AccountModel(
       name: json['accountNameD'] ?? '',
       currentBalance: json['accountCurrentBalanceD'] ?? 0,
+      iconIndex: json['accountIconIndexD'] ?? 0,
     );
   }
 
   @override
-  List<Object?> get props => [name, currentBalance];
+  List<Object?> get props => [name, currentBalance, iconIndex];
 }

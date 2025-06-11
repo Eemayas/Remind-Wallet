@@ -12,15 +12,14 @@ import 'package:remind_wallet/Componet/input_filed.dart';
 import 'package:remind_wallet/Provider/provider.dart';
 import 'package:remind_wallet/constant.dart';
 
-
-class AddTransaction extends StatefulWidget {
+class AddTransactionScreen extends StatefulWidget {
   static String id = "Add Transaction page";
 
   @override
-  State<AddTransaction> createState() => _AddTransactionState();
+  State<AddTransactionScreen> createState() => _AddTransactionScreenState();
 }
 
-class _AddTransactionState extends State<AddTransaction> {
+class _AddTransactionScreenState extends State<AddTransactionScreen> {
   final titleController = TextEditingController();
   final amtController = TextEditingController();
   final toFromController = TextEditingController();

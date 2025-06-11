@@ -1,29 +1,29 @@
 import 'package:equatable/equatable.dart';
 
-enum TransactionType { income, expense, toPay, toReceive }
+enum TransactionType { income, expense, toPay, toReceive, transfer }
 
 class Transaction extends Equatable {
   final String name;
   final int amount;
   final TransactionType type;
-  final String tag;
+  final String category;
   final String date;
   final String account;
   final String person;
   final String description;
-  final String icon;
+  final String? icon;
   final String createdDate;
 
   const Transaction({
     required this.name,
     required this.amount,
     required this.type,
-    required this.tag,
+    required this.category,
     required this.date,
     required this.account,
     required this.person,
     required this.description,
-    required this.icon,
+    this.icon,
     required this.createdDate,
   });
 
@@ -31,7 +31,7 @@ class Transaction extends Equatable {
     String? name,
     int? amount,
     TransactionType? type,
-    String? tag,
+    String? category,
     String? date,
     String? account,
     String? person,
@@ -43,7 +43,7 @@ class Transaction extends Equatable {
       name: name ?? this.name,
       amount: amount ?? this.amount,
       type: type ?? this.type,
-      tag: tag ?? this.tag,
+      category: category ?? this.category,
       date: date ?? this.date,
       account: account ?? this.account,
       person: person ?? this.person,
@@ -58,7 +58,7 @@ class Transaction extends Equatable {
       'transationNameD': name,
       'transactionAmountD': amount,
       'transactionTypeD': _typeToString(type),
-      'transactionTagD': tag,
+      'transactionTagD': category,
       'transactionDateD': date,
       'transactionAccountD': account,
       'transactionPersonD': person,
@@ -73,7 +73,7 @@ class Transaction extends Equatable {
       name: json['transationNameD'] ?? '',
       amount: json['transactionAmountD'] ?? 0,
       type: _stringToType(json['transactionTypeD'] ?? ''),
-      tag: json['transactionTagD'] ?? '',
+      category: json['transactionTagD'] ?? '',
       date: json['transactionDateD'] ?? '',
       account: json['transactionAccountD'] ?? '',
       person: json['transactionPersonD'] ?? '',
@@ -93,6 +93,8 @@ class Transaction extends Equatable {
         return 'toPay';
       case TransactionType.toReceive:
         return 'toReceive';
+      case TransactionType.transfer:
+        return 'transfer';
     }
   }
 
@@ -116,7 +118,7 @@ class Transaction extends Equatable {
         name,
         amount,
         type,
-        tag,
+        category,
         date,
         account,
         person,

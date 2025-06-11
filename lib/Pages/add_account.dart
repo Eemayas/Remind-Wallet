@@ -10,16 +10,14 @@ import 'package:remind_wallet/Componet/input_filed.dart';
 import 'package:remind_wallet/Provider/provider.dart';
 import 'package:remind_wallet/constant.dart';
 
-
-
-class AddAccount extends StatefulWidget {
+class AddAccountScreen extends StatefulWidget {
   static String id = "Add Account";
 
   @override
-  State<AddAccount> createState() => _AddAccountState();
+  State<AddAccountScreen> createState() => _AddAccountScreenState();
 }
 
-class _AddAccountState extends State<AddAccount> {
+class _AddAccountScreenState extends State<AddAccountScreen> {
   final accountnameController = TextEditingController();
   final amtController = TextEditingController();
 

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:remind_wallet/Componet/input_filed.dart';
+import 'package:remind_wallet/bloc/expense_bloc.dart';
+import 'package:remind_wallet/bloc/expense_event.dart';
 import 'package:remind_wallet/constant.dart';
 import 'package:remind_wallet/global/widgets/category_option_tile.dart';
 import 'package:remind_wallet/global/widgets/custom_button.dart';
 import 'package:remind_wallet/global/widgets/date_time_picker.dart';
 import 'package:remind_wallet/global/widgets/option_picker_field.dart';
 import 'package:remind_wallet/models/transaction_icon.dart';
+import 'package:remind_wallet/models/transaction_model.dart';
 import 'package:remind_wallet/theme/color.dart';
 import 'package:remind_wallet/theme/typography.dart';
-
-enum TransactionType { income, expense, toPay, toReceive, transfer }
 
 class Category {
   final String name;
@@ -30,7 +32,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
   String selectedTransactionType = TransactionType.expense.name;
   String selectedAccount = 'Account';
   String selectedCategory = 'Category';
-  String notes = '';
+  TransactionType type = TransactionType.expense;
   int selectedTab = 1;
 
   final TextEditingController titleController = TextEditingController();
@@ -145,6 +147,22 @@ class ExpenseScreenState extends State<ExpenseScreen> {
   }
 
   void _saveExpense() {
+    context.read<ExpenseBloc>().add(
+          AddTransactionEvent(
+            Transaction(
+              name: titleController.text,
+              amount: int.tryParse(currentAmount) ?? 0,
+              type: type,
+              category: selectedCategory,
+              date: selectedDateTime.toIso8601String(),
+              account: selectedAccount,
+              person: "",
+              description: notesController.text,
+              createdDate: DateTime.now().toIso8601String(),
+            ),
+          ),
+        );
+
     // Here you would typically save to database
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -158,7 +176,6 @@ class ExpenseScreenState extends State<ExpenseScreen> {
       currentAmount = '0';
       selectedAccount = 'Account';
       selectedCategory = 'Category';
-      notes = '';
       notesController.clear();
     });
   }
@@ -806,7 +823,9 @@ class ExpenseScreenState extends State<ExpenseScreen> {
         leadingWidth: 120,
         actions: [
           TextButton(
-            onPressed: _saveExpense,
+            onPressed: () {
+              _saveExpense();
+            },
             child: Text(
               '✓  SAVE',
               style: Theme.of(context)
@@ -916,7 +935,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
                 children: [
                   Expanded(
                     child: Text(
-                      currentAmount,
+                      currentAmount.toString(),
                       style: AppTextStyles.headlineLarge,
                       textAlign: TextAlign.right,
                     ),

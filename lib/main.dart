@@ -2,9 +2,11 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
+import 'package:remind_wallet/Pages/account_list_screen.dart';
 import 'package:remind_wallet/Pages/add_account.dart';
 import 'package:remind_wallet/Pages/add_transaction.dart';
 import 'package:remind_wallet/Pages/add_transaction_screen.dart';
@@ -19,6 +21,8 @@ import 'package:remind_wallet/Pages/show_income_page.dart';
 import 'package:remind_wallet/Pages/show_to_pay_page.dart';
 import 'package:remind_wallet/Pages/show_to_receive_page.dart';
 import 'package:remind_wallet/Pages/starting_pages/splash_screen.dart';
+import 'package:remind_wallet/bloc/expense_bloc.dart';
+import 'package:remind_wallet/bloc/expense_event.dart';
 import 'package:remind_wallet/constant.dart';
 import 'package:remind_wallet/extras/firebase_all_options.dart';
 import 'package:remind_wallet/theme/theme.dart';
@@ -28,6 +32,7 @@ import 'Pages/home_pages/bottom_navigation_bar.dart';
 import 'Pages/home_pages/show_user_detail.dart';
 import 'Pages/starting_pages/check_page.dart';
 import 'Provider/provider.dart';
+import 'di/injection_container.dart' as di;
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -37,15 +42,14 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  //* initialize hive
   await Hive.initFlutter();
 
-  //open the box
   var box = await Hive.openBox("expenses_tracker");
+
+  await di.init();
 
   //Provider Initialization
   runApp(MultiProvider(
-    //List of Provider used in the app
     providers: [ChangeNotifierProvider(create: (_) => ChangedMsg())],
     child: const MyApp(),
   ));
@@ -67,17 +71,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       builder: EasyLoading.init(),
       title: 'Remind Wallet',
-      // theme: ThemeData(
-      //   brightness: Brightness.dark,
-      //   scaffoldBackgroundColor: kBackgroundColor,
-      //   textTheme: TextTheme(
-      //     bodyLarge: TextStyle(
-      //       color: Colors.white,
-      //     ),
-      //   ),
-      // ),
       theme: AppTheme.darkTheme(),
-      home: ExpenseScreen(),
+      home: BlocProvider(
+        create: (context) => di.sl<ExpenseBloc>()..add(LoadExpenseDataEvent()),
+        child: AccountListScreen(),
+      ),
+
       // initialRoute: Splash_Page.id,
       routes: {
         Dashboard.id: (context) => const Dashboard(),
@@ -85,8 +84,8 @@ class MyApp extends StatelessWidget {
         ExpensePage.id: (context) => const ExpensePage(),
         ToPayPage.id: (context) => const ToPayPage(),
         ToReceivePage.id: (context) => const ToReceivePage(),
-        AddTransaction.id: (context) => AddTransaction(),
-        AddAccount.id: (context) => AddAccount(),
+        AddTransactionScreen.id: (context) => AddTransactionScreen(),
+        AddAccountScreen.id: (context) => AddAccountScreen(),
         AddUserDataPage.id: (context) => AddUserDataPage(),
         Splash_Page.id: (context) => Splash_Page(),
         CheckSignin_outPage.id: (context) => CheckSignin_outPage(),
