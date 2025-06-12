@@ -2,7 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:remind_wallet/constant.dart';
+import 'package:remind_wallet/global/widgets/category_option_tile.dart';
+import 'package:remind_wallet/models/transaction_icon.dart';
 import 'package:remind_wallet/theme/color.dart';
+import 'package:remind_wallet/theme/typography.dart';
 
 class InputField extends StatefulWidget {
   const InputField(
@@ -114,7 +117,6 @@ class BaseInputField extends StatefulWidget {
     this.contentPadding,
     this.borderRadius = 8.0,
     this.maxLines,
-    c,
   });
 
   final TextEditingController controller;
@@ -211,7 +213,9 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
       prefixIcon: Icons.lock,
       textCapitalization: TextCapitalization.none,
       suffixIcon: IconButton(
-        icon: Icon(passwordVisible ? Icons.visibility : Icons.visibility_off),
+        icon: Icon(
+          passwordVisible ? Icons.visibility : Icons.visibility_off,
+        ),
         onPressed: () {
           setState(() {
             passwordVisible = !passwordVisible;
@@ -237,6 +241,7 @@ class ClearableInputField extends StatelessWidget {
     this.hintText = '',
     this.keyboardType = TextInputType.text,
     this.prefixIcon,
+    this.validator,
     this.maxLines,
   });
 
@@ -245,6 +250,7 @@ class ClearableInputField extends StatelessWidget {
   final String hintText;
   final TextInputType keyboardType;
   final IconData? prefixIcon;
+  final String? Function(String?)? validator;
   final int? maxLines;
 
   @override
@@ -258,6 +264,7 @@ class ClearableInputField extends StatelessWidget {
           hintText: hintText,
           keyboardType: keyboardType,
           prefixIcon: prefixIcon,
+          validator: validator,
           suffixIcon: value.text.isNotEmpty
               ? IconButton(
                   icon: const Icon(Icons.close, color: Colors.red),
@@ -312,47 +319,54 @@ class BaseDropdownField extends StatefulWidget {
 }
 
 class _BaseDropdownFieldState extends State<BaseDropdownField> {
-  String? selectedValue;
+  late String? selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedValue = widget.controller.text.isNotEmpty
+        ? widget.controller.text
+        : null; // Initialize with controller text if available
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: DropdownButtonFormField<String>(
-        validator: widget.validator,
-        style: widget.style ?? Theme.of(context).textTheme.labelLarge,
-        decoration: InputDecoration(
-          suffixIcon: widget.suffixIcon,
-          labelStyle:
-              widget.labelStyle ?? Theme.of(context).textTheme.labelLarge,
-          filled: true,
-          hintStyle: widget.hintStyle ?? Theme.of(context).textTheme.labelLarge,
-          fillColor: widget.fillColor,
-          labelText: widget.labelText,
-          prefixIcon:
-              widget.prefixIcon != null ? Icon(widget.prefixIcon) : null,
-          prefixIconColor: Theme.of(context).iconTheme.color,
-          hintText: widget.hintText,
-          contentPadding: widget.contentPadding ??
-              const EdgeInsets.fromLTRB(32, 16, 32, 16),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(widget.borderRadius),
-          ),
+    return DropdownButtonFormField<String>(
+      validator: widget.validator,
+      style: widget.style ?? Theme.of(context).textTheme.labelLarge,
+      decoration: InputDecoration(
+        suffixIcon: widget.suffixIcon,
+        labelStyle: widget.labelStyle ?? Theme.of(context).textTheme.labelLarge,
+        filled: true,
+        hintStyle: widget.hintStyle ?? Theme.of(context).textTheme.labelLarge,
+        fillColor: widget.fillColor,
+        labelText: widget.labelText,
+        prefixIcon: widget.prefixIcon != null ? Icon(widget.prefixIcon) : null,
+        prefixIconColor: Theme.of(context).iconTheme.color,
+        hintText: widget.hintText,
+        contentPadding:
+            widget.contentPadding ?? const EdgeInsets.fromLTRB(32, 16, 32, 16),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(widget.borderRadius),
         ),
-        value: selectedValue,
-        onChanged: widget.isEnabled
-            ? (String? newValue) {
-                setState(() {
-                  selectedValue = newValue;
-                });
-              }
-            : null,
-        items: widget.items
-            .map<DropdownMenuItem<String>>(
-              (String item) =>
-                  DropdownMenuItem<String>(value: item, child: Text(item)),
-            )
-            .toList(),
       ),
+      value: selectedValue,
+      onChanged: widget.isEnabled
+          ? (String? newValue) {
+              setState(() {
+                selectedValue = newValue;
+                widget.controller.text = newValue ?? ''; // Update controller
+              });
+            }
+          : null,
+      items: widget.items
+          .map<DropdownMenuItem<String>>(
+            (String item) => DropdownMenuItem<String>(
+              value: item,
+              child: Text(item),
+            ),
+          )
+          .toList(),
     );
   }
 }
@@ -367,6 +381,7 @@ class DropdownInputField extends StatelessWidget {
     this.hintText = '',
     this.isEnabled = true,
     this.prefixIcon,
+    this.validator,
   });
 
   final TextEditingController controller;
@@ -375,22 +390,109 @@ class DropdownInputField extends StatelessWidget {
   final String hintText;
   final bool isEnabled;
   final IconData? prefixIcon;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
     return BaseDropdownField(
-      controller: controller,
-      labelText: labelText,
-      items: items,
-      hintText: hintText,
-      isEnabled: isEnabled,
-      prefixIcon: prefixIcon,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please select an option';
-        }
-        return null;
-      },
-    );
+        controller: controller,
+        labelText: labelText,
+        items: items,
+        hintText: hintText,
+        isEnabled: isEnabled,
+        prefixIcon: prefixIcon,
+        validator: validator);
   }
+}
+
+class IconPickerFormField extends FormField<IconData> {
+  IconPickerFormField({
+    Key? key,
+    required List<TransactionIcon> availableIcons,
+    required IconData? selectedIcon,
+    required ValueChanged<IconData> onIconSelected,
+    String labelText = 'Pick an Icon',
+    TextStyle? labelStyle,
+    String? Function(String?)? validator,
+    Color? fillColor,
+    TextStyle? style,
+    TextStyle? hintStyle,
+    double borderRadius = 12.0,
+    EdgeInsetsGeometry? contentPadding,
+  }) : super(
+          key: key,
+          validator: (_) {
+            if (selectedIcon == null) return 'Please select an icon';
+            return null;
+          },
+          builder: (FormFieldState<IconData> field) {
+            final bool hasError = field.hasError;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  labelText,
+                  style: labelStyle ??
+                      const TextStyle(
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  decoration: BoxDecoration(
+                    color: fillColor,
+                    borderRadius: BorderRadius.circular(borderRadius),
+                    border: Border.all(
+                      color: hasError
+                          ? AppColors.inputErrorBorderColor
+                          : Colors.transparent,
+                      width: 1.5,
+                    ),
+                  ),
+                  padding: contentPadding ?? const EdgeInsets.all(8),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: List.generate(
+                        availableIcons.length,
+                        (index) {
+                          final icon = availableIcons[index].icon;
+                          final iconColor = availableIcons[index].color;
+
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 6.0),
+                            child: CategoryOptionTile(
+                              iconData: icon,
+                              iconBackgroundColor: iconColor,
+                              isLabelVisible: false,
+                              containerColor: selectedIcon == icon
+                                  ? Colors.white.withOpacity(0.2)
+                                  : Colors.transparent,
+                              onTap: () {
+                                onIconSelected(icon);
+                                field.didChange(icon);
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                if (hasError)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      field.errorText ?? '',
+                      style: AppTextStyles.bodySmall
+                          .copyWith(color: AppColors.errorTextColor),
+                    ),
+                  ),
+              ],
+            );
+          },
+        );
 }

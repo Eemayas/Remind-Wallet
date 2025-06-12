@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:remind_wallet/global/utils/generate_unique_id.dart';
 import 'package:remind_wallet/utils/logger.dart';
 
 import '../constant.dart';
@@ -14,6 +15,8 @@ abstract class ExpenseRepository {
   Future<User> getUserDetails();
 
   Future<void> addAccount(AccountModel account);
+  Future<void> updateAccount(AccountModel account);
+  Future<void> deleteAccount(AccountModel account);
   Future<void> addTransaction(Transaction transaction);
   Future<void> updateTransaction(Transaction transaction);
   Future<void> updateUser(User user);
@@ -24,7 +27,7 @@ abstract class ExpenseRepository {
 }
 
 class HiveExpenseRepository implements ExpenseRepository {
-  final Box _box = Hive.box("expenses_tracker");
+  final Box _box = Hive.box("expenses_tracker_new");
   static const String className = 'HiveExpenseRepository';
 
   @override
@@ -41,8 +44,9 @@ class HiveExpenseRepository implements ExpenseRepository {
       logOngoing(
           functionName: functionName,
           message: 'Mapping data to Account objects.');
-      final accounts =
-          accountsData.map((data) => AccountModel.fromJson(data)).toList();
+      final accounts = accountsData
+          .map((data) => AccountModel.fromJson(Map<String, dynamic>.from(data)))
+          .toList();
 
       logSuccess(
           functionName: functionName,
@@ -54,6 +58,57 @@ class HiveExpenseRepository implements ExpenseRepository {
           message: 'Exception caught while fetching accounts: $e',
           errorCode: null);
       throw Exception('Failed to load accounts: $e');
+    }
+  }
+
+  @override
+  Future<void> deleteAccount(AccountModel account) async {
+    const functionName = '$className.deleteAccount';
+    logStarting(
+        functionName: functionName, message: 'Deleting account: ${account.id}');
+
+    try {
+      logProcessing(
+          functionName: functionName, message: 'Fetching existing accounts.');
+      final accounts = await getAccounts();
+
+      logOngoing(
+          functionName: functionName,
+          message: 'Locating account by ID for deletion.');
+      final index = accounts.indexWhere((acc) => acc.id == account.id);
+      if (index == -1) {
+        logFailure(
+            functionName: functionName,
+            message: 'Account not found for deletion.');
+        throw Exception('Account not found');
+      }
+
+      accounts.removeAt(index);
+
+      logProcessing(
+          functionName: functionName,
+          message: 'Saving updated account list to Hive.');
+      await _box.put(
+          accountDatabase, accounts.map((acc) => acc.toJson()).toList());
+
+      logProcessing(
+          functionName: functionName, message: 'Updating amount summary.');
+      final summary = await getAmountSummary();
+      final updatedSummary = summary.copyWith(
+        totalIncome: summary.totalIncome - account.currentBalance,
+        currentBalance: summary.currentBalance - account.currentBalance,
+      );
+      await updateAmountSummary(updatedSummary);
+
+      logSuccess(
+          functionName: functionName,
+          message: 'Account "${account.name}" deleted successfully.');
+    } catch (e) {
+      logError(
+          functionName: functionName,
+          message: 'Exception caught while deleting account: $e',
+          errorCode: null);
+      throw Exception('Failed to delete account: $e');
     }
   }
 
@@ -175,7 +230,7 @@ class HiveExpenseRepository implements ExpenseRepository {
       logOngoing(
           functionName: functionName,
           message: 'Checking if account already exists.');
-      final exists = accounts.any((acc) => acc.name == account.name);
+      final exists = accounts.any((acc) => acc.id == account.id);
       if (exists) {
         logFailure(
             functionName: functionName,
@@ -209,6 +264,39 @@ class HiveExpenseRepository implements ExpenseRepository {
           errorCode: null);
       throw Exception('Failed to add account: $e');
     }
+  }
+
+  @override
+  Future<void> updateAccount(AccountModel account) {
+    const functionName = '$className.updateAccount';
+    logStarting(
+        functionName: functionName,
+        message: 'Updating account: ${account.name}');
+
+    return getAccounts().then((accounts) {
+      final index = accounts.indexWhere((acc) => acc.id == account.id);
+      if (index == -1) {
+        logFailure(
+            functionName: functionName,
+            message: 'Account not found for update.');
+        throw Exception('Account not found');
+      }
+
+      accounts[index] = account;
+
+      return _box.put(
+          accountDatabase, accounts.map((acc) => acc.toJson()).toList());
+    }).then((_) {
+      logSuccess(
+          functionName: functionName,
+          message: 'Account "${account.name}" updated successfully.');
+    }).catchError((e) {
+      logError(
+          functionName: functionName,
+          message: 'Exception caught while updating account: $e',
+          errorCode: null);
+      throw Exception('Failed to update account: $e');
+    });
   }
 
   @override
@@ -383,9 +471,11 @@ class HiveExpenseRepository implements ExpenseRepository {
       logOngoing(
           functionName: functionName,
           message: 'Re-initializing with default account.');
-      await addAccount(const AccountModel(
+      await addAccount(AccountModel(
+        id: generateUniqueId(),
         name: miscellaneousaccountNameD,
         currentBalance: 0,
+        iconIndex: 0,
       ));
 
       logSuccess(

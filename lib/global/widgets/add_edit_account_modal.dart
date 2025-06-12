@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:remind_wallet/Componet/input_filed.dart';
-import 'package:remind_wallet/global/widgets/category_option_tile.dart';
 import 'package:remind_wallet/global/widgets/custom_button.dart';
 import 'package:remind_wallet/models/transaction_icon.dart';
 import 'package:remind_wallet/theme/color.dart';
 
-class AddAccountForm extends StatelessWidget {
+class AddAccountForm extends StatefulWidget {
   final TextEditingController accountName;
   final TextEditingController accountInitialAmount;
   final IconData? selectedIcon;
@@ -25,6 +24,12 @@ class AddAccountForm extends StatelessWidget {
     required this.onSave,
   });
 
+  @override
+  State<AddAccountForm> createState() => _AddAccountFormState();
+}
+
+class _AddAccountFormState extends State<AddAccountForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -54,80 +59,72 @@ class AddAccountForm extends StatelessWidget {
         ],
       ),
       content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ClearableInputField(
-              hintText: "Cash / Bank Account",
-              controller: accountName,
-              keyboardType: TextInputType.text,
-              labelText: "Account Name",
-              prefixIcon: Icons.account_balance_outlined,
-            ),
-            const SizedBox(height: 20),
-            ClearableInputField(
-              hintText: "Initial Amount",
-              controller: accountInitialAmount,
-              keyboardType: TextInputType.number,
-              labelText: "Initial Amount",
-              prefixIcon: Icons.money,
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              "Pick an Icon",
-              style: TextStyle(color: Colors.white70),
-            ),
-            const SizedBox(height: 10),
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.inputFillColor,
-                borderRadius: BorderRadius.circular(12),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClearableInputField(
+                hintText: "Cash / Bank Account",
+                controller: widget.accountName,
+                keyboardType: TextInputType.text,
+                labelText: "Account Name",
+                prefixIcon: Icons.account_balance_outlined,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your account name';
+                  }
+                  return null;
+                },
               ),
-              padding: const EdgeInsets.all(8),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(
-                    availableIcons.length,
-                    (index) {
-                      final icon = availableIcons[index].icon;
-                      final iconColor = availableIcons[index].color;
-
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                        child: CategoryOptionTile(
-                          iconData: icon,
-                          iconBackgroundColor: iconColor,
-                          isLabelVisible: false,
-                          containerColor: selectedIcon == icon
-                              ? Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withAlpha((0.5 * 255).round())
-                              : Colors.transparent,
-                          onTap: () => onIconSelected(icon),
-                        ),
-                      );
-                    },
+              const SizedBox(height: 20),
+              ClearableInputField(
+                hintText: "Initial Amount",
+                controller: widget.accountInitialAmount,
+                keyboardType: TextInputType.number,
+                labelText: "Initial Amount",
+                prefixIcon: Icons.money,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your initial amount';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              IconPickerFormField(
+                availableIcons: widget.availableIcons,
+                selectedIcon: widget.selectedIcon,
+                onIconSelected: widget.onIconSelected,
+                labelText: "Pick an Icon",
+                fillColor: AppColors.inputFillColor,
+                borderRadius: 12.0,
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CustomElevatedButton(
+                    onPressed: widget.onCancel,
+                    icon: Icons.cancel,
+                    label: 'Cancel',
                   ),
-                ),
+                  SizedBox(width: 10),
+                  CustomElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        widget.onSave();
+                      }
+                    },
+                    icon: Icons.check,
+                    label: 'Save',
+                  ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-      actions: [
-        CustomElevatedButton(
-          onPressed: onCancel,
-          icon: Icons.cancel,
-          label: 'Cancel',
-        ),
-        CustomElevatedButton(
-          onPressed: onSave,
-          icon: Icons.check,
-          label: 'Save',
-        ),
-      ],
     );
   }
 }

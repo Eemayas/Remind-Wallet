@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:remind_wallet/bloc/expense_bloc.dart';
+import 'package:remind_wallet/bloc/expense_event.dart';
 import 'package:remind_wallet/bloc/expense_state.dart';
+import 'package:remind_wallet/global/utils/generate_unique_id.dart';
 import 'package:remind_wallet/global/widgets/account_card.dart';
 import 'package:remind_wallet/global/widgets/add_edit_account_modal.dart';
 import 'package:remind_wallet/global/widgets/custom_button.dart';
+import 'package:remind_wallet/models/account_model.dart';
 import 'package:remind_wallet/models/transaction_icon.dart';
 import 'package:remind_wallet/theme/color.dart';
 
@@ -16,52 +19,72 @@ class AccountListScreen extends StatefulWidget {
 }
 
 class _AccountListScreenState extends State<AccountListScreen> {
-  void _showAddAccountForm(BuildContext context) {
-    final TextEditingController accountName = TextEditingController();
-    final TextEditingController accountInitialAmount = TextEditingController();
+  void showAddOrEditAccountForm(
+    BuildContext context, {
+    AccountModel? existingAccount,
+  }) {
+    final TextEditingController accountName =
+        TextEditingController(text: existingAccount?.name ?? '');
+    final TextEditingController accountInitialAmount = TextEditingController(
+        text: existingAccount?.currentBalance.toString() ?? '');
     final List<TransactionIcon> availableIcons = accountIcons;
 
-    IconData? selectedIcon;
+    IconData? selectedIcon = existingAccount != null
+        ? availableIcons[existingAccount.iconIndex ?? 0].icon
+        : null;
 
-    void showAddAccountForm() {
-      final TextEditingController accountName = TextEditingController();
-      final TextEditingController accountInitialAmount =
-          TextEditingController();
-      final List<TransactionIcon> availableIcons = accountIcons;
+    final bool isEdit = existingAccount != null;
 
-      IconData? selectedIcon;
+    showDialog(
+      context: context,
+      builder: (innerContext) {
+        return StatefulBuilder(
+          builder: (innerContext, setState) {
+            return AddAccountForm(
+              accountName: accountName,
+              accountInitialAmount: accountInitialAmount,
+              selectedIcon: selectedIcon,
+              availableIcons: availableIcons,
+              onIconSelected: (icon) {
+                setState(() {
+                  selectedIcon = icon;
+                });
+              },
+              onCancel: () {
+                selectedIcon = null;
+                accountName.clear();
+                accountInitialAmount.clear();
+                Navigator.pop(innerContext);
+              },
+              onSave: () {
+                final updatedAccount = AccountModel(
+                  id: existingAccount?.id ?? generateUniqueId(),
+                  name: accountName.text,
+                  currentBalance:
+                      (double.tryParse(accountInitialAmount.text)?.toInt() ??
+                          0),
+                  iconIndex: availableIcons
+                      .indexWhere((icon) => icon.icon == selectedIcon),
+                );
 
-      showDialog(
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(
-            builder: (context, setState) {
-              return AddAccountForm(
-                accountName: accountName,
-                accountInitialAmount: accountInitialAmount,
-                selectedIcon: selectedIcon,
-                availableIcons: availableIcons,
-                onIconSelected: (icon) => setState(() => selectedIcon = icon),
-                onCancel: () {
-                  selectedIcon = null;
-                  accountName.clear();
-                  accountInitialAmount.clear();
-                  Navigator.pop(context);
-                },
-                onSave: () {
-                  if (accountName.text.isNotEmpty &&
-                      accountInitialAmount.text.isNotEmpty &&
-                      selectedIcon != null) {
-                    // Add logic to store the new account
-                    Navigator.pop(context);
-                  }
-                },
-              );
-            },
-          );
-        },
-      );
-    }
+                final bloc = context.read<ExpenseBloc>();
+
+                if (isEdit) {
+                  bloc.add(UpdateAccountEvent(updatedAccount));
+                } else {
+                  bloc.add(AddAccountEvent(updatedAccount));
+                }
+
+                selectedIcon = null;
+                accountName.clear();
+                accountInitialAmount.clear();
+                Navigator.pop(innerContext);
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -72,8 +95,12 @@ class _AccountListScreenState extends State<AccountListScreen> {
           if (state.status == ExpenseStatus.failure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.errorMessage ?? 'An error occurred'),
-                backgroundColor: Colors.red,
+                content: Text(
+                  state.errorMessage ?? 'An error occurred',
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: AppColors.errorTextColor,
+                      ),
+                ),
               ),
             );
           }
@@ -86,14 +113,7 @@ class _AccountListScreenState extends State<AccountListScreen> {
               ),
             );
           }
-          if (state.status == ExpenseStatus.failure) {
-            return Center(
-              child: Text(
-                state.errorMessage ?? 'An error occurred',
-                style: TextStyle(color: Colors.red),
-              ),
-            );
-          }
+
           if (state.status == ExpenseStatus.initial) {
             return Center(
               child: Text(
@@ -110,16 +130,11 @@ class _AccountListScreenState extends State<AccountListScreen> {
                 expandedHeight: 200.0,
                 title: Text(
                   'Remind Wallet',
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
-                actions: [
-                  // Icon(
-                  //   Icons.search,
-                  //   color: Color(0xFFFFD700),
-                  //   size: 28,
-                  // ),
-                  // SizedBox(width: 16),
-                ],
+                actions: [],
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
                     padding: EdgeInsets.only(
@@ -226,14 +241,22 @@ class _AccountListScreenState extends State<AccountListScreen> {
                           ),
                         ),
 
-                      ...state.accounts.map((account) {
-                        return AccountCard(
-                          account: account,
-                        );
-                      }),
+                      ...state.accounts.map((account) => Column(
+                            children: [
+                              AccountCard(
+                                account: account,
+                                onEdit: () {
+                                  showAddOrEditAccountForm(
+                                    context,
+                                    existingAccount: account,
+                                  );
+                                },
+                                onDelete: () {},
+                              ),
+                              SizedBox(height: 12),
+                            ],
+                          )),
                       SizedBox(height: 12),
-
-                      SizedBox(height: 20),
 
                       // Add New Account Button
                       Builder(
@@ -241,7 +264,9 @@ class _AccountListScreenState extends State<AccountListScreen> {
                           return Center(
                             child: CustomElevatedButton(
                               onPressed: () {
-                                _showAddAccountForm(context);
+                                showAddOrEditAccountForm(
+                                  context,
+                                );
                               },
                               label: 'ADD NEW ACCOUNT',
                               icon: Icons.add,

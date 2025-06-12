@@ -89,7 +89,8 @@ class AppColors {
       Color(0xFF000000); // Status bar background
 
   // Card and surface variations
-  static const Color cardColor = Color(0xFF2C2C2C); // Card background
+  static const Color cardColor = Color(0xFF3C3C3C); // Card background
+  static const Color cardborderColor = Color(0xFF404040);
   static const Color cardElevatedColor =
       Color(0xFF353535); // Elevated card background
   static const Color bottomSheetColor =

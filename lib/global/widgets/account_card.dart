@@ -5,10 +5,13 @@ import 'package:remind_wallet/theme/color.dart';
 
 class AccountCard extends StatelessWidget {
   final AccountModel account;
-
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
   const AccountCard({
     super.key,
     required this.account,
+    required this.onEdit,
+    required this.onDelete,
   });
 
   @override
@@ -16,10 +19,10 @@ class AccountCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color(0xFF3C3C3C),
+        color: AppColors.cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Color(0xFF4C4C4C),
+          color: AppColors.cardborderColor,
           width: 1,
         ),
       ),
@@ -73,16 +76,16 @@ class AccountCard extends StatelessWidget {
             ),
           ),
           PopupMenuButton<String>(
+            borderRadius: BorderRadius.circular(8),
+            color: Theme.of(context).cardColor,
             icon: Icon(
               Icons.more_horiz,
-              size: 24,
-              color: Color(0xFFFFD700),
             ),
             onSelected: (value) {
               if (value == 'edit') {
-                // TODO: Implement edit functionality
+                onEdit();
               } else if (value == 'delete') {
-                // TODO: Implement delete functionality
+                onDelete();
               }
             },
             itemBuilder: (context) => [
