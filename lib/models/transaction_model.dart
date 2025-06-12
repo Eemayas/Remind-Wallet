@@ -1,8 +1,18 @@
 import 'package:equatable/equatable.dart';
 
-enum TransactionType { income, expense, toPay, toReceive, transfer }
+enum TransactionType {
+  income,
+  expense,
+  toPay,
+  toReceive,
+  transfer,
+  addAccount,
+  updateAccount,
+  deleteAccount
+}
 
 class Transaction extends Equatable {
+  final String id;
   final String name;
   final int amount;
   final TransactionType type;
@@ -13,8 +23,11 @@ class Transaction extends Equatable {
   final String description;
   final String? icon;
   final String createdDate;
+  final String? fromAccountId;
+  final String? toAccountId;
 
   const Transaction({
+    required this.id,
     required this.name,
     required this.amount,
     required this.type,
@@ -25,9 +38,12 @@ class Transaction extends Equatable {
     required this.description,
     this.icon,
     required this.createdDate,
+    this.fromAccountId,
+    this.toAccountId,
   });
 
   Transaction copyWith({
+    String? id,
     String? name,
     int? amount,
     TransactionType? type,
@@ -38,8 +54,11 @@ class Transaction extends Equatable {
     String? description,
     String? icon,
     String? createdDate,
+    String? fromAccountId,
+    String? toAccountId,
   }) {
     return Transaction(
+      id: id ?? this.id,
       name: name ?? this.name,
       amount: amount ?? this.amount,
       type: type ?? this.type,
@@ -50,11 +69,14 @@ class Transaction extends Equatable {
       description: description ?? this.description,
       icon: icon ?? this.icon,
       createdDate: createdDate ?? this.createdDate,
+      fromAccountId: fromAccountId ?? this.fromAccountId,
+      toAccountId: toAccountId ?? this.toAccountId,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'transactionIdD': id,
       'transationNameD': name,
       'transactionAmountD': amount,
       'transactionTypeD': _typeToString(type),
@@ -65,11 +87,14 @@ class Transaction extends Equatable {
       'transactionDescriptionD': description,
       'transactionIconD': icon,
       'transactionCreatedDateD': createdDate,
+      'fromAccountIdD': fromAccountId,
+      'toAccountIdD': toAccountId,
     };
   }
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
+      id: json['transactionIdD'] ?? '',
       name: json['transationNameD'] ?? '',
       amount: json['transactionAmountD'] ?? 0,
       type: _stringToType(json['transactionTypeD'] ?? ''),
@@ -80,6 +105,8 @@ class Transaction extends Equatable {
       description: json['transactionDescriptionD'] ?? '',
       icon: json['transactionIconD'] ?? '',
       createdDate: json['transactionCreatedDateD'] ?? '',
+      fromAccountId: json['fromAccountIdD'],
+      toAccountId: json['toAccountIdD'],
     );
   }
 
@@ -95,6 +122,12 @@ class Transaction extends Equatable {
         return 'toReceive';
       case TransactionType.transfer:
         return 'transfer';
+      case TransactionType.addAccount:
+        return 'addAccount';
+      case TransactionType.updateAccount:
+        return 'updateAccount';
+      case TransactionType.deleteAccount:
+        return 'deleteAccount';
     }
   }
 
@@ -108,6 +141,14 @@ class Transaction extends Equatable {
         return TransactionType.toPay;
       case 'toReceive':
         return TransactionType.toReceive;
+      case 'transfer':
+        return TransactionType.transfer;
+      case 'addAccount':
+        return TransactionType.addAccount;
+      case 'updateAccount':
+        return TransactionType.updateAccount;
+      case 'deleteAccount':
+        return TransactionType.deleteAccount;
       default:
         return TransactionType.expense;
     }
@@ -115,6 +156,7 @@ class Transaction extends Equatable {
 
   @override
   List<Object?> get props => [
+        id,
         name,
         amount,
         type,
@@ -125,5 +167,7 @@ class Transaction extends Equatable {
         description,
         icon,
         createdDate,
+        fromAccountId,
+        toAccountId,
       ];
 }

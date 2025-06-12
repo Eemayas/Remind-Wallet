@@ -4,6 +4,7 @@ import 'package:remind_wallet/Componet/input_filed.dart';
 import 'package:remind_wallet/bloc/expense_bloc.dart';
 import 'package:remind_wallet/bloc/expense_event.dart';
 import 'package:remind_wallet/constant.dart';
+import 'package:remind_wallet/global/utils/generate_unique_id.dart';
 import 'package:remind_wallet/global/widgets/category_option_tile.dart';
 import 'package:remind_wallet/global/widgets/custom_button.dart';
 import 'package:remind_wallet/global/widgets/date_time_picker.dart';
@@ -150,6 +151,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
     context.read<ExpenseBloc>().add(
           AddTransactionEvent(
             Transaction(
+              id: generateUniqueId(),
               name: titleController.text,
               amount: int.tryParse(currentAmount) ?? 0,
               type: type,

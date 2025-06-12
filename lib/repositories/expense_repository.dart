@@ -517,42 +517,166 @@ class HiveExpenseRepository implements ExpenseRepository {
 
       logProcessing(
           functionName: functionName,
-          message: 'Recalculating balances based on transactions.');
+          message:
+              'Recalculating balances based on ${transactions.length} transactions.');
+
       // Recalculate based on transactions
       for (final transaction in transactions) {
         final accountIndex = updatedAccounts
             .indexWhere((acc) => acc.name == transaction.account);
 
         if (accountIndex != -1) {
+          final currentBalance = updatedAccounts[accountIndex].currentBalance;
+
           switch (transaction.type) {
             case TransactionType.income:
+              logInfo(
+                  functionName: functionName,
+                  message:
+                      'INCOME - Transaction: ${transaction.name}, Amount: ${transaction.amount} | '
+                      'Account: ${transaction.account} | '
+                      'totalIncome: $totalIncome -> ${totalIncome + transaction.amount} | '
+                      'Account Balance: $currentBalance -> ${currentBalance + transaction.amount}');
               totalIncome += transaction.amount;
               updatedAccounts[accountIndex] = updatedAccounts[accountIndex]
                   .copyWith(
-                      currentBalance:
-                          updatedAccounts[accountIndex].currentBalance +
-                              transaction.amount);
+                      currentBalance: currentBalance + transaction.amount);
               break;
+
             case TransactionType.expense:
+              logInfo(
+                  functionName: functionName,
+                  message:
+                      'EXPENSE - Transaction: ${transaction.name}, Amount: ${transaction.amount} | '
+                      'Account: ${transaction.account} | '
+                      'totalExpenses: $totalExpenses -> ${totalExpenses + transaction.amount} | '
+                      'Account Balance: $currentBalance -> ${currentBalance - transaction.amount}');
               totalExpenses += transaction.amount;
               updatedAccounts[accountIndex] = updatedAccounts[accountIndex]
                   .copyWith(
-                      currentBalance:
-                          updatedAccounts[accountIndex].currentBalance -
-                              transaction.amount);
+                      currentBalance: currentBalance - transaction.amount);
               break;
+
             case TransactionType.toPay:
+              logInfo(
+                  functionName: functionName,
+                  message:
+                      'TO_PAY - Transaction: ${transaction.name}, Amount: ${transaction.amount} | '
+                      'Account: ${transaction.account} | '
+                      'toPay: $toPay -> ${toPay + transaction.amount} | '
+                      'Account Balance: $currentBalance -> ${currentBalance - transaction.amount}');
               toPay += transaction.amount;
+              updatedAccounts[accountIndex] = updatedAccounts[accountIndex]
+                  .copyWith(
+                      currentBalance: currentBalance - transaction.amount);
               break;
+
             case TransactionType.toReceive:
+              logInfo(
+                  functionName: functionName,
+                  message:
+                      'TO_RECEIVE - Transaction: ${transaction.name}, Amount: ${transaction.amount} | '
+                      'Account: ${transaction.account} | '
+                      'toReceive: $toReceive -> ${toReceive + transaction.amount} | '
+                      'Account Balance: $currentBalance -> ${currentBalance + transaction.amount}');
               toReceive += transaction.amount;
+              updatedAccounts[accountIndex] = updatedAccounts[accountIndex]
+                  .copyWith(
+                      currentBalance: currentBalance + transaction.amount);
               break;
+
             case TransactionType.transfer:
-              // TODO: Handle this case.
-              throw UnimplementedError();
+              // Handle transfer between accounts
+              if (transaction.fromAccountId != null &&
+                  transaction.toAccountId != null) {
+                final fromAccountIndex = updatedAccounts
+                    .indexWhere((acc) => acc.id == transaction.fromAccountId);
+                final toAccountIndex = updatedAccounts
+                    .indexWhere((acc) => acc.id == transaction.toAccountId);
+
+                if (fromAccountIndex != -1 && toAccountIndex != -1) {
+                  final fromBalance =
+                      updatedAccounts[fromAccountIndex].currentBalance;
+                  final toBalance =
+                      updatedAccounts[toAccountIndex].currentBalance;
+
+                  logInfo(
+                      functionName: functionName,
+                      message:
+                          'TRANSFER - Transaction: ${transaction.name}, Amount: ${transaction.amount} | '
+                          'From Account: ${updatedAccounts[fromAccountIndex].name} ($fromBalance -> ${fromBalance - transaction.amount}) | '
+                          'To Account: ${updatedAccounts[toAccountIndex].name} ($toBalance -> ${toBalance + transaction.amount})');
+
+                  updatedAccounts[fromAccountIndex] =
+                      updatedAccounts[fromAccountIndex].copyWith(
+                          currentBalance: fromBalance - transaction.amount);
+                  updatedAccounts[toAccountIndex] =
+                      updatedAccounts[toAccountIndex].copyWith(
+                          currentBalance: toBalance + transaction.amount);
+                } else {
+                  logInfo(
+                      functionName: functionName,
+                      message:
+                          'Transfer accounts not found - From: ${transaction.fromAccountId}, To: ${transaction.toAccountId}');
+                }
+              } else {
+                logInfo(
+                    functionName: functionName,
+                    message:
+                        'Transfer transaction missing account IDs: ${transaction.name}');
+              }
+              break;
+
+            case TransactionType.addAccount:
+              logInfo(
+                  functionName: functionName,
+                  message:
+                      'ADD_ACCOUNT - Transaction: ${transaction.name}, Initial Balance: ${transaction.amount} | '
+                      'Account: ${transaction.account} | '
+                      'Account Balance: $currentBalance -> ${currentBalance + transaction.amount}');
+              updatedAccounts[accountIndex] = updatedAccounts[accountIndex]
+                  .copyWith(
+                      currentBalance: currentBalance + transaction.amount);
+              break;
+
+            case TransactionType.updateAccount:
+              logInfo(
+                  functionName: functionName,
+                  message:
+                      'UPDATE_ACCOUNT - Transaction: ${transaction.name}, New Balance: ${transaction.amount} | '
+                      'Account: ${transaction.account} | '
+                      'Account Balance: $currentBalance -> ${transaction.amount}');
+              updatedAccounts[accountIndex] = updatedAccounts[accountIndex]
+                  .copyWith(currentBalance: transaction.amount);
+              break;
+
+            case TransactionType.deleteAccount:
+              logInfo(
+                  functionName: functionName,
+                  message:
+                      'DELETE_ACCOUNT - Transaction: ${transaction.name} | '
+                      'Account: ${transaction.account} will be removed from calculations');
+              // Account deletion should be handled separately
+              // This transaction type indicates the account should be excluded
+              break;
           }
+        } else {
+          logInfo(
+              functionName: functionName,
+              message:
+                  'Account not found for transaction: ${transaction.name} (Account: ${transaction.account})');
         }
       }
+
+      // Calculate final current balance
+      final finalCurrentBalance = updatedAccounts.fold<int>(
+          0, (sum, account) => sum + account.currentBalance);
+
+      logProcessing(
+          functionName: functionName,
+          message:
+              'Final calculations - Total Income: $totalIncome, Total Expenses: $totalExpenses, '
+              'To Pay: $toPay, To Receive: $toReceive, Current Balance: $finalCurrentBalance');
 
       logProcessing(
           functionName: functionName,
@@ -565,17 +689,27 @@ class HiveExpenseRepository implements ExpenseRepository {
           functionName: functionName, message: 'Updating amount summary.');
       // Update amount summary
       final summary = AmountSummary(
-        currentBalance: totalIncome - totalExpenses,
+        currentBalance:
+            finalCurrentBalance, // Use calculated balance from accounts
         totalIncome: totalIncome,
         totalExpenses: totalExpenses,
         toPay: toPay,
         toReceive: toReceive,
       );
+
+      logInfo(
+          functionName: functionName,
+          message:
+              'Summary updated - Current Balance: ${summary.currentBalance}, '
+              'Total Income: ${summary.totalIncome}, Total Expenses: ${summary.totalExpenses}, '
+              'To Pay: ${summary.toPay}, To Receive: ${summary.toReceive}');
+
       await updateAmountSummary(summary);
 
       logSuccess(
           functionName: functionName,
-          message: 'Balances recalculated and saved successfully.');
+          message: 'Balances recalculated and saved successfully. '
+              'Processed ${transactions.length} transactions across ${updatedAccounts.length} accounts.');
     } catch (e) {
       logError(
           functionName: functionName,
@@ -618,8 +752,16 @@ class HiveExpenseRepository implements ExpenseRepository {
       logOngoing(
           functionName: functionName,
           message: 'Processing transaction type: ${transaction.type}.');
+
       switch (transaction.type) {
         case TransactionType.income:
+          // Add income to total income and increase current balance
+          logInfo(
+              functionName: functionName,
+              message: 'INCOME - Amount: $amount | '
+                  'Summary: totalIncome ${summary.totalIncome} -> ${summary.totalIncome + amount}, '
+                  'currentBalance ${summary.currentBalance} -> ${summary.currentBalance + amount} | '
+                  'Account: currentBalance ${updatedAccount.currentBalance} -> ${updatedAccount.currentBalance + amount}');
           updatedSummary = summary.copyWith(
             totalIncome: summary.totalIncome + amount,
             currentBalance: summary.currentBalance + amount,
@@ -628,7 +770,15 @@ class HiveExpenseRepository implements ExpenseRepository {
             currentBalance: updatedAccount.currentBalance + amount,
           );
           break;
+
         case TransactionType.expense:
+          // Add to total expenses and decrease current balance
+          logInfo(
+              functionName: functionName,
+              message: 'EXPENSE - Amount: $amount | '
+                  'Summary: totalExpenses ${summary.totalExpenses} -> ${summary.totalExpenses + amount}, '
+                  'currentBalance ${summary.currentBalance} -> ${summary.currentBalance - amount} | '
+                  'Account: currentBalance ${updatedAccount.currentBalance} -> ${updatedAccount.currentBalance - amount}');
           updatedSummary = summary.copyWith(
             totalExpenses: summary.totalExpenses + amount,
             currentBalance: summary.currentBalance - amount,
@@ -637,20 +787,250 @@ class HiveExpenseRepository implements ExpenseRepository {
             currentBalance: updatedAccount.currentBalance - amount,
           );
           break;
+
         case TransactionType.toPay:
+          // Increase amount to pay (liability)
+          logInfo(
+              functionName: functionName,
+              message: 'TO_PAY - Amount: $amount | '
+                  'Summary: toPay ${summary.toPay} -> ${summary.toPay + amount}, '
+                  'currentBalance ${summary.currentBalance} -> ${summary.currentBalance - amount} | '
+                  'Account: currentBalance ${updatedAccount.currentBalance} -> ${updatedAccount.currentBalance - amount}');
           updatedSummary = summary.copyWith(
             toPay: summary.toPay + amount,
+            currentBalance: summary.currentBalance -
+                amount, // Decrease balance for liability
+          );
+          updatedAccount = updatedAccount.copyWith(
+            currentBalance: updatedAccount.currentBalance - amount,
           );
           break;
+
         case TransactionType.toReceive:
+          // Increase amount to receive (asset)
+          logInfo(
+              functionName: functionName,
+              message: 'TO_RECEIVE - Amount: $amount | '
+                  'Summary: toReceive ${summary.toReceive} -> ${summary.toReceive + amount}, '
+                  'currentBalance ${summary.currentBalance} -> ${summary.currentBalance + amount} | '
+                  'Account: currentBalance ${updatedAccount.currentBalance} -> ${updatedAccount.currentBalance + amount}');
           updatedSummary = summary.copyWith(
             toReceive: summary.toReceive + amount,
+            currentBalance: summary.currentBalance +
+                amount, // Increase balance for receivable
+          );
+          updatedAccount = updatedAccount.copyWith(
+            currentBalance: updatedAccount.currentBalance + amount,
           );
           break;
+
         case TransactionType.transfer:
-          // TODO: Handle this case.
-          throw UnimplementedError();
+          // Transfer between accounts - handle source and destination
+          if (transaction.fromAccountId == updatedAccount.id) {
+            // Transferring FROM this account - decrease balance
+            logInfo(
+                functionName: functionName,
+                message: 'TRANSFER_OUT - Amount: $amount | '
+                    'From Account: ${updatedAccount.id} | '
+                    'Summary: currentBalance ${summary.currentBalance} -> ${summary.currentBalance - amount} | '
+                    'Account: currentBalance ${updatedAccount.currentBalance} -> ${updatedAccount.currentBalance - amount}');
+            updatedSummary = summary.copyWith(
+              currentBalance: summary.currentBalance - amount,
+            );
+            updatedAccount = updatedAccount.copyWith(
+              currentBalance: updatedAccount.currentBalance - amount,
+            );
+          } else if (transaction.toAccountId == updatedAccount.id) {
+            // Transferring TO this account - increase balance
+            logInfo(
+                functionName: functionName,
+                message: 'TRANSFER_IN - Amount: $amount | '
+                    'To Account: ${updatedAccount.id} | '
+                    'Summary: currentBalance ${summary.currentBalance} -> ${summary.currentBalance + amount} | '
+                    'Account: currentBalance ${updatedAccount.currentBalance} -> ${updatedAccount.currentBalance + amount}');
+            updatedSummary = summary.copyWith(
+              currentBalance: summary.currentBalance + amount,
+            );
+            updatedAccount = updatedAccount.copyWith(
+              currentBalance: updatedAccount.currentBalance + amount,
+            );
+          } else {
+            // Transfer doesn't involve this account
+            logInfo(
+                functionName: functionName,
+                message: 'Transfer does not involve this account.');
+            return;
+          }
+          break;
+
+        case TransactionType.addAccount:
+          // New account added - may need to update summary totals
+          // Assuming initial balance is included in the transaction amount
+          logInfo(
+              functionName: functionName,
+              message: 'ADD_ACCOUNT - Amount: $amount | '
+                  'Summary: currentBalance ${summary.currentBalance} -> ${summary.currentBalance + amount}');
+          updatedSummary = summary.copyWith(
+            currentBalance: summary.currentBalance + amount,
+          );
+          break;
+
+        case TransactionType.updateAccount:
+          // Account updated - calculate balance difference
+          double balanceDifference =
+              (amount - updatedAccount.currentBalance) as double;
+          logInfo(
+              functionName: functionName,
+              message:
+                  'UPDATE_ACCOUNT - Amount: $amount | Balance Difference: $balanceDifference | '
+                  'Summary: currentBalance ${summary.currentBalance} -> ${summary.currentBalance + balanceDifference} | '
+                  'Account: currentBalance ${updatedAccount.currentBalance} -> $amount');
+          updatedSummary = summary.copyWith(
+            currentBalance:
+                (summary.currentBalance + balanceDifference).round(),
+          );
+          updatedAccount = updatedAccount.copyWith(
+            currentBalance: amount, // Set to new balance
+          );
+          break;
+
+        case TransactionType.deleteAccount:
+          // Account deleted - remove its balance from summary
+          logInfo(
+              functionName: functionName,
+              message:
+                  'DELETE_ACCOUNT - Removing Account Balance: ${updatedAccount.currentBalance} | '
+                  'Summary: currentBalance ${summary.currentBalance} -> ${summary.currentBalance - updatedAccount.currentBalance}');
+          updatedSummary = summary.copyWith(
+            currentBalance:
+                summary.currentBalance - updatedAccount.currentBalance,
+          );
+          // Note: The account object itself should be removed from the collection
+          break;
       }
+
+      // switch (transaction.type) {
+      //   case TransactionType.income:
+      //     // Add income to total income and increase current balance
+      //     logInfo(
+      //         functionName: functionName,
+      //         message: 'INCOME - Amount: $amount | '
+      //             'Summary: totalIncome ${summary.totalIncome} -> ${summary.totalIncome + amount}, '
+      //             'currentBalance ${summary.currentBalance} -> ${summary.currentBalance + amount} | '
+      //             'Account: currentBalance ${updatedAccount.currentBalance} -> ${updatedAccount.currentBalance + amount}');
+      //     updatedSummary = summary.copyWith(
+      //       totalIncome: summary.totalIncome + amount,
+      //       currentBalance: summary.currentBalance + amount,
+      //     );
+      //     updatedAccount = updatedAccount.copyWith(
+      //       currentBalance: updatedAccount.currentBalance + amount,
+      //     );
+      //     break;
+
+      //   case TransactionType.expense:
+      //     // Add to total expenses and decrease current balance
+      //     logInfo(
+      //         functionName: functionName,
+      //         message: 'EXPENSE - Amount: $amount | '
+      //             'Summary: totalExpenses ${summary.totalExpenses} -> ${summary.totalExpenses + amount}, '
+      //             'currentBalance ${summary.currentBalance} -> ${summary.currentBalance - amount} | '
+      //             'Account: currentBalance ${updatedAccount.currentBalance} -> ${updatedAccount.currentBalance - amount}');
+      //     updatedSummary = summary.copyWith(
+      //       totalExpenses: summary.totalExpenses + amount,
+      //       currentBalance: summary.currentBalance - amount,
+      //     );
+      //     updatedAccount = updatedAccount.copyWith(
+      //       currentBalance: updatedAccount.currentBalance - amount,
+      //     );
+      //     break;
+
+      //   case TransactionType.toPay:
+      //     // Increase amount to pay (liability)
+      //     logInfo(
+      //         functionName: functionName,
+      //         message: 'TO_PAY - Amount: $amount | '
+      //             'Summary: toPay ${summary.toPay} -> ${summary.toPay + amount}, '
+      //             'currentBalance ${summary.currentBalance} -> ${summary.currentBalance - amount} | '
+      //             'Account: currentBalance ${updatedAccount.currentBalance} -> ${updatedAccount.currentBalance - amount}');
+      //     updatedSummary = summary.copyWith(
+      //       toPay: summary.toPay + amount,
+      //       currentBalance: summary.currentBalance -
+      //           amount, // Decrease balance for liability
+      //     );
+      //     updatedAccount = updatedAccount.copyWith(
+      //       currentBalance: updatedAccount.currentBalance - amount,
+      //     );
+      //     break;
+
+      //   case TransactionType.toReceive:
+      //     // Increase amount to receive (asset)
+      //     logInfo(
+      //         functionName: functionName,
+      //         message: 'TO_RECEIVE - Amount: $amount | '
+      //             'Summary: toReceive ${summary.toReceive} -> ${summary.toReceive + amount}, '
+      //             'currentBalance ${summary.currentBalance} -> ${summary.currentBalance + amount} | '
+      //             'Account: currentBalance ${updatedAccount.currentBalance} -> ${updatedAccount.currentBalance + amount}');
+      //     updatedSummary = summary.copyWith(
+      //       toReceive: summary.toReceive + amount,
+      //       currentBalance: summary.currentBalance +
+      //           amount, // Increase balance for receivable
+      //     );
+      //     updatedAccount = updatedAccount.copyWith(
+      //       currentBalance: updatedAccount.currentBalance + amount,
+      //     );
+      //     break;
+
+      //   case TransactionType.transfer:
+      //     // Transfer between accounts - handle source and destination
+      //     if (transaction.fromAccountId == updatedAccount.id) {
+      //       // Transferring FROM this account - decrease balance
+      //       logInfo(
+      //           functionName: functionName,
+      //           message: 'TRANSFER_OUT - Amount: $amount | '
+      //               'From Account: ${updatedAccount.id} | '
+      //               'Summary: currentBalance ${summary.currentBalance} -> ${summary.currentBalance - amount} | '
+      //               'Account: currentBalance ${updatedAccount.currentBalance} -> ${updatedAccount.currentBalance - amount}');
+      //       updatedSummary = summary.copyWith(
+      //         currentBalance: summary.currentBalance - amount,
+      //       );
+      //       updatedAccount = updatedAccount.copyWith(
+      //         currentBalance: updatedAccount.currentBalance - amount,
+      //       );
+      //     } else if (transaction.toAccountId == updatedAccount.id) {
+      //       // Transferring TO this account - increase balance
+      //       logInfo(
+      //           functionName: functionName,
+      //           message: 'TRANSFER_IN - Amount: $amount | '
+      //               'To Account: ${updatedAccount.id} | '
+      //               'Summary: currentBalance ${summary.currentBalance} -> ${summary.currentBalance + amount} | '
+      //               'Account: currentBalance ${updatedAccount.currentBalance} -> ${updatedAccount.currentBalance + amount}');
+      //       updatedSummary = summary.copyWith(
+      //         currentBalance: summary.currentBalance + amount,
+      //       );
+      //       updatedAccount = updatedAccount.copyWith(
+      //         currentBalance: updatedAccount.currentBalance + amount,
+      //       );
+      //     } else {
+      //       // Transfer doesn't involve this account
+      //       logInfo(
+      //           functionName: functionName,
+      //           message: 'Transfer does not involve this account.');
+      //       return;
+      //     }
+      //     break;
+
+      //   case TransactionType.addAccount:
+      //     // New account added - may need to update summary totals
+      //     // Assuming initial balance is included in the transaction amount
+      //     logInfo(
+      //         functionName: functionName,
+      //         message: 'ADD_ACCOUNT - Amount: $amount | '
+      //             'Summary: currentBalance ${summary.currentBalance} -> ${summary.currentBalance + amount}');
+      //     updatedSummary = summary.copyWith(
+      //       currentBalance: summary.currentBalance + amount,
+      //     );
+      //     break;
+      // }
 
       logProcessing(
           functionName: functionName,
