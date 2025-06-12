@@ -22,6 +22,24 @@ class AddAccountEvent extends ExpenseEvent {
   List<Object> get props => [account];
 }
 
+class UpdateAccountEvent extends ExpenseEvent {
+  final AccountModel account;
+
+  const UpdateAccountEvent(this.account);
+
+  @override
+  List<Object> get props => [account];
+}
+
+class DeleteAccountEvent extends ExpenseEvent {
+  final AccountModel account;
+
+  const DeleteAccountEvent(this.account);
+
+  @override
+  List<Object> get props => [account];
+}
+
 class AddTransactionEvent extends ExpenseEvent {
   final Transaction transaction;
 

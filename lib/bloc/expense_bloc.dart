@@ -13,6 +13,8 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
         super(const ExpenseState()) {
     on<LoadExpenseDataEvent>(_onLoadExpenseData);
     on<AddAccountEvent>(_onAddAccount);
+    on<UpdateAccountEvent>(_onUpdateAccount);
+    on<DeleteAccountEvent>(_onDeleteAccount);
     on<AddTransactionEvent>(_onAddTransaction);
     on<UpdateTransactionEvent>(_onUpdateTransaction);
     on<ModifyUserEvent>(_onUpdateUser);
@@ -53,6 +55,36 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
   ) async {
     try {
       await _repository.addAccount(event.account);
+      add(LoadExpenseDataEvent());
+    } catch (e) {
+      emit(state.copyWith(
+        status: ExpenseStatus.failure,
+        errorMessage: e.toString(),
+      ));
+    }
+  }
+
+  Future<void> _onUpdateAccount(
+    UpdateAccountEvent event,
+    Emitter<ExpenseState> emit,
+  ) async {
+    try {
+      await _repository.updateAccount(event.account);
+      add(LoadExpenseDataEvent());
+    } catch (e) {
+      emit(state.copyWith(
+        status: ExpenseStatus.failure,
+        errorMessage: e.toString(),
+      ));
+    }
+  }
+
+  Future<void> _onDeleteAccount(
+    DeleteAccountEvent event,
+    Emitter<ExpenseState> emit,
+  ) async {
+    try {
+      await _repository.deleteAccount(event.account);
       add(LoadExpenseDataEvent());
     } catch (e) {
       emit(state.copyWith(
