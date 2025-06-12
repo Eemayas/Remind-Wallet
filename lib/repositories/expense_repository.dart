@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-import 'package:remind_wallet/global/utils/generate_unique_id.dart';
 import 'package:remind_wallet/utils/logger.dart';
 
 import '../constant.dart';
@@ -62,6 +61,102 @@ class HiveExpenseRepository implements ExpenseRepository {
   }
 
   @override
+  Future<void> addAccount(AccountModel account) async {
+    const functionName = '$className.addAccount';
+    logStarting(
+        functionName: functionName, message: 'Adding new account: $account');
+
+    try {
+      logProcessing(
+          functionName: functionName, message: 'Fetching existing accounts.');
+      final accounts = await getAccounts();
+
+      logOngoing(
+          functionName: functionName,
+          message: 'Checking if account already exists.');
+      final exists = accounts.any((acc) => acc.id == account.id);
+      if (exists) {
+        logFailure(
+            functionName: functionName,
+            message: 'Account with name "${account.name}" already exists.');
+        throw Exception('Account with this name already exists');
+      }
+
+      accounts.add(account);
+      logProcessing(
+          functionName: functionName,
+          message: 'Saving updated account list to Hive.');
+      await _box.put(
+          accountDatabase, accounts.map((acc) => acc.toJson()).toList());
+
+      logProcessing(
+          functionName: functionName, message: 'Updating amount summary.');
+      final summary = await getAmountSummary();
+      final updatedSummary = summary.copyWith(
+        currentBalance: summary.currentBalance + account.currentBalance,
+      );
+      await updateAmountSummary(updatedSummary);
+
+      logSuccess(
+          functionName: functionName,
+          message:
+              'Account "${account.name}" added successfully with balance ${account.currentBalance}.');
+    } catch (e) {
+      logError(
+          functionName: functionName,
+          message: 'Exception caught while adding account: $e',
+          errorCode: null);
+      throw Exception('Failed to add account: $e');
+    }
+  }
+
+  @override
+  Future<void> updateAccount(AccountModel account) async {
+    const functionName = '$className.updateAccount';
+    logStarting(
+        functionName: functionName,
+        message: 'Updating account: ${account.name}');
+
+    try {
+      final accounts = await getAccounts();
+      final index = accounts.indexWhere((acc) => acc.id == account.id);
+      if (index == -1) {
+        logFailure(
+            functionName: functionName,
+            message: 'Account not found for update.');
+        throw Exception('Account not found');
+      }
+
+      final oldAccount = accounts[index];
+      final oldBalance = oldAccount.currentBalance;
+      final newBalance = account.currentBalance;
+      final balanceDifference = newBalance - oldBalance;
+
+      accounts[index] = account;
+
+      await _box.put(
+          accountDatabase, accounts.map((acc) => acc.toJson()).toList());
+
+      final summary = await getAmountSummary();
+      final updatedSummary = summary.copyWith(
+        currentBalance: summary.currentBalance + balanceDifference,
+      );
+      await updateAmountSummary(updatedSummary);
+
+      logSuccess(
+          functionName: functionName,
+          message:
+              'Account "${account.name}" updated. Balance changed from $oldBalance to $newBalance.');
+    } catch (e) {
+      logError(
+          functionName: functionName,
+          message: 'Exception caught while updating account: $e',
+          errorCode: null);
+      throw Exception('Failed to update account: $e');
+    }
+  }
+
+  @override
   Future<void> deleteAccount(AccountModel account) async {
     const functionName = '$className.deleteAccount';
     logStarting(
@@ -83,6 +178,9 @@ class HiveExpenseRepository implements ExpenseRepository {
         throw Exception('Account not found');
       }
 
+      final deletedAccount = accounts[index];
+      final deletedBalance = deletedAccount.currentBalance;
+
       accounts.removeAt(index);
 
       logProcessing(
@@ -95,14 +193,14 @@ class HiveExpenseRepository implements ExpenseRepository {
           functionName: functionName, message: 'Updating amount summary.');
       final summary = await getAmountSummary();
       final updatedSummary = summary.copyWith(
-        totalIncome: summary.totalIncome - account.currentBalance,
-        currentBalance: summary.currentBalance - account.currentBalance,
+        currentBalance: summary.currentBalance - deletedBalance,
       );
       await updateAmountSummary(updatedSummary);
 
       logSuccess(
           functionName: functionName,
-          message: 'Account "${account.name}" deleted successfully.');
+          message:
+              'Account "${deletedAccount.name}" deleted. Removed balance: $deletedBalance.');
     } catch (e) {
       logError(
           functionName: functionName,
@@ -214,89 +312,6 @@ class HiveExpenseRepository implements ExpenseRepository {
           errorCode: null);
       throw Exception('Failed to load user details: $e');
     }
-  }
-
-  @override
-  Future<void> addAccount(AccountModel account) async {
-    const functionName = '$className.addAccount';
-    logStarting(
-        functionName: functionName, message: 'Adding new account: $account');
-
-    try {
-      logProcessing(
-          functionName: functionName, message: 'Fetching existing accounts.');
-      final accounts = await getAccounts();
-
-      logOngoing(
-          functionName: functionName,
-          message: 'Checking if account already exists.');
-      final exists = accounts.any((acc) => acc.id == account.id);
-      if (exists) {
-        logFailure(
-            functionName: functionName,
-            message: 'Account with name "${account.name}" already exists.');
-        throw Exception('Account with this name already exists');
-      }
-
-      accounts.add(account);
-      logProcessing(
-          functionName: functionName,
-          message: 'Saving updated account list to Hive.');
-      await _box.put(
-          accountDatabase, accounts.map((acc) => acc.toJson()).toList());
-
-      logProcessing(
-          functionName: functionName, message: 'Updating amount summary.');
-      final summary = await getAmountSummary();
-      final updatedSummary = summary.copyWith(
-        totalIncome: summary.totalIncome + account.currentBalance,
-        currentBalance: summary.currentBalance + account.currentBalance,
-      );
-      await updateAmountSummary(updatedSummary);
-
-      logSuccess(
-          functionName: functionName,
-          message: 'Account "${account.name}" added successfully.');
-    } catch (e) {
-      logError(
-          functionName: functionName,
-          message: 'Exception caught while adding account: $e',
-          errorCode: null);
-      throw Exception('Failed to add account: $e');
-    }
-  }
-
-  @override
-  Future<void> updateAccount(AccountModel account) {
-    const functionName = '$className.updateAccount';
-    logStarting(
-        functionName: functionName,
-        message: 'Updating account: ${account.name}');
-
-    return getAccounts().then((accounts) {
-      final index = accounts.indexWhere((acc) => acc.id == account.id);
-      if (index == -1) {
-        logFailure(
-            functionName: functionName,
-            message: 'Account not found for update.');
-        throw Exception('Account not found');
-      }
-
-      accounts[index] = account;
-
-      return _box.put(
-          accountDatabase, accounts.map((acc) => acc.toJson()).toList());
-    }).then((_) {
-      logSuccess(
-          functionName: functionName,
-          message: 'Account "${account.name}" updated successfully.');
-    }).catchError((e) {
-      logError(
-          functionName: functionName,
-          message: 'Exception caught while updating account: $e',
-          errorCode: null);
-      throw Exception('Failed to update account: $e');
-    });
   }
 
   @override
@@ -468,15 +483,15 @@ class HiveExpenseRepository implements ExpenseRepository {
           functionName: functionName, message: 'Deleting user data database.');
       await _box.delete(userDataDatabase);
 
-      logOngoing(
-          functionName: functionName,
-          message: 'Re-initializing with default account.');
-      await addAccount(AccountModel(
-        id: generateUniqueId(),
-        name: miscellaneousaccountNameD,
-        currentBalance: 0,
-        iconIndex: 0,
-      ));
+      // logOngoing(
+      //     functionName: functionName,
+      //     message: 'Re-initializing with default account.');
+      // await addAccount(AccountModel(
+      //   id: generateUniqueId(),
+      //   name: miscellaneousaccountNameD,
+      //   currentBalance: 0,
+      //   iconIndex: 0,
+      // ));
 
       logSuccess(
           functionName: functionName,

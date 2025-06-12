@@ -4,11 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:remind_wallet/bloc/expense_bloc.dart';
 import 'package:remind_wallet/bloc/expense_event.dart';
 import 'package:remind_wallet/bloc/expense_state.dart';
-import 'package:remind_wallet/global/widgets/account_card.dart';
-import 'package:remind_wallet/global/widgets/custom_button.dart';
+import 'package:remind_wallet/global/widgets/delete_account_dialog.dart';
 import 'package:remind_wallet/models/account_model.dart';
-import 'package:remind_wallet/modules/account/widgets/account_form_dialog.dart';
-import 'package:remind_wallet/modules/account/widgets/empty_accounts_widget.dart';
+import 'package:remind_wallet/modules/account/presentation/widgets/account_form_dialog.dart';
+import 'package:remind_wallet/modules/account/presentation/widgets/account_summary_header.dart';
+import 'package:remind_wallet/modules/account/presentation/widgets/accounts_section.dart';
+import 'package:remind_wallet/repositories/expense_repository.dart';
 import 'package:remind_wallet/theme/color.dart';
 
 class AccountListScreen extends StatefulWidget {
@@ -19,7 +20,7 @@ class AccountListScreen extends StatefulWidget {
 }
 
 class _AccountListScreenState extends State<AccountListScreen> {
-  // HiveExpenseRepository expRepo = HiveExpenseRepository();
+  HiveExpenseRepository expRepo = HiveExpenseRepository();
 
   // @override
   // void initState() {
@@ -39,6 +40,25 @@ class _AccountListScreenState extends State<AccountListScreen> {
           } else {
             bloc.add(AddAccountEvent(account));
           }
+        },
+      ),
+    );
+  }
+
+  void showDeleteAccountDialog({
+    required BuildContext context,
+    required AccountModel account,
+  }) {
+    showDialog(
+      context: context,
+      builder: (_) => DeleteAccountDialog(
+        title: 'Delete Account?',
+        content:
+            "Are you sure you want to delete? This action is irreversible.",
+        onDelete: () {
+          final bloc = context.read<ExpenseBloc>();
+          bloc.add(DeleteAccountEvent(account));
+          // Navigator.pop(context);
         },
       ),
     );
@@ -91,7 +111,10 @@ class _AccountListScreenState extends State<AccountListScreen> {
               existingAccount: account,
             ),
             onDeleteAccount: (account) {
-              // TODO: Implement delete functionality
+              showDeleteAccountDialog(
+                context: context,
+                account: account,
+              );
             },
           ),
         ),
@@ -123,190 +146,6 @@ class _InitialWidget extends StatelessWidget {
       child: Text(
         'Welcome to Remind Wallet',
         style: TextStyle(color: Colors.white),
-      ),
-    );
-  }
-}
-
-// ================================
-// widgets/account_summary_header.dart
-// ================================
-
-class AccountSummaryHeader extends StatelessWidget {
-  final dynamic amountSummary; // Replace with proper type
-
-  const AccountSummaryHeader({
-    super.key,
-    required this.amountSummary,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverAppBar(
-      elevation: 0,
-      pinned: true,
-      expandedHeight: 200.0,
-      title: Text(
-        'Remind Wallet',
-        style: Theme.of(context).textTheme.titleMedium!.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-      ),
-      flexibleSpace: FlexibleSpaceBar(
-        background: Container(
-          padding: const EdgeInsets.only(
-            top: 100,
-            left: 16,
-            right: 16,
-            bottom: 20,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              _buildTotalBalance(context),
-              const SizedBox(height: 20),
-              _buildExpenseIncomeRow(context),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTotalBalance(BuildContext context) {
-    return Text(
-      '[ All Accounts Rs. ${amountSummary.currentBalance} ]',
-      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-    );
-  }
-
-  Widget _buildExpenseIncomeRow(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _SummaryItem(
-          title: 'EXPENSE SO FAR',
-          amount: 'Rs. ${amountSummary.totalExpenses}',
-          color: AppColors.expenseColor,
-        ),
-        _SummaryItem(
-          title: 'INCOME SO FAR',
-          amount: 'Rs. ${amountSummary.totalIncome}',
-          color: AppColors.incomeColor,
-        ),
-      ],
-    );
-  }
-}
-
-class _SummaryItem extends StatelessWidget {
-  final String title;
-  final String amount;
-  final Color color;
-
-  const _SummaryItem({
-    required this.title,
-    required this.amount,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          amount,
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: color,
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-      ],
-    );
-  }
-}
-
-// ================================
-// widgets/accounts_section.dart
-// ================================
-
-class AccountsSection extends StatelessWidget {
-  final List<AccountModel> accounts;
-  final VoidCallback onAddAccount;
-  final Function(AccountModel) onEditAccount;
-  final Function(AccountModel) onDeleteAccount;
-
-  const AccountsSection({
-    super.key,
-    required this.accounts,
-    required this.onAddAccount,
-    required this.onEditAccount,
-    required this.onDeleteAccount,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildSectionTitle(context),
-          const SizedBox(height: 16),
-          _buildAccountsList(),
-          const SizedBox(height: 12),
-          _buildAddAccountButton(),
-          const SizedBox(height: 80), // Extra space for bottom navigation
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle(BuildContext context) {
-    return Text(
-      'Accounts',
-      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-    );
-  }
-
-  Widget _buildAccountsList() {
-    if (accounts.isEmpty) {
-      return const EmptyAccountsWidget();
-    }
-
-    return Column(
-      children: accounts.map((account) {
-        return Column(
-          children: [
-            AccountCard(
-              account: account,
-              onEdit: () => onEditAccount(account),
-              onDelete: () => onDeleteAccount(account),
-            ),
-            const SizedBox(height: 12),
-          ],
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildAddAccountButton() {
-    return Center(
-      child: CustomElevatedButton(
-        onPressed: onAddAccount,
-        label: 'ADD NEW ACCOUNT',
-        icon: Icons.add,
       ),
     );
   }

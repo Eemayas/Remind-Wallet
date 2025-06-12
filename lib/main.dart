@@ -8,7 +8,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:remind_wallet/Pages/add_account.dart';
 import 'package:remind_wallet/Pages/add_transaction.dart';
-import 'package:remind_wallet/Pages/add_transaction_screen.dart';
+import 'package:remind_wallet/modules/transactions/presentation/add_transaction_screen.dart';
 import 'package:remind_wallet/Pages/authentication/add_user_data_entry_page.dart';
 import 'package:remind_wallet/Pages/authentication/forgot_password.dart';
 import 'package:remind_wallet/Pages/edit_user_detail.dart';
