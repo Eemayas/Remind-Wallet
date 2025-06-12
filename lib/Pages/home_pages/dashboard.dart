@@ -3,7 +3,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-// import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:remind_wallet/API/database.dart';
 import 'package:remind_wallet/API/firebase_databse.dart';
@@ -23,7 +22,6 @@ import 'package:remind_wallet/Pages/starting_pages/check_page.dart';
 import 'package:remind_wallet/Provider/provider.dart';
 import 'package:remind_wallet/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class Dashboard extends StatefulWidget {
   static String id = "DashBoard page";
@@ -321,7 +319,8 @@ class _DashboardState extends State<Dashboard> {
       drawer: CustomDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final result = await Navigator.pushNamed(context, AddTransaction.id);
+          final result =
+              await Navigator.pushNamed(context, AddTransactionScreen.id);
           print(result);
           if (result != null) {
             db.getAccountDB();
@@ -487,8 +486,8 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     InkWell(
                       onTap: () async {
-                        final result =
-                            await Navigator.pushNamed(context, AddAccount.id);
+                        final result = await Navigator.pushNamed(
+                            context, AddAccountScreen.id);
                         print(result);
                         if (result != null) {
                           db.getAccountDB();
@@ -536,9 +535,6 @@ class _DashboardState extends State<Dashboard> {
               ),
               for (int i = Database.TransactionList.length - 1; i >= 0; i--)
                 if (Database.TransactionList[i][transationNameD] != null &&
-                    Database.TransactionList[i][transactionAmountD]
-                            .toString() !=
-                        null &&
                     Database.TransactionList[i][transactionTypeD] != "0" &&
                     Database.TransactionList[i][transactionTagD] != null &&
                     Database.TransactionList[i][transactionDateD] != null &&

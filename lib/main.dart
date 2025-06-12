@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
-import 'package:remind_wallet/Pages/account_list_screen.dart';
+import 'package:remind_wallet/modules/account/presentation/account_list_screen.dart';
 import 'package:remind_wallet/Pages/add_account.dart';
 import 'package:remind_wallet/Pages/add_transaction.dart';
 import 'package:remind_wallet/Pages/add_transaction_screen.dart';

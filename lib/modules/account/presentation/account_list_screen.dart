@@ -3,11 +3,66 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:remind_wallet/bloc/expense_bloc.dart';
 import 'package:remind_wallet/bloc/expense_state.dart';
 import 'package:remind_wallet/global/widgets/account_card.dart';
-import 'package:remind_wallet/models/account_model.dart';
+import 'package:remind_wallet/global/widgets/add_edit_account_modal.dart';
+import 'package:remind_wallet/global/widgets/custom_button.dart';
+import 'package:remind_wallet/models/transaction_icon.dart';
 import 'package:remind_wallet/theme/color.dart';
 
-class AccountListScreen extends StatelessWidget {
+class AccountListScreen extends StatefulWidget {
   const AccountListScreen({super.key});
+
+  @override
+  State<AccountListScreen> createState() => _AccountListScreenState();
+}
+
+class _AccountListScreenState extends State<AccountListScreen> {
+  void _showAddAccountForm(BuildContext context) {
+    final TextEditingController accountName = TextEditingController();
+    final TextEditingController accountInitialAmount = TextEditingController();
+    final List<TransactionIcon> availableIcons = accountIcons;
+
+    IconData? selectedIcon;
+
+    void showAddAccountForm() {
+      final TextEditingController accountName = TextEditingController();
+      final TextEditingController accountInitialAmount =
+          TextEditingController();
+      final List<TransactionIcon> availableIcons = accountIcons;
+
+      IconData? selectedIcon;
+
+      showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AddAccountForm(
+                accountName: accountName,
+                accountInitialAmount: accountInitialAmount,
+                selectedIcon: selectedIcon,
+                availableIcons: availableIcons,
+                onIconSelected: (icon) => setState(() => selectedIcon = icon),
+                onCancel: () {
+                  selectedIcon = null;
+                  accountName.clear();
+                  accountInitialAmount.clear();
+                  Navigator.pop(context);
+                },
+                onSave: () {
+                  if (accountName.text.isNotEmpty &&
+                      accountInitialAmount.text.isNotEmpty &&
+                      selectedIcon != null) {
+                    // Add logic to store the new account
+                    Navigator.pop(context);
+                  }
+                },
+              );
+            },
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,64 +208,48 @@ class AccountListScreen extends StatelessWidget {
                             ),
                       ),
                       SizedBox(height: 16),
-
-                      // Account Cards
-                      AccountCard(
-                        account: AccountModel(
-                          name: 'Main Account',
-                          currentBalance: 10000,
-                          iconIndex: 0,
+                      if (state.accounts.isEmpty)
+                        Center(
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.account_balance_wallet_outlined,
+                                size: 64,
+                                color: Colors.grey[400],
+                              ),
+                              SizedBox(height: 12),
+                              Text(
+                                'No accounts available. Add one to get started!',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
+
+                      ...state.accounts.map((account) {
+                        return AccountCard(
+                          account: account,
+                        );
+                      }),
                       SizedBox(height: 12),
-                      // AccountCard(
-                      //   name: 'Sanima',
-                      //   balance: '₹3,510.00',
-                      //   icon: Icons.account_balance_wallet,
-                      //   iconColor: Colors.greenAccent,
-                      // ),
-                      // SizedBox(height: 12),
-                      // AccountCard(
-                      //   name: 'Saving',
-                      //   balance: '₹500.00',
-                      //   icon: Icons.savings,
-                      //   iconColor: Colors.pinkAccent,
-                      // ),
-                      // SizedBox(height: 12),
-                      // AccountCard(
-                      //   name: 'Wallet',
-                      //   balance: '₹1,245.00',
-                      //   icon: Icons.savings,
-                      //   iconColor: Colors.pinkAccent,
-                      // ),
+
                       SizedBox(height: 20),
 
                       // Add New Account Button
-                      Container(
-                        width: double.infinity,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Color(0xFFFFD700),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: TextButton.icon(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.add,
-                            color: Color(0xFFFFD700),
-                          ),
-                          label: Text(
-                            'ADD NEW ACCOUNT',
-                            style: TextStyle(
-                              color: Color(0xFFFFD700),
-                              fontWeight: FontWeight.w600,
+                      Builder(
+                        builder: (context) {
+                          return Center(
+                            child: CustomElevatedButton(
+                              onPressed: () {
+                                _showAddAccountForm(context);
+                              },
+                              label: 'ADD NEW ACCOUNT',
+                              icon: Icons.add,
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
+
                       SizedBox(height: 80), // Extra space for bottom navigation
                     ],
                   ),
@@ -221,64 +260,26 @@ class AccountListScreen extends StatelessWidget {
         },
       ),
 
-      // Bottom Navigation
-      bottomNavigationBar: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          color: Color(0xFF3C3C3C),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            BottomNavItem(
-              icon: Icons.calendar_today,
-              label: 'Records',
-              isSelected: false,
-            ),
-            BottomNavItem(
-              icon: Icons.pie_chart,
-              label: 'Analysis',
-              isSelected: false,
-            ),
-            BottomNavItem(
-              icon: Icons.calculate,
-              label: 'Budgets',
-              isSelected: false,
-            ),
-            BottomNavItem(
-              icon: Icons.account_balance_wallet,
-              label: 'Accounts',
-              isSelected: true,
-            ),
-            BottomNavItem(
-              icon: Icons.category,
-              label: 'Categories',
-              isSelected: false,
-            ),
-          ],
-        ),
-      ),
-
-      // Floating Action Button
-      floatingActionButton: Container(
-        width: 56,
-        height: 56,
-        decoration: BoxDecoration(
-          color: Color(0xFF4C4C4C),
-          shape: BoxShape.circle,
-        ),
-        child: FloatingActionButton(
-          onPressed: () {},
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          child: Icon(
-            Icons.add,
-            color: Color(0xFFFFD700),
-            size: 28,
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // // Floating Action Button
+      // floatingActionButton: Container(
+      //   width: 56,
+      //   height: 56,
+      //   decoration: BoxDecoration(
+      //     color: Color(0xFF4C4C4C),
+      //     shape: BoxShape.circle,
+      //   ),
+      //   child: FloatingActionButton(
+      //     onPressed: () {},
+      //     backgroundColor: Colors.transparent,
+      //     elevation: 0,
+      //     child: Icon(
+      //       Icons.add,
+      //       color: Color(0xFFFFD700),
+      //       size: 28,
+      //     ),
+      //   ),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
