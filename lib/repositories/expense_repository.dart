@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
-import 'package:remind_wallet/utils/logger.dart';
+import 'package:remind_wallet/global/utils/logger.dart';
+import 'package:remind_wallet/models/category_model.dart';
 
 import '../constant.dart';
 import '../models/account_model.dart';
@@ -9,15 +10,21 @@ import '../models/user_model.dart';
 
 abstract class ExpenseRepository {
   Future<List<AccountModel>> getAccounts();
-  Future<List<Transaction>> getTransactions();
-  Future<AmountSummary> getAmountSummary();
-  Future<User> getUserDetails();
-
   Future<void> addAccount(AccountModel account);
   Future<void> updateAccount(AccountModel account);
   Future<void> deleteAccount(AccountModel account);
+
+  Future<List<Transaction>> getTransactions();
   Future<void> addTransaction(Transaction transaction);
   Future<void> updateTransaction(Transaction transaction);
+
+  Future<List<CategoryModel>> getCategories();
+  Future<void> addCategory(CategoryModel category);
+  Future<void> updateCategory(CategoryModel category);
+  Future<void> deleteCategory(CategoryModel category);
+
+  Future<AmountSummary> getAmountSummary();
+  Future<User> getUserDetails();
   Future<void> updateUser(User user);
   Future<void> updateAmountSummary(AmountSummary summary);
 
@@ -26,7 +33,7 @@ abstract class ExpenseRepository {
 }
 
 class HiveExpenseRepository implements ExpenseRepository {
-  final Box _box = Hive.box("expenses_tracker_new");
+  final Box _box = Hive.box(newHiveDatabase);
   static const String className = 'HiveExpenseRepository';
 
   @override
@@ -278,6 +285,161 @@ class HiveExpenseRepository implements ExpenseRepository {
           message: 'Exception caught while fetching amount summary: $e',
           errorCode: null);
       throw Exception('Failed to load amount summary: $e');
+    }
+  }
+
+  @override
+  Future<List<CategoryModel>> getCategories() async {
+    const functionName = '$className.getCategories';
+    logStarting(
+        functionName: functionName, message: 'Fetching categories from Hive.');
+
+    try {
+      logProcessing(
+          functionName: functionName, message: 'Reading data from box.');
+      final List<dynamic> categoriesData = _box.get(categoryDatabase) ?? [];
+
+      logOngoing(
+          functionName: functionName,
+          message: 'Mapping data to CategoryModel objects.');
+      final categories = categoriesData
+          .map(
+              (data) => CategoryModel.fromJson(Map<String, dynamic>.from(data)))
+          .toList();
+
+      logSuccess(
+          functionName: functionName,
+          message: 'Successfully fetched ${categories.length} categories.');
+      return categories;
+    } catch (e) {
+      logError(
+          functionName: functionName,
+          message: 'Exception caught while fetching categories: $e',
+          errorCode: null);
+      throw Exception('Failed to load categories: $e');
+    }
+  }
+
+  @override
+  Future<void> addCategory(CategoryModel category) async {
+    const functionName = '$className.addCategory';
+    logStarting(
+        functionName: functionName, message: 'Adding new category: $category');
+
+    try {
+      logProcessing(
+          functionName: functionName, message: 'Fetching existing categories.');
+      final categories = await getCategories();
+      logOngoing(
+          functionName: functionName,
+          message: 'Checking if category already exists.');
+      final exists = categories.any((cat) => cat.name == category.name);
+      if (exists) {
+        logFailure(
+            functionName: functionName,
+            message: 'Category with name "${category.name}" already exists.');
+        throw Exception('Category with this name already exists');
+      }
+
+      categories.add(category);
+      logProcessing(
+          functionName: functionName,
+          message: 'Saving updated category list to Hive.');
+      await _box.put(
+        categoryDatabase,
+        categories.map((cat) => cat.toJson()).toList(),
+      );
+
+      logSuccess(
+          functionName: functionName,
+          message:
+              'Category "${category.name}" added successfully with iconIndex ${category.iconIndex}.');
+    } catch (e) {
+      logError(
+          functionName: functionName,
+          message: 'Exception caught while adding category: $e',
+          errorCode: null);
+      throw Exception('Failed to add category: $e');
+    }
+  }
+
+  @override
+  Future<void> updateCategory(CategoryModel category) async {
+    const functionName = '$className.updateCategory';
+    logStarting(
+        functionName: functionName,
+        message: 'Updating category: ${category.name}');
+
+    try {
+      final categories = await getCategories();
+      final index = categories.indexWhere((cat) => cat.id == category.id);
+      if (index == -1) {
+        logFailure(
+            functionName: functionName,
+            message: 'Category not found for update.');
+        throw Exception('Category not found');
+      }
+
+      final oldCategory = categories[index];
+      categories[index] = category;
+
+      await _box.put(
+          categoryDatabase, categories.map((cat) => cat.toJson()).toList());
+
+      logSuccess(
+          functionName: functionName,
+          message:
+              'Category "${oldCategory.name}" updated to "${category.name}".');
+    } catch (e) {
+      logError(
+          functionName: functionName,
+          message: 'Exception caught while updating category: $e',
+          errorCode: null);
+      throw Exception('Failed to update category: $e');
+    }
+  }
+
+  @override
+  Future<void> deleteCategory(CategoryModel category) async {
+    const functionName = '$className.deleteCategory';
+    logStarting(
+        functionName: functionName,
+        message: 'Deleting category: ${category.id}');
+
+    try {
+      logProcessing(
+          functionName: functionName, message: 'Fetching existing categories.');
+      final categories = await getCategories();
+
+      logOngoing(
+          functionName: functionName,
+          message: 'Locating category by ID for deletion.');
+      final index = categories.indexWhere((cat) => cat.id == category.id);
+      if (index == -1) {
+        logFailure(
+            functionName: functionName,
+            message: 'Category not found for deletion.');
+        throw Exception('Category not found');
+      }
+
+      final deletedCategory = categories[index];
+      categories.removeAt(index);
+
+      logProcessing(
+          functionName: functionName,
+          message: 'Saving updated category list to Hive.');
+      await _box.put(
+          categoryDatabase, categories.map((cat) => cat.toJson()).toList());
+
+      logSuccess(
+          functionName: functionName,
+          message: 'Category "${deletedCategory.name}" deleted successfully.');
+    } catch (e) {
+      logError(
+          functionName: functionName,
+          message: 'Exception caught while deleting category: $e',
+          errorCode: null);
+      throw Exception('Failed to delete category: $e');
     }
   }
 

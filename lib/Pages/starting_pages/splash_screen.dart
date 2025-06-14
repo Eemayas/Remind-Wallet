@@ -7,6 +7,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:remind_wallet/Componet/logo_viewer.dart';
 import 'package:remind_wallet/Pages/introduction_pages/introduction_pages.dart';
 import 'package:remind_wallet/Pages/starting_pages/ask_permission_page.dart';
+import 'package:remind_wallet/constant.dart';
+import 'package:remind_wallet/models/category_model.dart';
+import 'package:remind_wallet/services/hive_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'check_page.dart';
@@ -20,6 +23,8 @@ class Splash_Page extends StatefulWidget {
 }
 
 class _Splash_PageState extends State<Splash_Page> {
+  final newBox = Hive.box(newHiveDatabase);
+  final hiveService = HiveService();
   @override
   void initState() {
     super.initState();
@@ -33,10 +38,16 @@ class _Splash_PageState extends State<Splash_Page> {
   Future<bool> _checkFirstTime() async {
     _prefs = await SharedPreferences.getInstance();
     bool isFirstTime = _prefs.getBool('isFirstTime') ?? true;
-    setState(() {
+    setState(() async {
       if (isFirstTime) {
         // If it's the first time, set the flag to false
         _prefs.setBool('isFirstTime', false);
+        newBox.put(categoryDatabase, defaultCategories);
+
+        await hiveService.saveCategories(
+          categories: defaultCategories,
+          key: categoryDatabase,
+        );
       }
     });
     return isFirstTime;

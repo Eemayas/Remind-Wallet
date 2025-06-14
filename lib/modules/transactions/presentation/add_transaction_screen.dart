@@ -3,14 +3,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:remind_wallet/Componet/input_filed.dart';
 import 'package:remind_wallet/bloc/expense_bloc.dart';
 import 'package:remind_wallet/bloc/expense_event.dart';
+import 'package:remind_wallet/bloc/expense_state.dart';
 import 'package:remind_wallet/constant.dart';
 import 'package:remind_wallet/global/utils/generate_unique_id.dart';
+import 'package:remind_wallet/global/widgets/account_card.dart';
+import 'package:remind_wallet/global/widgets/account_form_dialog.dart';
 import 'package:remind_wallet/global/widgets/category_option_tile.dart';
 import 'package:remind_wallet/global/widgets/custom_button.dart';
 import 'package:remind_wallet/global/widgets/date_time_picker.dart';
+import 'package:remind_wallet/global/widgets/delete_account_dialog.dart';
 import 'package:remind_wallet/global/widgets/option_picker_field.dart';
+import 'package:remind_wallet/models/account_model.dart';
 import 'package:remind_wallet/models/transaction_icon.dart';
 import 'package:remind_wallet/models/transaction_model.dart';
+import 'package:remind_wallet/modules/transactions/presentation/widgets/transaction_tab_selector.dart';
 import 'package:remind_wallet/theme/color.dart';
 import 'package:remind_wallet/theme/typography.dart';
 
@@ -21,20 +27,22 @@ class Category {
   Category({required this.name, required this.icon});
 }
 
-class ExpenseScreen extends StatefulWidget {
-  const ExpenseScreen({super.key});
+class AddTransactionsScreen extends StatefulWidget {
+  const AddTransactionsScreen({super.key});
 
   @override
-  ExpenseScreenState createState() => ExpenseScreenState();
+  AddTransactionsScreenState createState() => AddTransactionsScreenState();
 }
 
-class ExpenseScreenState extends State<ExpenseScreen> {
+class AddTransactionsScreenState extends State<AddTransactionsScreen> {
   String currentAmount = '0';
   String selectedTransactionType = TransactionType.expense.name;
-  String selectedAccount = 'Account';
+  String selectedAccountId = 'Account';
   String selectedCategory = 'Category';
   TransactionType type = TransactionType.expense;
   int selectedTab = 1;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
@@ -157,7 +165,7 @@ class ExpenseScreenState extends State<ExpenseScreen> {
               type: type,
               category: selectedCategory,
               date: selectedDateTime.toIso8601String(),
-              account: selectedAccount,
+              account: selectedAccountId,
               person: "",
               description: notesController.text,
               createdDate: DateTime.now().toIso8601String(),
@@ -176,222 +184,115 @@ class ExpenseScreenState extends State<ExpenseScreen> {
     // Reset form
     setState(() {
       currentAmount = '0';
-      selectedAccount = 'Account';
+      selectedAccountId = 'Account';
       selectedCategory = 'Category';
       notesController.clear();
     });
   }
 
-  void _showAddAccountForm() {
-    final TextEditingController categoryNameController =
-        TextEditingController();
-
-    final List<TransactionIcon> availableIcons = accountIcons;
-
-    IconData? selectedIcon;
-
+  void _showAddOrEditAccountForm({AccountModel? existingAccount}) {
     showDialog(
       context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              backgroundColor: AppColors.bottomSheetColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              titlePadding: const EdgeInsets.only(
-                  top: 20, left: 20, right: 20, bottom: 10),
-              title: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Add New Account',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Divider(
-                    color: Colors.white24,
-                    thickness: 1,
-                    indent: 10,
-                    endIndent: 10,
-                  ),
-                ],
-              ),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ClearableInputField(
-                      hintText: "Cash / Bank Account ",
-                      controller: accountName,
-                      keyboardType: TextInputType.text,
-                      labelText: "Account Name",
-                      prefixIcon: Icons.account_balance_outlined,
-                    ),
-                    SizedBox(height: 20),
-                    ClearableInputField(
-                      hintText: "Initial Amount",
-                      controller: accountInitialAmount,
-                      keyboardType: TextInputType.number,
-                      labelText: "Initial Amount",
-                      prefixIcon: Icons.money,
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      "Pick an Icon",
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.inputFillColor,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: EdgeInsets.all(8),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: List.generate(
-                            availableIcons.length,
-                            (index) {
-                              IconData icon = availableIcons[index].icon;
-                              Color iconColor = availableIcons[index].color;
+      builder: (innerContext) => AccountFormDialog(
+        existingAccount: existingAccount,
+        onAccountSaved: (account, isEdit) {
+          final bloc = context.read<ExpenseBloc>();
+          if (isEdit) {
+            bloc.add(UpdateAccountEvent(account));
+          } else {
+            bloc.add(AddAccountEvent(account));
+          }
+        },
+      ),
+    );
+  }
 
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 6.0),
-                                child: CategoryOptionTile(
-                                  iconData: icon,
-                                  iconBackgroundColor: iconColor,
-                                  isLabelVisible: false,
-                                  containerColor: selectedIcon == icon
-                                      ? Theme.of(context)
-                                          .colorScheme
-                                          .primary
-                                          .withAlpha((0.5 * 255).round())
-                                      : Colors.transparent,
-                                  onTap: () {
-                                    setState(() => selectedIcon = icon);
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                CustomElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      selectedIcon = null;
-                      categoryNameController.clear();
-                    });
-                    Navigator.pop(context);
-                  },
-                  icon: Icons.cancel,
-                  label: 'Cancel',
-                ),
-                CustomElevatedButton(
-                  onPressed: () {
-                    if (categoryNameController.text.isNotEmpty &&
-                        selectedIcon != null) {
-                      // Add logic to store the new category
-                      Navigator.pop(context);
-                    }
-                  },
-                  icon: Icons.check,
-                  label: 'Save',
-                ),
-              ],
-            );
-          },
-        );
-      },
+  void showDeleteAccountDialog({
+    required BuildContext context,
+    required AccountModel account,
+  }) {
+    showDialog(
+      context: context,
+      builder: (_) => DeleteAccountDialog(
+        title: 'Delete Account?',
+        content:
+            "Are you sure you want to delete? This action is irreversible.",
+        onDelete: () {
+          final bloc = context.read<ExpenseBloc>();
+          bloc.add(DeleteAccountEvent(account));
+          // Navigator.pop(context);
+        },
+      ),
     );
   }
 
   void _showAccountPicker() {
-    Map<String, double> accounts = {
-      'Cash': 1200.0,
-      'Bank Account': 5400.25,
-      'Credit Card': -350.75,
-      'Savings': 2000.0,
-    };
+    final expenseBloc = BlocProvider.of<ExpenseBloc>(context);
 
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.bottomSheetColor,
-      builder: (context) {
-        return Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.5,
-          ),
-          padding: EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Text(
-                  'Select Account',
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
+      builder: (_) {
+        return BlocProvider.value(
+          value: expenseBloc,
+          child: BlocConsumer<ExpenseBloc, ExpenseState>(
+            listener: _handleStateChanges,
+            builder: (blocContext, state) {
+              return Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.5,
+                ),
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Text(
+                        'Select Account',
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
-                ),
-              ),
-              SizedBox(height: 20),
-              ...accounts.entries.map(
-                (entry) => Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.inputFillColor,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.inputBorderColor),
-                  ),
-                  margin: EdgeInsets.symmetric(vertical: 5),
-                  child: ListTile(
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(entry.key,
-                            style: Theme.of(context).textTheme.bodyMedium),
-                        Text(
-                          '\$${entry.value.toStringAsFixed(2)}',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    color: entry.value >= 0
-                                        ? Colors.green
-                                        : Colors.red,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                      ],
                     ),
-                    onTap: () {
-                      setState(() {
-                        selectedAccount = entry.key;
-                      });
-                      Navigator.pop(context);
-                    },
-                  ),
+                    SizedBox(height: 20),
+                    ...state.accounts.map(
+                      (account) => Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedAccountId = account.id;
+                              });
+                              Navigator.pop(context);
+                            },
+                            child: AccountCard(
+                              account: account,
+                              onEdit: () => _showAddOrEditAccountForm(
+                                existingAccount: account,
+                              ),
+                              onDelete: () => showDeleteAccountDialog(
+                                context: context,
+                                account: account,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Center(
+                      child: CustomElevatedButton(
+                        label: "Add New Account",
+                        onPressed: _showAddOrEditAccountForm,
+                        icon: Icons.add,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(height: 10),
-              Center(
-                child: CustomElevatedButton(
-                  label: "Add New Account",
-                  onPressed: _showAddAccountForm,
-                  icon: Icons.add,
-                ),
-              ),
-            ],
+              );
+            },
           ),
         );
       },
@@ -402,11 +303,11 @@ class ExpenseScreenState extends State<ExpenseScreen> {
     final TextEditingController categoryNameController =
         TextEditingController();
 
-    final List<TransactionIcon> incomeIcons = categoryIcons
+    final List<TransactionIcon> incomeIcons = initialCategoryIcons
         .where((icon) => icon.type == TransactionType.income)
         .toList();
 
-    final List<TransactionIcon> expenseIcons = categoryIcons
+    final List<TransactionIcon> expenseIcons = initialCategoryIcons
         .where((icon) => icon.type == TransactionType.expense)
         .toList();
 
@@ -808,6 +709,21 @@ class ExpenseScreenState extends State<ExpenseScreen> {
     );
   }
 
+  void _handleStateChanges(BuildContext context, ExpenseState state) {
+    if (state.status == ExpenseStatus.failure) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            state.errorMessage ?? 'An error occurred',
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: AppColors.errorTextColor,
+                ),
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -838,145 +754,171 @@ class ExpenseScreenState extends State<ExpenseScreen> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          // Tab selector
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceEvenly, // ⬅️ Equal space between tabs
+      body: BlocConsumer<ExpenseBloc, ExpenseState>(
+        listener: _handleStateChanges,
+        builder: (context, state) {
+          return Form(
+            key: _formKey,
+            child: Column(
               children: [
-                _buildTab(TransactionType.income.name, 0),
-                _buildDivider(),
-                _buildTab(TransactionType.expense.name, 1),
-                _buildDivider(),
-                _buildTab(TransactionType.toPay.name, 2),
-                _buildDivider(),
-                _buildTab(TransactionType.toReceive.name, 3),
-                _buildDivider(),
-                _buildTab(TransactionType.transfer.name, 4),
-              ],
-            ),
-          ),
-
-          // Account and Category selectors
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              children: [
-                Expanded(
-                  child: BaseDropdownPickerField(
-                    labelText: 'Account',
-                    prefixIcon: Icons.account_balance_wallet,
-                    selectedValue: selectedAccount,
-                    onTap: _showAccountPicker,
-                    hintText: 'Select an account',
-                  ),
+                TransactionTabSelector(
+                  selectedIndex: selectedTab,
+                  onTabSelected: (index) {
+                    setState(() {
+                      selectedTab = index;
+                    });
+                  },
                 ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: BaseDropdownPickerField(
-                    labelText: 'Category',
-                    prefixIcon: Icons.local_offer,
-                    selectedValue: selectedCategory,
-                    onTap: _showCategoryPicker,
-                    hintText: 'Select an Category',
-                  ),
-                ),
-              ],
-            ),
-          ),
 
-          SizedBox(
-            height: 16,
-          ),
-
-          // Name section
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: ClearableInputField(
-              hintText: "Shopping at the mall / Grocery shopping",
-              controller: titleController,
-              keyboardType: TextInputType.text,
-              labelText: "Title",
-              prefixIcon: Icons.title_sharp,
-            ),
-          ),
-          SizedBox(
-            height: 16,
-          ),
-
-          // Notes section
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: ClearableInputField(
-              hintText: "Add notes",
-              controller: notesController,
-              keyboardType: TextInputType.text,
-              labelText: "Notes",
-              maxLines: 2,
-            ),
-          ),
-          SizedBox(
-            height: 16,
-          ),
-
-          // Amount display
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: AppColors.inputFillColor,
-                border: Border.all(color: AppColors.inputBorderColor),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: Text(
-                      currentAmount.toString(),
-                      style: AppTextStyles.headlineLarge,
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  GestureDetector(
-                    onTap: _deleteLastDigit,
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      child: Icon(
-                        Icons.backspace_outlined,
-                        color: Colors.white,
-                        size: 24,
+                // Account and Category selectors
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: BaseDropdownPickerField(
+                          labelText: 'Account',
+                          prefixIcon: Icons.account_balance_wallet,
+                          selectedValue: selectedAccountId == "Account"
+                              ? 'Account'
+                              : state.accounts
+                                  .firstWhere(
+                                    (account) =>
+                                        account.id == selectedAccountId,
+                                  )
+                                  .name,
+                          onTap: _showAccountPicker,
+                          hintText: 'Select an account',
+                          validator: (String? value) {
+                            if (value == 'Account' ||
+                                value == null ||
+                                value.isEmpty) {
+                              return 'Please select an account';
+                            }
+                            return null;
+                          },
+                        ),
                       ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: BaseDropdownPickerField(
+                          labelText: 'Category',
+                          prefixIcon: Icons.local_offer,
+                          selectedValue: selectedCategory,
+                          onTap: _showCategoryPicker,
+                          hintText: 'Select an Category',
+                          validator: (String? value) {
+                            if (value == 'Category' ||
+                                value == null ||
+                                value.isEmpty) {
+                              return 'Please select an account';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(
+                  height: 16,
+                ),
+
+                // Name section
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: ClearableInputField(
+                    hintText: "Shopping at the mall / Grocery shopping",
+                    controller: titleController,
+                    keyboardType: TextInputType.text,
+                    labelText: "Title",
+                    prefixIcon: Icons.title_sharp,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a title';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+
+                // Notes section
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: ClearableInputField(
+                    hintText: "Add notes",
+                    controller: notesController,
+                    keyboardType: TextInputType.text,
+                    labelText: "Notes",
+                    maxLines: 2,
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+
+                // Amount display
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.inputFillColor,
+                      border: Border.all(color: AppColors.inputBorderColor),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            currentAmount.toString(),
+                            style: AppTextStyles.headlineLarge,
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: _deleteLastDigit,
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            child: Icon(
+                              Icons.backspace_outlined,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                // Calculator grid
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      spacing: 5,
+                      children: [
+                        _buildCalculatorRow(['+', '7', '8', '9']),
+                        _buildCalculatorRow(['-', '4', '5', '6']),
+                        _buildCalculatorRow(['x', '1', '2', '3']),
+                        _buildCalculatorRow(['÷', '0', '.', '=']),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-          SizedBox(
-            height: 16,
-          ),
-          // Calculator grid
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                spacing: 5,
-                children: [
-                  _buildCalculatorRow(['+', '7', '8', '9']),
-                  _buildCalculatorRow(['-', '4', '5', '6']),
-                  _buildCalculatorRow(['x', '1', '2', '3']),
-                  _buildCalculatorRow(['÷', '0', '.', '=']),
-                ],
-              ),
-            ),
-          ),
-        ],
+          );
+        },
       ),
       persistentFooterButtons: [
         DateTimePickerRow(

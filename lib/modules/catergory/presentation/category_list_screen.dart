@@ -1,32 +1,37 @@
-// account_list_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:remind_wallet/bloc/expense_bloc.dart';
-import 'package:remind_wallet/bloc/expense_event.dart';
 import 'package:remind_wallet/bloc/expense_state.dart';
-import 'package:remind_wallet/global/widgets/account_form_dialog.dart';
+import 'package:remind_wallet/constant.dart';
 import 'package:remind_wallet/global/widgets/account_summary_header.dart';
-import 'package:remind_wallet/global/widgets/delete_account_dialog.dart';
-import 'package:remind_wallet/models/account_model.dart';
-import 'package:remind_wallet/modules/account/presentation/widgets/accounts_section.dart';
-import 'package:remind_wallet/repositories/expense_repository.dart';
+import 'package:remind_wallet/models/category_model.dart';
+import 'package:remind_wallet/modules/catergory/presentation/widgets/category_section.dart';
+import 'package:remind_wallet/services/hive_service.dart';
 import 'package:remind_wallet/theme/color.dart';
 
-class AccountListScreen extends StatefulWidget {
-  const AccountListScreen({super.key});
+class CategoryListScreen extends StatefulWidget {
+  const CategoryListScreen({super.key});
 
   @override
-  State<AccountListScreen> createState() => _AccountListScreenState();
+  State<CategoryListScreen> createState() => _CategoryListScreenState();
 }
 
-class _AccountListScreenState extends State<AccountListScreen> {
-  HiveExpenseRepository expRepo = HiveExpenseRepository();
+class _CategoryListScreenState extends State<CategoryListScreen> {
+  final hiveService = HiveService();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   expRepo.deleteAllData();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _initializeCategories();
+  }
+
+  Future<void> _initializeCategories() async {
+    await hiveService.saveCategories(
+      categories: defaultCategories,
+      key: categoryDatabase,
+    );
+    hiveService.loadAllData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,16 +73,16 @@ class _AccountListScreenState extends State<AccountListScreen> {
       slivers: [
         AccountSummaryHeader(amountSummary: state.amountSummary),
         SliverToBoxAdapter(
-          child: AccountsSection(
-            accounts: state.accounts,
-            onAddAccount: () => _showAddOrEditAccountForm(),
-            onEditAccount: (account) => _showAddOrEditAccountForm(
-              existingAccount: account,
+          child: CategorySection(
+            categories: state.categories,
+            onAddCategory: () => _showAddOrEditAccountForm(),
+            onEditCategory: (category) => _showAddOrEditAccountForm(
+              existingCategory: category,
             ),
-            onDeleteAccount: (account) {
+            onDeleteCategory: (category) {
               showDeleteAccountDialog(
                 context: context,
-                account: account,
+                category: category,
               );
             },
           ),
@@ -86,43 +91,41 @@ class _AccountListScreenState extends State<AccountListScreen> {
     );
   }
 
-  void _showAddOrEditAccountForm({AccountModel? existingAccount}) {
-    showDialog(
-      context: context,
-      builder: (innerContext) => AccountFormDialog(
-        existingAccount: existingAccount,
-        onAccountSaved: (account, isEdit) {
-          final bloc = context.read<ExpenseBloc>();
-          if (isEdit) {
-            bloc.add(UpdateAccountEvent(account));
-          } else {
-            bloc.add(AddAccountEvent(account));
-          }
-        },
-      ),
-    );
+  void _showAddOrEditAccountForm({CategoryModel? existingCategory}) {
+    // showDialog(
+    //   context: context,
+    //   builder: (innerContext) => AccountFormDialog(
+    //     existingAccount: existingAccount,
+    //     onAccountSaved: (account, isEdit) {
+    //       final bloc = context.read<ExpenseBloc>();
+    //       if (isEdit) {
+    //         bloc.add(UpdateAccountEvent(account));
+    //       } else {
+    //         bloc.add(AddAccountEvent(account));
+    //       }
+    //     },
+    //   ),
+    // );
   }
 
   void showDeleteAccountDialog({
     required BuildContext context,
-    required AccountModel account,
+    required CategoryModel category,
   }) {
-    showDialog(
-      context: context,
-      builder: (_) => DeleteAccountDialog(
-        title: 'Delete Account?',
-        content:
-            "Are you sure you want to delete? This action is irreversible.",
-        onDelete: () {
-          final bloc = context.read<ExpenseBloc>();
-          bloc.add(DeleteAccountEvent(account));
-          // Navigator.pop(context);
-        },
-      ),
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (_) => DeleteAccountDialog(
+    //     title: 'Delete Account?',
+    //     content:
+    //         "Are you sure you want to delete? This action is irreversible.",
+    //     onDelete: () {
+    //       final bloc = context.read<ExpenseBloc>();
+    //       bloc.add(DeleteAccountEvent(account));
+    //       // Navigator.pop(context);
+    //     },
+    //   ),
+    // );
   }
-
-
 }
 
 // Private widgets for this screen

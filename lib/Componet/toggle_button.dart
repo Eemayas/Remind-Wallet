@@ -24,7 +24,7 @@ class ToggleButton extends StatefulWidget {
   final VoidCallback onRightToggleActive;
 
   const ToggleButton(
-      {Key? key,
+      {super.key,
       required this.width,
       required this.height,
       required this.toggleBackgroundColor,
@@ -35,8 +35,7 @@ class ToggleButton extends StatefulWidget {
       required this.leftDescription,
       required this.rightDescription,
       required this.onLeftToggleActive,
-      required this.onRightToggleActive})
-      : super(key: key);
+      required this.onRightToggleActive});
 
   @override
   _ToggleButtonState createState() => _ToggleButtonState();

@@ -8,7 +8,6 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:remind_wallet/Pages/add_account.dart';
 import 'package:remind_wallet/Pages/add_transaction.dart';
-import 'package:remind_wallet/modules/transactions/presentation/add_transaction_screen.dart';
 import 'package:remind_wallet/Pages/authentication/add_user_data_entry_page.dart';
 import 'package:remind_wallet/Pages/authentication/forgot_password.dart';
 import 'package:remind_wallet/Pages/edit_user_detail.dart';
@@ -25,6 +24,8 @@ import 'package:remind_wallet/bloc/expense_event.dart';
 import 'package:remind_wallet/constant.dart';
 import 'package:remind_wallet/extras/firebase_all_options.dart';
 import 'package:remind_wallet/modules/account/presentation/account_list_screen.dart';
+import 'package:remind_wallet/modules/catergory/presentation/category_list_screen.dart';
+import 'package:remind_wallet/modules/transactions/presentation/add_transaction_screen.dart';
 import 'package:remind_wallet/theme/theme.dart';
 
 import 'Pages/authentication/signIn_signOut_page.dart';
@@ -45,7 +46,7 @@ Future<void> main() async {
   await Hive.initFlutter();
 
   var box = await Hive.openBox("expenses_tracker");
-  var boxNew = await Hive.openBox("expenses_tracker_new");
+  var boxNew = await Hive.openBox(newHiveDatabase);
 
   await di.init();
 
@@ -75,7 +76,9 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.darkTheme(),
       home: BlocProvider(
         create: (context) => di.sl<ExpenseBloc>()..add(LoadExpenseDataEvent()),
-        child: AccountListScreen(),
+        child: CategoryListScreen(),
+        // child: AddTransactionsScreen(),
+        // child: AccountListScreen(),
       ),
 
       // initialRoute: Splash_Page.id,

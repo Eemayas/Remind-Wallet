@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:remind_wallet/models/transaction_model.dart';
 
 class TransactionIcon {
@@ -13,168 +14,247 @@ class TransactionIcon {
   });
 }
 
-final List<TransactionIcon> categoryIcons = [
+final List<TransactionIcon> initialCategoryIcons = [
   TransactionIcon(
-      icon: Icons.attach_money,
-      color: Colors.green,
-      type: TransactionType.income), // direct cash
-  TransactionIcon(
-      icon: Icons.monetization_on,
-      color: Colors.amber,
-      type: TransactionType.income), // investment
-  TransactionIcon(
-      icon: Icons.account_balance_wallet,
+      icon: FontAwesomeIcons.baby,
       color: Colors.brown,
-      type: TransactionType.income), // wallet
+      type: TransactionType.expense),
   TransactionIcon(
-      icon: Icons.trending_up,
-      color: Colors.lightGreen,
-      type: TransactionType.income), // growth
+      icon: FontAwesomeIcons.soap,
+      color: Colors.pink,
+      type: TransactionType.expense),
   TransactionIcon(
-      icon: Icons.payments,
-      color: Colors.teal,
-      type: TransactionType.income), // bank transfer
-  TransactionIcon(
-      icon: Icons.savings,
-      color: Colors.blueAccent,
-      type: TransactionType.income), // savings account
-  TransactionIcon(
-      icon: Icons.card_giftcard,
-      color: Colors.purple,
-      type: TransactionType.income), // gift
-  TransactionIcon(
-      icon: Icons.paid,
-      color: Colors.indigo,
-      type: TransactionType.income), // official payment
-  TransactionIcon(
-      icon: Icons.redeem,
-      color: Colors.deepPurple,
-      type: TransactionType.income), // redeemed rewards
-  TransactionIcon(
-      icon: Icons.receipt_long,
-      color: Colors.blueGrey,
-      type: TransactionType.income), // salary statement
-  TransactionIcon(
-      icon: Icons.moving,
-      color: Colors.orangeAccent,
-      type: TransactionType.income), // passive income
-  TransactionIcon(
-      icon: Icons.account_balance,
-      color: Colors.cyan,
-      type: TransactionType.income), // institution fund
-  TransactionIcon(
-      icon: Icons.auto_graph,
-      color: Colors.greenAccent,
-      type: TransactionType.income), // stock profits
-  TransactionIcon(
-      icon: Icons.check_circle,
-      color: Colors.lightBlue,
-      type: TransactionType.income), // completed goals
-  TransactionIcon(
-      icon: Icons.attach_file,
+      icon: FontAwesomeIcons.fileInvoiceDollar,
       color: Colors.grey,
-      type: TransactionType.income), // documents
+      type: TransactionType.expense),
   TransactionIcon(
-      icon: Icons.emoji_events,
-      color: Colors.amberAccent,
-      type: TransactionType.income), // rewards/prizes
+      icon: FontAwesomeIcons.car,
+      color: Colors.purple,
+      type: TransactionType.expense),
   TransactionIcon(
-      icon: Icons.wallet,
-      color: Colors.brown.shade700,
-      type: TransactionType.income), // physical wallet
-  TransactionIcon(
-      icon: Icons.trending_flat,
-      color: Colors.lime,
-      type: TransactionType.income), // consistent income
-  TransactionIcon(
-      icon: Icons.request_page,
-      color: Colors.blueGrey.shade600,
-      type: TransactionType.income), // invoice
-  TransactionIcon(
-      icon: Icons.note_add,
-      color: Colors.deepPurpleAccent,
-      type: TransactionType.income), // record addition
-
-  TransactionIcon(
-      icon: Icons.shopping_cart,
-      color: Colors.indigo,
-      type: TransactionType.expense), // shopping
-  TransactionIcon(
-      icon: Icons.money_off,
-      color: Colors.red,
-      type: TransactionType.expense), // loss
-  TransactionIcon(
-      icon: Icons.receipt,
-      color: Colors.blueGrey,
-      type: TransactionType.expense), // bill
-  TransactionIcon(
-      icon: Icons.fastfood,
-      color: Colors.deepOrange,
-      type: TransactionType.expense), // food
-  TransactionIcon(
-      icon: Icons.local_gas_station,
-      color: Colors.amber.shade800,
-      type: TransactionType.expense), // fuel
-  TransactionIcon(
-      icon: Icons.home,
-      color: Colors.brown,
-      type: TransactionType.expense), // rent/mortgage
-  TransactionIcon(
-      icon: Icons.phone_android,
-      color: Colors.lightBlue,
-      type: TransactionType.expense), // mobile expense
-  TransactionIcon(
-      icon: Icons.credit_card,
-      color: Colors.teal,
-      type: TransactionType.expense), // credit card payments
-  TransactionIcon(
-      icon: Icons.flight_takeoff,
-      color: Colors.blue,
-      type: TransactionType.expense), // travel
-  TransactionIcon(
-      icon: Icons.healing,
-      color: Colors.pinkAccent,
-      type: TransactionType.expense), // medical
-  TransactionIcon(
-      icon: Icons.theater_comedy,
-      color: Colors.deepPurple,
-      type: TransactionType.expense), // entertainment
-  TransactionIcon(
-      icon: Icons.school,
+      icon: FontAwesomeIcons.shirt,
       color: Colors.orange,
-      type: TransactionType.expense), // education
+      type: TransactionType.expense),
   TransactionIcon(
-      icon: Icons.coffee,
+      icon: FontAwesomeIcons.graduationCap,
+      color: Colors.blue,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.tv,
+      color: Colors.teal,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.film,
+      color: Colors.indigo,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.utensils,
+      color: Colors.red,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.heartPulse,
+      color: Colors.deepOrange,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.house,
+      color: Colors.pinkAccent,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.shieldHalved,
+      color: Colors.orangeAccent,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.bagShopping,
+      color: Colors.blue,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.peopleGroup,
+      color: Colors.green,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.volleyball,
+      color: Colors.lightGreen,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.fileInvoice,
+      color: Colors.deepOrange,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.phone,
+      color: Colors.lime,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.dollarSign,
+      color: Colors.blueAccent,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.bus,
+      color: Colors.indigo,
+      type: TransactionType.expense),
+
+  // Extra Income Icons
+  TransactionIcon(
+      icon: FontAwesomeIcons.moneyBill1Wave,
+      color: Colors.green,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.coins,
+      color: Colors.amber,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.wallet,
+      color: Colors.brown,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.chartLine,
+      color: Colors.lightGreen,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.arrowRightArrowLeft,
+      color: Colors.teal,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.piggyBank,
+      color: Colors.blueAccent,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.gift,
+      color: Colors.purple,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.moneyCheckDollar,
+      color: Colors.indigo,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.gift,
+      color: Colors.deepPurple,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.receipt,
+      color: Colors.blueGrey,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.moneyBillTrendUp,
+      color: Colors.orangeAccent,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.university,
+      color: Colors.cyan,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.chartColumn,
+      color: Colors.greenAccent,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.bullseye,
+      color: Colors.lightBlue,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.paperclip,
+      color: Colors.grey,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.trophy,
+      color: Colors.amberAccent,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.wallet,
+      color: Colors.brown.shade700,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.arrowTrendUp,
+      color: Colors.lime,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.fileInvoice,
+      color: Colors.blueGrey.shade600,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.noteSticky,
+      color: Colors.deepPurpleAccent,
+      type: TransactionType.income),
+
+  // More Expense Icons
+  TransactionIcon(
+      icon: FontAwesomeIcons.cartShopping,
+      color: Colors.indigo,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.moneyBillWave,
+      color: Colors.red,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.fileLines,
+      color: Colors.blueGrey,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.burger,
+      color: Colors.deepOrange,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.gasPump,
+      color: Colors.amber.shade800,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.houseChimney,
+      color: Colors.brown,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.mobileScreen,
+      color: Colors.lightBlue,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.creditCard,
+      color: Colors.teal,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.planeDeparture,
+      color: Colors.blue,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.briefcaseMedical,
+      color: Colors.pinkAccent,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.masksTheater,
+      color: Colors.deepPurple,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.graduationCap,
+      color: Colors.orange,
+      type: TransactionType.expense),
+  TransactionIcon(
+      icon: FontAwesomeIcons.mugHot,
       color: Colors.brown.shade400,
-      type: TransactionType.expense), // coffee/snacks
+      type: TransactionType.expense),
   TransactionIcon(
-      icon: Icons.pets,
+      icon: FontAwesomeIcons.paw,
       color: Colors.teal.shade300,
-      type: TransactionType.expense), // pet care
+      type: TransactionType.expense),
   TransactionIcon(
-      icon: Icons.sports_soccer,
+      icon: FontAwesomeIcons.futbol,
       color: Colors.green.shade700,
-      type: TransactionType.expense), // sports
+      type: TransactionType.expense),
   TransactionIcon(
-      icon: Icons.style,
+      icon: FontAwesomeIcons.hatCowboy,
       color: Colors.purpleAccent,
-      type: TransactionType.expense), // fashion
+      type: TransactionType.expense),
   TransactionIcon(
-      icon: Icons.wifi,
+      icon: FontAwesomeIcons.wifi,
       color: Colors.indigoAccent,
-      type: TransactionType.expense), // internet
+      type: TransactionType.expense),
   TransactionIcon(
-      icon: Icons.lightbulb,
+      icon: FontAwesomeIcons.lightbulb,
       color: Colors.yellow.shade700,
-      type: TransactionType.expense), // electricity
+      type: TransactionType.expense),
   TransactionIcon(
-      icon: Icons.laptop_mac,
+      icon: FontAwesomeIcons.laptop,
       color: Colors.grey.shade800,
-      type: TransactionType.expense), // gadgets
+      type: TransactionType.expense),
   TransactionIcon(
-      icon: Icons.subscriptions,
+      icon: FontAwesomeIcons.repeat,
       color: Colors.cyan.shade700,
-      type: TransactionType.expense), // recurring bills
+      type: TransactionType.expense),
 ];
 
 final List<TransactionIcon> accountIcons = [

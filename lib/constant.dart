@@ -117,6 +117,10 @@ const String userEmailD = "userEmailD";
 const String userDOBD = "userDOBD";
 
 const String transactionDatabase = "Transaction";
+const String categoryDatabase = "Categories";
 const String accountDatabase = "Account";
 const String amountListDatabase = "AmountList";
 const String userDataDatabase = "UserData";
+
+const String oldHiveDatabase = "expenses_tracker";
+const String newHiveDatabase = "expenses_tracker_new";
