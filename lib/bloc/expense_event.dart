@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:remind_wallet/models/category_model.dart';
 
 import '../models/account_model.dart';
 import '../models/transaction_model.dart';
@@ -47,6 +48,33 @@ class AddTransactionEvent extends ExpenseEvent {
 
   @override
   List<Object> get props => [transaction];
+}
+
+class AddCategoryEvent extends ExpenseEvent {
+  final CategoryModel category;
+
+  const AddCategoryEvent(this.category);
+
+  @override
+  List<Object> get props => [category];
+}
+
+class UpdateCategoryEvent extends ExpenseEvent {
+  final CategoryModel category;
+
+  const UpdateCategoryEvent(this.category);
+
+  @override
+  List<Object> get props => [category];
+}
+
+class DeleteCategoryEvent extends ExpenseEvent {
+  final CategoryModel category;
+
+  const DeleteCategoryEvent(this.category);
+
+  @override
+  List<Object> get props => [category];
 }
 
 class UpdateTransactionEvent extends ExpenseEvent {
