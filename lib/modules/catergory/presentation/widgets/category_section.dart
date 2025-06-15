@@ -28,13 +28,13 @@ class CategorySection extends StatelessWidget {
         children: [
           _buildSectionTitle(context, 'Income Categories'),
           const SizedBox(height: 16),
-          _buildAccountsList(TransactionType.income),
+          _buildCategoryList(TransactionType.income),
           const SizedBox(height: 16),
           _buildSectionTitle(context, 'Expenses Categories'),
           const SizedBox(height: 16),
-          _buildAccountsList(TransactionType.expense),
+          _buildCategoryList(TransactionType.expense),
           const SizedBox(height: 12),
-          _buildAddAccountButton(),
+          _buildAddCategoryButton(),
           const SizedBox(height: 80), // Extra space for bottom navigation
         ],
       ),
@@ -60,7 +60,7 @@ class CategorySection extends StatelessWidget {
     );
   }
 
-  Widget _buildAccountsList(TransactionType type) {
+  Widget _buildCategoryList(TransactionType type) {
     if (categories.isEmpty) {
       return const EmptyAccountsWidget();
     }
@@ -70,6 +70,7 @@ class CategorySection extends StatelessWidget {
 
     return Column(
       children: filteredCategories.map((category) {
+        print("CategoryCard created - I: $category ${category.type} ");
         return Column(
           children: [
             CategoryCard(
@@ -84,7 +85,7 @@ class CategorySection extends StatelessWidget {
     );
   }
 
-  Widget _buildAddAccountButton() {
+  Widget _buildAddCategoryButton() {
     return Center(
       child: CustomElevatedButton(
         onPressed: onAddCategory,

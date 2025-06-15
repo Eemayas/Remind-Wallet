@@ -41,7 +41,7 @@ class _AccountFormDialogState extends State<AccountFormDialog> {
   }
 
   void _initializeIcons() {
-    _availableIcons = accountIcons;
+    _availableIcons = initialAccountCategoryIcons;
     _selectedIcon = widget.existingAccount != null
         ? _availableIcons[widget.existingAccount!.iconIndex ?? 0].icon
         : null;

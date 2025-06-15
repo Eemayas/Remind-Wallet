@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:remind_wallet/bloc/expense_bloc.dart';
+import 'package:remind_wallet/bloc/expense_event.dart';
 import 'package:remind_wallet/bloc/expense_state.dart';
-import 'package:remind_wallet/constant.dart';
 import 'package:remind_wallet/global/widgets/account_summary_header.dart';
+import 'package:remind_wallet/global/widgets/category_form_dialog.dart';
 import 'package:remind_wallet/models/category_model.dart';
 import 'package:remind_wallet/modules/catergory/presentation/widgets/category_section.dart';
 import 'package:remind_wallet/services/hive_service.dart';
@@ -18,20 +19,6 @@ class CategoryListScreen extends StatefulWidget {
 
 class _CategoryListScreenState extends State<CategoryListScreen> {
   final hiveService = HiveService();
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeCategories();
-  }
-
-  Future<void> _initializeCategories() async {
-    await hiveService.saveCategories(
-      categories: defaultCategories,
-      key: categoryDatabase,
-    );
-    hiveService.loadAllData();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +62,8 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
         SliverToBoxAdapter(
           child: CategorySection(
             categories: state.categories,
-            onAddCategory: () => _showAddOrEditAccountForm(),
-            onEditCategory: (category) => _showAddOrEditAccountForm(
+            onAddCategory: () => _showAddOrEditCategoryForm(),
+            onEditCategory: (category) => _showAddOrEditCategoryForm(
               existingCategory: category,
             ),
             onDeleteCategory: (category) {
@@ -91,21 +78,21 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
     );
   }
 
-  void _showAddOrEditAccountForm({CategoryModel? existingCategory}) {
-    // showDialog(
-    //   context: context,
-    //   builder: (innerContext) => AccountFormDialog(
-    //     existingAccount: existingAccount,
-    //     onAccountSaved: (account, isEdit) {
-    //       final bloc = context.read<ExpenseBloc>();
-    //       if (isEdit) {
-    //         bloc.add(UpdateAccountEvent(account));
-    //       } else {
-    //         bloc.add(AddAccountEvent(account));
-    //       }
-    //     },
-    //   ),
-    // );
+  void _showAddOrEditCategoryForm({CategoryModel? existingCategory}) {
+    showDialog(
+      context: context,
+      builder: (innerContext) => CategoryFormDialog(
+        existingCategory: existingCategory,
+        onCategorySaved: (category, isEdit) {
+          final bloc = context.read<ExpenseBloc>();
+          if (isEdit) {
+            bloc.add(UpdateCategoryEvent(category));
+          } else {
+            bloc.add(AddCategoryEvent(category));
+          }
+        },
+      ),
+    );
   }
 
   void showDeleteAccountDialog({

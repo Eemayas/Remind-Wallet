@@ -13,10 +13,10 @@ import 'package:remind_wallet/global/widgets/custom_button.dart';
 import 'package:remind_wallet/global/widgets/date_time_picker.dart';
 import 'package:remind_wallet/global/widgets/delete_account_dialog.dart';
 import 'package:remind_wallet/global/widgets/option_picker_field.dart';
+import 'package:remind_wallet/global/widgets/transaction_tab_selector.dart';
 import 'package:remind_wallet/models/account_model.dart';
 import 'package:remind_wallet/models/transaction_icon.dart';
 import 'package:remind_wallet/models/transaction_model.dart';
-import 'package:remind_wallet/modules/transactions/presentation/widgets/transaction_tab_selector.dart';
 import 'package:remind_wallet/theme/color.dart';
 import 'package:remind_wallet/theme/typography.dart';
 
@@ -303,13 +303,9 @@ class AddTransactionsScreenState extends State<AddTransactionsScreen> {
     final TextEditingController categoryNameController =
         TextEditingController();
 
-    final List<TransactionIcon> incomeIcons = initialCategoryIcons
-        .where((icon) => icon.type == TransactionType.income)
-        .toList();
+    final List<TransactionIcon> incomeIcons = initialExpenseCategoryIcons;
 
-    final List<TransactionIcon> expenseIcons = initialCategoryIcons
-        .where((icon) => icon.type == TransactionType.expense)
-        .toList();
+    final List<TransactionIcon> expenseIcons = initialIncomeCategoryIcons;
 
     final List<TransactionIcon> availableIcons =
         selectedTransactionType == TransactionType.income.name ||
@@ -762,6 +758,13 @@ class AddTransactionsScreenState extends State<AddTransactionsScreen> {
             child: Column(
               children: [
                 TransactionTabSelector(
+                  tabs: [
+                    TransactionType.income.name,
+                    TransactionType.expense.name,
+                    TransactionType.toPay.name,
+                    TransactionType.toReceive.name,
+                    TransactionType.transfer.name,
+                  ],
                   selectedIndex: selectedTab,
                   onTabSelected: (index) {
                     setState(() {

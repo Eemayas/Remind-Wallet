@@ -36,8 +36,8 @@ class AccountCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
-              accountIcons[account.iconIndex ?? 0].icon,
-              color: accountIcons[account.iconIndex ?? 0].color,
+              initialAccountCategoryIcons[account.iconIndex ?? 0].icon,
+              color: initialAccountCategoryIcons[account.iconIndex ?? 0].color,
               size: 28,
             ),
           ),
@@ -155,8 +155,8 @@ class AccountSmallCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
-              accountIcons[account.iconIndex ?? 0].icon,
-              color: accountIcons[account.iconIndex ?? 0].color,
+              initialAccountCategoryIcons[account.iconIndex ?? 0].icon,
+              color: initialAccountCategoryIcons[account.iconIndex ?? 0].color,
               size: 28,
             ),
           ),

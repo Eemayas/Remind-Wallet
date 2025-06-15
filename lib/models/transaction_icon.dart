@@ -14,7 +14,7 @@ class TransactionIcon {
   });
 }
 
-final List<TransactionIcon> initialCategoryIcons = [
+final List<TransactionIcon> initialExpenseCategoryIcons = [
   TransactionIcon(
       icon: FontAwesomeIcons.baby,
       color: Colors.brown,
@@ -91,90 +91,6 @@ final List<TransactionIcon> initialCategoryIcons = [
       icon: FontAwesomeIcons.bus,
       color: Colors.indigo,
       type: TransactionType.expense),
-
-  // Extra Income Icons
-  TransactionIcon(
-      icon: FontAwesomeIcons.moneyBill1Wave,
-      color: Colors.green,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.coins,
-      color: Colors.amber,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.wallet,
-      color: Colors.brown,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.chartLine,
-      color: Colors.lightGreen,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.arrowRightArrowLeft,
-      color: Colors.teal,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.piggyBank,
-      color: Colors.blueAccent,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.gift,
-      color: Colors.purple,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.moneyCheckDollar,
-      color: Colors.indigo,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.gift,
-      color: Colors.deepPurple,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.receipt,
-      color: Colors.blueGrey,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.moneyBillTrendUp,
-      color: Colors.orangeAccent,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.university,
-      color: Colors.cyan,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.chartColumn,
-      color: Colors.greenAccent,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.bullseye,
-      color: Colors.lightBlue,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.paperclip,
-      color: Colors.grey,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.trophy,
-      color: Colors.amberAccent,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.wallet,
-      color: Colors.brown.shade700,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.arrowTrendUp,
-      color: Colors.lime,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.fileInvoice,
-      color: Colors.blueGrey.shade600,
-      type: TransactionType.income),
-  TransactionIcon(
-      icon: FontAwesomeIcons.noteSticky,
-      color: Colors.deepPurpleAccent,
-      type: TransactionType.income),
-
-  // More Expense Icons
   TransactionIcon(
       icon: FontAwesomeIcons.cartShopping,
       color: Colors.indigo,
@@ -257,7 +173,90 @@ final List<TransactionIcon> initialCategoryIcons = [
       type: TransactionType.expense),
 ];
 
-final List<TransactionIcon> accountIcons = [
+final List<TransactionIcon> initialIncomeCategoryIcons = [
+  TransactionIcon(
+      icon: FontAwesomeIcons.moneyBill1Wave,
+      color: Colors.green,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.coins,
+      color: Colors.amber,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.wallet,
+      color: Colors.brown,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.chartLine,
+      color: Colors.lightGreen,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.arrowRightArrowLeft,
+      color: Colors.teal,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.piggyBank,
+      color: Colors.blueAccent,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.gift,
+      color: Colors.purple,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.moneyCheckDollar,
+      color: Colors.indigo,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.gift,
+      color: Colors.deepPurple,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.receipt,
+      color: Colors.blueGrey,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.moneyBillTrendUp,
+      color: Colors.orangeAccent,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.university,
+      color: Colors.cyan,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.chartColumn,
+      color: Colors.greenAccent,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.bullseye,
+      color: Colors.lightBlue,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.paperclip,
+      color: Colors.grey,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.trophy,
+      color: Colors.amberAccent,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.wallet,
+      color: Colors.brown.shade700,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.arrowTrendUp,
+      color: Colors.lime,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.fileInvoice,
+      color: Colors.blueGrey.shade600,
+      type: TransactionType.income),
+  TransactionIcon(
+      icon: FontAwesomeIcons.noteSticky,
+      color: Colors.deepPurpleAccent,
+      type: TransactionType.income),
+];
+
+final List<TransactionIcon> initialAccountCategoryIcons = [
   TransactionIcon(
     icon: Icons.account_balance, // Bank account
     color: Colors.blue,

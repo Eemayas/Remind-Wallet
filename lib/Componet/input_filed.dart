@@ -418,6 +418,7 @@ class IconPickerFormField extends FormField<IconData> {
     TextStyle? style,
     TextStyle? hintStyle,
     double borderRadius = 12.0,
+    int rowsCount = 1,
     EdgeInsetsGeometry? contentPadding,
   }) : super(
           key: key,
@@ -431,14 +432,7 @@ class IconPickerFormField extends FormField<IconData> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  labelText,
-                  style: labelStyle ??
-                      const TextStyle(
-                        color: Colors.white70,
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
+                Text(labelText, style: labelStyle ?? AppTextStyles.bodyMedium),
                 const SizedBox(height: 10),
                 Container(
                   decoration: BoxDecoration(
@@ -456,25 +450,39 @@ class IconPickerFormField extends FormField<IconData> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: List.generate(
-                        availableIcons.length,
-                        (index) {
-                          final icon = availableIcons[index].icon;
-                          final iconColor = availableIcons[index].color;
+                        (availableIcons.length / rowsCount).ceil(),
+                        (colIndex) {
+                          // final icon = availableIcons[colIndex].icon;
+                          // final iconColor = availableIcons[colIndex].color;
 
                           return Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 6.0),
-                            child: CategoryOptionTile(
-                              iconData: icon,
-                              iconBackgroundColor: iconColor,
-                              isLabelVisible: false,
-                              containerColor: selectedIcon == icon
-                                  ? Colors.white.withOpacity(0.2)
-                                  : Colors.transparent,
-                              onTap: () {
-                                onIconSelected(icon);
-                                field.didChange(icon);
-                              },
+                            child: Column(
+                              children: List.generate(rowsCount, (rowIndex) {
+                                int index = colIndex * rowsCount + rowIndex;
+                                if (index >= availableIcons.length) {
+                                  return SizedBox();
+                                }
+                                IconData icon = availableIcons[index].icon;
+                                Color iconColor = availableIcons[index].color;
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 6.0),
+                                  child: CategoryOptionTile(
+                                    iconData: icon,
+                                    iconBackgroundColor: iconColor,
+                                    isLabelVisible: false,
+                                    containerColor: selectedIcon == icon
+                                        ? Colors.white.withOpacity(0.2)
+                                        : Colors.transparent,
+                                    onTap: () {
+                                      onIconSelected(icon);
+                                      field.didChange(icon);
+                                    },
+                                  ),
+                                );
+                              }),
                             ),
                           );
                         },

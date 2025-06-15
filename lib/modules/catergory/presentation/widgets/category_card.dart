@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:remind_wallet/models/account_model.dart';
 import 'package:remind_wallet/models/category_model.dart';
 import 'package:remind_wallet/models/transaction_icon.dart';
+import 'package:remind_wallet/models/transaction_model.dart';
 import 'package:remind_wallet/theme/color.dart';
 
 class CategoryCard extends StatelessWidget {
@@ -17,6 +18,7 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("CategoryCard created - II: $category ${category.type} ");
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 2),
       decoration: BoxDecoration(
@@ -37,8 +39,12 @@ class CategoryCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
-              initialCategoryIcons[category.iconIndex ?? 0].icon,
-              color: initialCategoryIcons[category.iconIndex ?? 0].color,
+              category.type == TransactionType.income
+                  ? initialIncomeCategoryIcons[category.iconIndex ?? 0].icon
+                  : initialExpenseCategoryIcons[category.iconIndex ?? 0].icon,
+              color: category.type == TransactionType.income
+                  ? initialIncomeCategoryIcons[category.iconIndex ?? 0].color
+                  : initialExpenseCategoryIcons[category.iconIndex ?? 0].color,
               size: 24,
             ),
           ),
@@ -137,8 +143,8 @@ class AccountSmallCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
-              accountIcons[account.iconIndex ?? 0].icon,
-              color: accountIcons[account.iconIndex ?? 0].color,
+              initialAccountCategoryIcons[account.iconIndex ?? 0].icon,
+              color: initialAccountCategoryIcons[account.iconIndex ?? 0].color,
               size: 28,
             ),
           ),

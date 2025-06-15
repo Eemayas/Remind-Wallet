@@ -1,27 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:remind_wallet/models/transaction_model.dart';
 import 'package:remind_wallet/theme/color.dart';
 
 class TransactionTabSelector extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTabSelected;
+  final List<String> tabs;
 
   const TransactionTabSelector({
     super.key,
     required this.selectedIndex,
     required this.onTabSelected,
+    required this.tabs,
   });
 
   @override
   Widget build(BuildContext context) {
-    final tabs = [
-      TransactionType.income.name,
-      TransactionType.expense.name,
-      TransactionType.toPay.name,
-      TransactionType.toReceive.name,
-      TransactionType.transfer.name,
-    ];
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Row(
