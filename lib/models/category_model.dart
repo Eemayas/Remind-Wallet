@@ -1,5 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:remind_wallet/global/utils/generate_unique_id.dart';
+import 'package:remind_wallet/models/transaction_icon.dart';
 import 'package:remind_wallet/models/transaction_model.dart';
 
 class CategoryModel extends Equatable {
@@ -61,97 +64,193 @@ final List<CategoryModel> defaultCategories = [
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Food & Drinks',
-    iconIndex: 8,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.utensils,
+        color: Colors.green,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Transportation',
-    iconIndex: 3,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.bus,
+        color: Colors.blue,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Clothing',
-    iconIndex: 4,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.shirt,
+        color: Colors.orange,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Health',
-    iconIndex: 9,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.briefcaseMedical,
+        color: Colors.red,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Education',
-    iconIndex: 5,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.graduationCap,
+        color: Colors.blue,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Rent',
-    iconIndex: 10,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.house,
+        color: Colors.brown,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Insurance',
-    iconIndex: 11,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.shieldHalved,
+        color: Colors.indigo,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Shopping',
-    iconIndex: 12,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.bagShopping,
+        color: Colors.pink,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Entertainment',
-    iconIndex: 7,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.film,
+        color: Colors.amber,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Mobile & Internet',
-    iconIndex: 15,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.wifi,
+        color: Colors.deepPurple,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Fuel',
-    iconIndex: 16,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.gasPump,
+        color: Colors.orangeAccent,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Travel',
-    iconIndex: 17,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.bus,
+        color: Colors.indigo,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Pets',
-    iconIndex: 19,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.paw,
+        color: Colors.brown,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Bills',
-    iconIndex: 2,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.fileInvoiceDollar,
+        color: Colors.deepOrange,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Baby Supplies',
-    iconIndex: 0,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.baby,
+        color: Colors.purpleAccent,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.expense,
     name: 'Personal Care',
-    iconIndex: 1,
+    iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.soap,
+        color: Colors.pinkAccent,
+        type: TransactionType.expense,
+      ),
+    ),
   ),
 
   // INCOME categories
@@ -159,54 +258,108 @@ final List<CategoryModel> defaultCategories = [
     id: generateUniqueId(),
     type: TransactionType.income,
     name: 'Salary',
-    iconIndex: 20,
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.moneyBill1Wave,
+        color: Colors.green,
+        type: TransactionType.income,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.income,
     name: 'Business',
-    iconIndex: 21,
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.briefcase,
+        color: Colors.purple,
+        type: TransactionType.income,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.income,
     name: 'Bonus',
-    iconIndex: 22,
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.chartLine,
+        color: Colors.lightGreen,
+        type: TransactionType.income,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.income,
     name: 'Gift',
-    iconIndex: 25,
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.gift,
+        color: Colors.pink,
+        type: TransactionType.income,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.income,
     name: 'Investment',
-    iconIndex: 24,
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.chartLine,
+        color: Colors.cyan,
+        type: TransactionType.income,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.income,
     name: 'Freelance',
-    iconIndex: 28,
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.receipt,
+        color: Colors.blueGrey,
+        type: TransactionType.income,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.income,
     name: 'Savings',
-    iconIndex: 23,
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.piggyBank,
+        color: Colors.deepPurple,
+        type: TransactionType.income,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.income,
     name: 'Scholarship',
-    iconIndex: 29,
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.university,
+        color: Colors.cyan,
+        type: TransactionType.income,
+      ),
+    ),
   ),
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.income,
     name: 'Award',
-    iconIndex: 30,
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.award,
+        color: Colors.amber,
+        type: TransactionType.income,
+      ),
+    ),
   ),
 ];

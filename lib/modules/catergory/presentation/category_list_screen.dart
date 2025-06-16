@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:remind_wallet/bloc/expense_bloc.dart';
 import 'package:remind_wallet/bloc/expense_event.dart';
 import 'package:remind_wallet/bloc/expense_state.dart';
+import 'package:remind_wallet/constant.dart';
 import 'package:remind_wallet/global/widgets/account_summary_header.dart';
 import 'package:remind_wallet/global/widgets/category_form_dialog.dart';
 import 'package:remind_wallet/models/category_model.dart';
@@ -19,7 +20,19 @@ class CategoryListScreen extends StatefulWidget {
 
 class _CategoryListScreenState extends State<CategoryListScreen> {
   final hiveService = HiveService();
+@override
+  void initState() {
+    super.initState();
+    _initializeCategories();
+  }
 
+  Future<void> _initializeCategories() async {
+    await hiveService.saveCategories(
+      categories: defaultCategories,
+      key: categoryDatabase,
+    );
+    hiveService.loadAllData();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
