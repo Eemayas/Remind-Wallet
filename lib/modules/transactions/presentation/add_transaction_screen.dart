@@ -23,12 +23,14 @@ class AddTransactionsScreen extends StatefulWidget {
 
 class AddTransactionsScreenState extends State<AddTransactionsScreen> {
   late final TransactionFormController _controller;
+  late final ExpenseBloc expenseBloc;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     _controller = TransactionFormController();
+    expenseBloc = BlocProvider.of<ExpenseBloc>(context);
   }
 
   @override
@@ -94,10 +96,55 @@ class AddTransactionsScreenState extends State<AddTransactionsScreen> {
     // Show account picker
     TransactionScreenLogic.showAccountPicker(
       context: context,
-      accounts: context.read<ExpenseBloc>().state.accounts,
       selectedAccountId: _controller.selectedAccountId,
       onAccountSelected: (accountId) {
         setState(() => _controller.updateAccount(accountId));
+      },
+      onAddNewAccount: onAddNewAccount,
+      onEditAccount: onEditAccount,
+      onDeleteAccount: onDeleteAccount,
+    );
+  }
+
+  void _handleToAccountActions(ExpenseBloc bloc) {
+    // Account management methods
+    void onAccountSaved(AccountModel account, bool isEdit) {
+      if (isEdit) {
+        bloc.add(UpdateAccountEvent(account));
+      } else {
+        bloc.add(AddAccountEvent(account));
+      }
+    }
+
+    void onEditAccount(AccountModel account) {
+      TransactionScreenLogic.showAccountForm(
+        context: context,
+        onAccountSaved: onAccountSaved,
+        existingAccount: account,
+      );
+    }
+
+    void onDeleteAccount(AccountModel account) {
+      TransactionScreenLogic.showDeleteAccountDialog(
+        context: context,
+        account: account,
+        onDelete: () => bloc.add(DeleteAccountEvent(account)),
+      );
+    }
+
+    void onAddNewAccount() {
+      TransactionScreenLogic.showAccountForm(
+        context: context,
+        onAccountSaved: onAccountSaved,
+      );
+    }
+
+    // Show account picker
+    TransactionScreenLogic.showAccountPicker(
+      context: context,
+      selectedAccountId: _controller.selectedToAccountId,
+      onAccountSelected: (accountId) {
+        setState(() => _controller.updateToAccount(accountId));
       },
       onAddNewAccount: onAddNewAccount,
       onEditAccount: onEditAccount,
@@ -123,7 +170,6 @@ class AddTransactionsScreenState extends State<AddTransactionsScreen> {
 
     TransactionScreenLogic.showCategoryPicker(
       context: context,
-      categories: context.read<ExpenseBloc>().state.categories,
       selectedCategory: _controller.selectedCategory,
       selectedTab: _controller.selectedTab,
       onCategorySelected: (category) {
@@ -155,42 +201,52 @@ class AddTransactionsScreenState extends State<AddTransactionsScreen> {
         builder: (context, state) {
           return Form(
             key: _controller.formKey,
-            child: Column(
-              children: [
-                TransactionTabSelector(
-                  tabs: [
-                    TransactionType.income.name,
-                    TransactionType.expense.name,
-                    TransactionType.toPay.name,
-                    TransactionType.toReceive.name,
-                    TransactionType.transfer.name,
-                  ],
-                  selectedIndex: _controller.selectedTab,
-                  onTabSelected: (index) {
-                    setState(() => _controller.updateSelectedTab(index));
-                  },
-                ),
-                TransactionFormFields(
-                  controller: _controller,
-                  accounts: state.accounts,
-                  onAccountPickerTap: () =>
-                      _handleAccountActions(context.read<ExpenseBloc>()),
-                  onCategoryPickerTap: () =>
-                      _handleCategoryActions(context.read<ExpenseBloc>()),
-                ),
-                SizedBox(height: 16),
-                Expanded(
-                  child: Padding(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  TransactionTabSelector(
+                    tabs: [
+                      TransactionType.income.name,
+                      TransactionType.expense.name,
+                      TransactionType.toPay.name,
+                      TransactionType.toReceive.name,
+                      TransactionType.transfer.name,
+                    ],
+                    selectedIndex: _controller.selectedTab,
+                    onTabSelected: (index) {
+                      setState(() => _controller.updateSelectedTab(index));
+                    },
+                  ),
+                  TransactionFormFields(
+                    controller: _controller,
+                    accounts: state.accounts,
+                    onAccountPickerTap: () =>
+                        _handleAccountActions(context.read<ExpenseBloc>()),
+                    onToAccountPickerTap: () =>
+                        _handleToAccountActions(context.read<ExpenseBloc>()),
+                    onCategoryPickerTap: () =>
+                        _handleCategoryActions(context.read<ExpenseBloc>()),
+                  ),
+                  SizedBox(height: 16),
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: CalculatorWidget(
                       initialValue: _controller.currentAmount,
                       onValueChanged: (value) {
                         setState(() => _controller.updateAmount(value));
                       },
+                      validator: (String? value) {
+                        if (value == 0.toString() ||
+                            value == null ||
+                            value.isEmpty) {
+                          return 'Please enter a valid amount';
+                        }
+                        return null;
+                      },
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },

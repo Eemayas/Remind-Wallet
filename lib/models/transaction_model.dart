@@ -23,7 +23,7 @@ class Transaction extends Equatable {
   final String description;
   final String? icon;
   final String createdDate;
-  final String? fromAccountId;
+  // final String? fromAccountId;
   final String? toAccountId;
 
   const Transaction({
@@ -38,7 +38,7 @@ class Transaction extends Equatable {
     required this.description,
     this.icon,
     required this.createdDate,
-    this.fromAccountId,
+    // this.fromAccountId,
     this.toAccountId,
   });
 
@@ -69,7 +69,7 @@ class Transaction extends Equatable {
       description: description ?? this.description,
       icon: icon ?? this.icon,
       createdDate: createdDate ?? this.createdDate,
-      fromAccountId: fromAccountId ?? this.fromAccountId,
+      // fromAccountId: fromAccountId ?? this.fromAccountId,
       toAccountId: toAccountId ?? this.toAccountId,
     );
   }
@@ -87,7 +87,7 @@ class Transaction extends Equatable {
       'transactionDescriptionD': description,
       'transactionIconD': icon,
       'transactionCreatedDateD': createdDate,
-      'fromAccountIdD': fromAccountId,
+      // 'fromAccountIdD': fromAccountId,
       'toAccountIdD': toAccountId,
     };
   }
@@ -105,7 +105,7 @@ class Transaction extends Equatable {
       description: json['transactionDescriptionD'] ?? '',
       icon: json['transactionIconD'] ?? '',
       createdDate: json['transactionCreatedDateD'] ?? '',
-      fromAccountId: json['fromAccountIdD'],
+      // fromAccountId: json['fromAccountIdD'],
       toAccountId: json['toAccountIdD'],
     );
   }
@@ -167,7 +167,7 @@ class Transaction extends Equatable {
         description,
         icon,
         createdDate,
-        fromAccountId,
+        // fromAccountId,
         toAccountId,
       ];
 }

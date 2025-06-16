@@ -67,9 +67,13 @@ class CategoryPickerBottomSheet extends StatelessWidget {
               children: filteredCategories.map((category) {
                 return CategoryOptionTile(
                   name: category.name,
-                  iconData: availableIcons[category.iconIndex ?? 0].icon,
+                  iconData: availableIcons[
+                          (category.iconIndex == null || category.iconIndex == -1)
+                              ? 0
+                              : category.iconIndex!]
+                      .icon,
                   iconBackgroundColor:
-                      availableIcons[category.iconIndex ?? 0].color,
+                      availableIcons[(category.iconIndex == null || category.iconIndex == -1) ? 0 : category.iconIndex!].color,
                   onTap: () {
                     onCategorySelected(category.name);
                     Navigator.pop(context);

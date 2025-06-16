@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:remind_wallet/bloc/expense_bloc.dart';
+import 'package:remind_wallet/bloc/expense_state.dart';
 import 'package:remind_wallet/global/widgets/account_form_dialog.dart';
 import 'package:remind_wallet/global/widgets/category_form_dialog.dart';
 import 'package:remind_wallet/global/widgets/delete_account_dialog.dart';
@@ -11,7 +14,6 @@ import 'package:remind_wallet/theme/color.dart';
 class TransactionScreenLogic {
   static void showAccountPicker({
     required BuildContext context,
-    required List<AccountModel> accounts,
     required String selectedAccountId,
     required Function(String) onAccountSelected,
     required VoidCallback onAddNewAccount,
@@ -21,20 +23,26 @@ class TransactionScreenLogic {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (_) => AccountPickerBottomSheet(
-        accounts: accounts,
-        selectedAccountId: selectedAccountId,
-        onAccountSelected: onAccountSelected,
-        onAddNewAccount: onAddNewAccount,
-        onEditAccount: onEditAccount,
-        onDeleteAccount: onDeleteAccount,
+      builder: (_) => BlocProvider.value(
+        value: BlocProvider.of<ExpenseBloc>(context),
+        child: BlocBuilder<ExpenseBloc, ExpenseState>(
+          builder: (blocContext, state) {
+            return AccountPickerBottomSheet(
+              accounts: state.accounts,
+              selectedAccountId: selectedAccountId,
+              onAccountSelected: onAccountSelected,
+              onAddNewAccount: onAddNewAccount,
+              onEditAccount: onEditAccount,
+              onDeleteAccount: onDeleteAccount,
+            );
+          },
+        ),
       ),
     );
   }
 
   static void showCategoryPicker({
     required BuildContext context,
-    required List<CategoryModel> categories,
     required String selectedCategory,
     required int selectedTab,
     required Function(String) onCategorySelected,
@@ -44,12 +52,19 @@ class TransactionScreenLogic {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (_) => CategoryPickerBottomSheet(
-        categories: categories,
-        selectedCategory: selectedCategory,
-        selectedTab: selectedTab,
-        onCategorySelected: onCategorySelected,
-        onAddNewCategory: onAddNewCategory,
+      builder: (_) => BlocProvider.value(
+        value: BlocProvider.of<ExpenseBloc>(context),
+        child: BlocBuilder<ExpenseBloc, ExpenseState>(
+          builder: (blocContext, state) {
+            return CategoryPickerBottomSheet(
+              categories: state.categories,
+              selectedCategory: selectedCategory,
+              selectedTab: selectedTab,
+              onCategorySelected: onCategorySelected,
+              onAddNewCategory: onAddNewCategory,
+            );
+          },
+        ),
       ),
     );
   }

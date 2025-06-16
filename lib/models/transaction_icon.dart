@@ -35,10 +35,23 @@ class TransactionIcon {
         .indexWhere((e) => e.icon == icon.icon && e.type == icon.type);
   }
 
+  static int getTransferCategoryIconIndex(TransactionIcon icon) {
+    return initialTransferCategoryIcons
+        .indexWhere((e) => e.icon == icon.icon && e.type == icon.type);
+  }
+
   static int getAccountCategoryIconIndex(TransactionIcon icon) {
     return initialAccountCategoryIcons.indexOf(icon);
   }
 }
+
+final List<TransactionIcon> initialTransferCategoryIcons = [
+  TransactionIcon(
+    icon: FontAwesomeIcons.moneyBillTransfer,
+    color: Colors.green,
+    type: TransactionType.transfer,
+  ),
+];
 
 final List<TransactionIcon> initialExpenseCategoryIcons = [
   // 0

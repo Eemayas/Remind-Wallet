@@ -7,12 +7,14 @@ class CalculatorWidget extends StatefulWidget {
   final String? initialValue;
   final Function(String)? onValueChanged;
   final List<List<String>>? customButtons;
+  final String? Function(String?)? validator;
 
   const CalculatorWidget({
     super.key,
     this.initialValue,
     this.onValueChanged,
     this.customButtons,
+    this.validator,
   });
 
   @override
@@ -79,6 +81,7 @@ class CalculatorWidgetState extends State<CalculatorWidget> {
         CalculatorDisplay(
           value: currentAmount,
           onDelete: _onDelete,
+          validator: widget.validator,
         ),
         SizedBox(height: 20),
         ...buttons.map((row) => Column(

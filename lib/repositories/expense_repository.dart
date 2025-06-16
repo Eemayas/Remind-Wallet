@@ -509,7 +509,7 @@ class HiveExpenseRepository implements ExpenseRepository {
 
       logSuccess(
           functionName: functionName,
-          message: 'Transaction "${transaction.name}" added successfully.');
+          message: 'Transaction "$transaction" added successfully.');
     } catch (e) {
       logError(
           functionName: functionName,
@@ -524,7 +524,7 @@ class HiveExpenseRepository implements ExpenseRepository {
     const functionName = '$className.updateTransaction';
     logStarting(
         functionName: functionName,
-        message: 'Updating transaction: ${transaction.name}');
+        message: 'Updating transaction: $transaction');
 
     try {
       logProcessing(
@@ -564,7 +564,7 @@ class HiveExpenseRepository implements ExpenseRepository {
 
       logSuccess(
           functionName: functionName,
-          message: 'Transaction "${transaction.name}" updated successfully.');
+          message: 'Transaction "$transaction" updated successfully.');
     } catch (e) {
       logError(
           functionName: functionName,
@@ -710,7 +710,7 @@ class HiveExpenseRepository implements ExpenseRepository {
               logInfo(
                   functionName: functionName,
                   message:
-                      'INCOME - Transaction: ${transaction.name}, Amount: ${transaction.amount} | '
+                      'INCOME - Transaction: $transaction, Amount: ${transaction.amount} | '
                       'Account: ${transaction.account} | '
                       'totalIncome: $totalIncome -> ${totalIncome + transaction.amount} | '
                       'Account Balance: $currentBalance -> ${currentBalance + transaction.amount}');
@@ -724,7 +724,7 @@ class HiveExpenseRepository implements ExpenseRepository {
               logInfo(
                   functionName: functionName,
                   message:
-                      'EXPENSE - Transaction: ${transaction.name}, Amount: ${transaction.amount} | '
+                      'EXPENSE - Transaction: $transaction, Amount: ${transaction.amount} | '
                       'Account: ${transaction.account} | '
                       'totalExpenses: $totalExpenses -> ${totalExpenses + transaction.amount} | '
                       'Account Balance: $currentBalance -> ${currentBalance - transaction.amount}');
@@ -738,7 +738,7 @@ class HiveExpenseRepository implements ExpenseRepository {
               logInfo(
                   functionName: functionName,
                   message:
-                      'TO_PAY - Transaction: ${transaction.name}, Amount: ${transaction.amount} | '
+                      'TO_PAY - Transaction: $transaction, Amount: ${transaction.amount} | '
                       'Account: ${transaction.account} | '
                       'toPay: $toPay -> ${toPay + transaction.amount} | '
                       'Account Balance: $currentBalance -> ${currentBalance - transaction.amount}');
@@ -752,7 +752,7 @@ class HiveExpenseRepository implements ExpenseRepository {
               logInfo(
                   functionName: functionName,
                   message:
-                      'TO_RECEIVE - Transaction: ${transaction.name}, Amount: ${transaction.amount} | '
+                      'TO_RECEIVE - Transaction: $transaction, Amount: ${transaction.amount} | '
                       'Account: ${transaction.account} | '
                       'toReceive: $toReceive -> ${toReceive + transaction.amount} | '
                       'Account Balance: $currentBalance -> ${currentBalance + transaction.amount}');
@@ -764,10 +764,9 @@ class HiveExpenseRepository implements ExpenseRepository {
 
             case TransactionType.transfer:
               // Handle transfer between accounts
-              if (transaction.fromAccountId != null &&
-                  transaction.toAccountId != null) {
+              if (transaction.toAccountId != null) {
                 final fromAccountIndex = updatedAccounts
-                    .indexWhere((acc) => acc.id == transaction.fromAccountId);
+                    .indexWhere((acc) => acc.id == transaction.account);
                 final toAccountIndex = updatedAccounts
                     .indexWhere((acc) => acc.id == transaction.toAccountId);
 
@@ -780,7 +779,7 @@ class HiveExpenseRepository implements ExpenseRepository {
                   logInfo(
                       functionName: functionName,
                       message:
-                          'TRANSFER - Transaction: ${transaction.name}, Amount: ${transaction.amount} | '
+                          'TRANSFER - Transaction: $transaction, Amount: ${transaction.amount} | '
                           'From Account: ${updatedAccounts[fromAccountIndex].name} ($fromBalance -> ${fromBalance - transaction.amount}) | '
                           'To Account: ${updatedAccounts[toAccountIndex].name} ($toBalance -> ${toBalance + transaction.amount})');
 
@@ -794,13 +793,13 @@ class HiveExpenseRepository implements ExpenseRepository {
                   logInfo(
                       functionName: functionName,
                       message:
-                          'Transfer accounts not found - From: ${transaction.fromAccountId}, To: ${transaction.toAccountId}');
+                          'Transfer accounts not found - From: ${transaction.account}, To: ${transaction.toAccountId}');
                 }
               } else {
                 logInfo(
                     functionName: functionName,
                     message:
-                        'Transfer transaction missing account IDs: ${transaction.name}');
+                        'Transfer transaction missing account IDs: $transaction');
               }
               break;
 
@@ -808,7 +807,7 @@ class HiveExpenseRepository implements ExpenseRepository {
               logInfo(
                   functionName: functionName,
                   message:
-                      'ADD_ACCOUNT - Transaction: ${transaction.name}, Initial Balance: ${transaction.amount} | '
+                      'ADD_ACCOUNT - Transaction: $transaction, Initial Balance: ${transaction.amount} | '
                       'Account: ${transaction.account} | '
                       'Account Balance: $currentBalance -> ${currentBalance + transaction.amount}');
               updatedAccounts[accountIndex] = updatedAccounts[accountIndex]
@@ -820,7 +819,7 @@ class HiveExpenseRepository implements ExpenseRepository {
               logInfo(
                   functionName: functionName,
                   message:
-                      'UPDATE_ACCOUNT - Transaction: ${transaction.name}, New Balance: ${transaction.amount} | '
+                      'UPDATE_ACCOUNT - Transaction: $transaction, New Balance: ${transaction.amount} | '
                       'Account: ${transaction.account} | '
                       'Account Balance: $currentBalance -> ${transaction.amount}');
               updatedAccounts[accountIndex] = updatedAccounts[accountIndex]
@@ -830,8 +829,7 @@ class HiveExpenseRepository implements ExpenseRepository {
             case TransactionType.deleteAccount:
               logInfo(
                   functionName: functionName,
-                  message:
-                      'DELETE_ACCOUNT - Transaction: ${transaction.name} | '
+                  message: 'DELETE_ACCOUNT - Transaction: $transaction | '
                       'Account: ${transaction.account} will be removed from calculations');
               // Account deletion should be handled separately
               // This transaction type indicates the account should be excluded
@@ -841,7 +839,7 @@ class HiveExpenseRepository implements ExpenseRepository {
           logInfo(
               functionName: functionName,
               message:
-                  'Account not found for transaction: ${transaction.name} (Account: ${transaction.account})');
+                  'Account not found for transaction: $transaction (Account: ${transaction.account})');
         }
       }
 
@@ -1003,7 +1001,7 @@ class HiveExpenseRepository implements ExpenseRepository {
 
         case TransactionType.transfer:
           // Transfer between accounts - handle source and destination
-          if (transaction.fromAccountId == updatedAccount.id) {
+          if (transaction.account == updatedAccount.id) {
             // Transferring FROM this account - decrease balance
             logInfo(
                 functionName: functionName,

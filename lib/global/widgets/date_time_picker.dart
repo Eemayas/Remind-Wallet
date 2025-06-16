@@ -63,7 +63,7 @@ class DateTimePickerRow extends StatelessWidget {
           Container(
             width: 1,
             height: 24,
-            color: Colors.grey.withOpacity(0.4),
+            color: Colors.grey.withAlpha((0.4 * 255).toInt()),
             margin: const EdgeInsets.symmetric(horizontal: 8),
           ),
 

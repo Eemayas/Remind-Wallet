@@ -20,15 +20,12 @@ class AskStoragePermission extends StatefulWidget {
 class _AskStoragePermissionState extends State<AskStoragePermission> {
   Future<void> requestStoragePermission(BuildContext context) async {
     var status = await Permission.manageExternalStorage.status;
-    print("Permission Status: ${status.toString()}");
     if (status.isGranted) {
-      print("Permission Granted");
       Navigator.of(context).pushReplacement(PageTransition(
           type: PageTransitionType.fade,
           duration: Duration(seconds: 1),
           child: Splash_Page()));
     } else if (status.isDenied || status.isPermanentlyDenied) {
-      print("Permission Denied");
       PermissionStatus newStatus =
           await Permission.manageExternalStorage.request();
       if (newStatus.isGranted) {
@@ -37,7 +34,6 @@ class _AskStoragePermissionState extends State<AskStoragePermission> {
             duration: Duration(seconds: 1),
             child: Splash_Page()));
       } else if (newStatus.isPermanentlyDenied) {
-        print("Permission Permanently Denied");
         openAppSettings();
         Navigator.of(context).pushReplacement(PageTransition(
             type: PageTransitionType.fade,

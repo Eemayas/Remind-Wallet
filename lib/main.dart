@@ -26,6 +26,7 @@ import 'package:remind_wallet/extras/firebase_all_options.dart';
 import 'package:remind_wallet/modules/account/presentation/account_list_screen.dart';
 import 'package:remind_wallet/modules/catergory/presentation/category_list_screen.dart';
 import 'package:remind_wallet/modules/transactions/presentation/add_transaction_screen.dart';
+// import 'package:remind_wallet/modules/transactions/presentation/add_transaction_screen copy.dart';
 import 'package:remind_wallet/theme/theme.dart';
 
 import 'Pages/authentication/signIn_signOut_page.dart';

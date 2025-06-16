@@ -603,4 +603,18 @@ final List<CategoryModel> defaultCategories = [
       ),
     ),
   ),
+
+  // Transfer categories
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.transfer,
+    name: 'Transfer',
+    iconIndex: TransactionIcon.getTransferCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.moneyBillTransfer,
+        color: Colors.green,
+        type: TransactionType.transfer,
+      ),
+    ),
+  ),
 ];
