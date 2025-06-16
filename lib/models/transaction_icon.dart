@@ -231,6 +231,24 @@ final List<TransactionIcon> initialExpenseCategoryIcons = [
       icon: FontAwesomeIcons.repeat,
       color: Colors.cyan.shade700,
       type: TransactionType.expense),
+  // 38
+    TransactionIcon(
+        icon: FontAwesomeIcons.school,
+        color: Colors.blue,
+        type: TransactionType.expense),
+    // 39
+     TransactionIcon(
+        icon: FontAwesomeIcons.cartShopping,
+        color: Colors.pink,
+        type: TransactionType.expense,
+      ),
+      //40
+      TransactionIcon(
+        icon: FontAwesomeIcons.passport,
+        color: Colors.indigo,
+        type: TransactionType.expense,
+      ),
+
 ];
 
 final List<TransactionIcon> initialIncomeCategoryIcons = [
@@ -351,6 +369,32 @@ final List<TransactionIcon> initialIncomeCategoryIcons = [
     color: Colors.amber,
     type: TransactionType.income,
   ),
+//23
+TransactionIcon(
+        icon: FontAwesomeIcons.moneyBillTrendUp,
+        color: Colors.green,
+        type: TransactionType.income,
+      ),
+    // 24
+     TransactionIcon(
+        icon: FontAwesomeIcons.businessTime,
+        color: Colors.purple,
+        type: TransactionType.income,
+      ),
+    //25
+    TransactionIcon(
+        icon: FontAwesomeIcons.moneyBills,
+        color: Colors.lightGreen,
+        type: TransactionType.income,
+      ),
+      // 26
+     TransactionIcon(
+        icon: FontAwesomeIcons.houseLaptop,
+        color: Colors.blueGrey,
+        type: TransactionType.income,
+      ),
+      // 27
+      
 ];
 
 final List<TransactionIcon> initialAccountCategoryIcons = [

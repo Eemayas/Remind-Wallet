@@ -114,7 +114,7 @@ final List<CategoryModel> defaultCategories = [
     name: 'Education',
     iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
       TransactionIcon(
-        icon: FontAwesomeIcons.graduationCap,
+        icon: FontAwesomeIcons.school,
         color: Colors.blue,
         type: TransactionType.expense,
       ),
@@ -150,7 +150,7 @@ final List<CategoryModel> defaultCategories = [
     name: 'Shopping',
     iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
       TransactionIcon(
-        icon: FontAwesomeIcons.bagShopping,
+        icon: FontAwesomeIcons.cartShopping,
         color: Colors.pink,
         type: TransactionType.expense,
       ),
@@ -198,7 +198,7 @@ final List<CategoryModel> defaultCategories = [
     name: 'Travel',
     iconIndex: TransactionIcon.getExpenseCategoryIconIndex(
       TransactionIcon(
-        icon: FontAwesomeIcons.bus,
+        icon: FontAwesomeIcons.passport,
         color: Colors.indigo,
         type: TransactionType.expense,
       ),
@@ -260,7 +260,7 @@ final List<CategoryModel> defaultCategories = [
     name: 'Salary',
     iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
       TransactionIcon(
-        icon: FontAwesomeIcons.moneyBill1Wave,
+        icon: FontAwesomeIcons.moneyBillTrendUp,
         color: Colors.green,
         type: TransactionType.income,
       ),
@@ -272,7 +272,7 @@ final List<CategoryModel> defaultCategories = [
     name: 'Business',
     iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
       TransactionIcon(
-        icon: FontAwesomeIcons.briefcase,
+        icon: FontAwesomeIcons.businessTime,
         color: Colors.purple,
         type: TransactionType.income,
       ),
@@ -284,7 +284,7 @@ final List<CategoryModel> defaultCategories = [
     name: 'Bonus',
     iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
       TransactionIcon(
-        icon: FontAwesomeIcons.chartLine,
+        icon: FontAwesomeIcons.moneyBills,
         color: Colors.lightGreen,
         type: TransactionType.income,
       ),
@@ -320,7 +320,7 @@ final List<CategoryModel> defaultCategories = [
     name: 'Freelance',
     iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
       TransactionIcon(
-        icon: FontAwesomeIcons.receipt,
+        icon: FontAwesomeIcons.houseLaptop,
         color: Colors.blueGrey,
         type: TransactionType.income,
       ),
