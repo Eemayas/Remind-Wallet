@@ -254,6 +254,7 @@ final List<CategoryModel> defaultCategories = [
   ),
 
   // INCOME categories
+  // INCOME categories
   CategoryModel(
     id: generateUniqueId(),
     type: TransactionType.income,
@@ -344,7 +345,7 @@ final List<CategoryModel> defaultCategories = [
     name: 'Scholarship',
     iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
       TransactionIcon(
-        icon: FontAwesomeIcons.university,
+        icon: FontAwesomeIcons.buildingColumns,
         color: Colors.cyan,
         type: TransactionType.income,
       ),
@@ -358,6 +359,246 @@ final List<CategoryModel> defaultCategories = [
       TransactionIcon(
         icon: FontAwesomeIcons.award,
         color: Colors.amber,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Rent Income',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.building,
+        color: Colors.teal,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Interest',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.percent,
+        color: Colors.orangeAccent,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Refund',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.arrowRotateLeft,
+        color: Colors.blueAccent,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Lottery',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.ticket,
+        color: Colors.deepOrange,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Cashback',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.coins,
+        color: Colors.greenAccent,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Rental Equipment',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.toolbox,
+        color: Colors.brown,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Grants',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.handHoldingDollar,
+        color: Colors.indigo,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Side Hustle',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.laptopCode,
+        color: Colors.lime,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'YouTube / Creator',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.youtube,
+        color: Colors.redAccent,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Royalties',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.copyright,
+        color: Colors.grey,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Rental Property',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.houseChimney,
+        color: Colors.deepOrangeAccent,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Affiliate Income',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.link,
+        color: Colors.purpleAccent,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Resale',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.cartShopping,
+        color: Colors.tealAccent,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Crowdfunding',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.peopleGroup,
+        color: Colors.lightBlue,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'eCommerce',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.store,
+        color: Colors.deepPurpleAccent,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Consulting',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.userTie,
+        color: Colors.cyanAccent,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Refunds (Tax)',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.receipt,
+        color: Colors.limeAccent,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Charity Received',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.handshakeAngle,
+        color: Colors.orange,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Crypto Earnings',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.bitcoin,
+        color: Colors.amberAccent,
+        type: TransactionType.income,
+      ),
+    ),
+  ),
+  CategoryModel(
+    id: generateUniqueId(),
+    type: TransactionType.income,
+    name: 'Stock Dividends',
+    iconIndex: TransactionIcon.getIncomeCategoryIconIndex(
+      TransactionIcon(
+        icon: FontAwesomeIcons.chartPie,
+        color: Colors.greenAccent,
         type: TransactionType.income,
       ),
     ),

@@ -70,7 +70,6 @@ class CategorySection extends StatelessWidget {
 
     return Column(
       children: filteredCategories.map((category) {
-        print("CategoryCard created - I: $category ${category.type} ");
         return Column(
           children: [
             CategoryCard(

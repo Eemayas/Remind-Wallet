@@ -63,6 +63,6 @@ class TransactionTabSelector extends StatelessWidget {
   Widget _buildDivider() => Container(
         width: 1,
         height: 20,
-        color: Colors.grey.withOpacity(0.3),
+        color: Colors.grey.withValues(alpha: (0.3 * 255)),
       );
 }

@@ -76,8 +76,8 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.darkTheme(),
       home: BlocProvider(
         create: (context) => di.sl<ExpenseBloc>()..add(LoadExpenseDataEvent()),
-        child: CategoryListScreen(),
-        // child: AddTransactionsScreen(),
+        // child: CategoryListScreen(),
+        child: AddTransactionsScreen(),
         // child: AccountListScreen(),
       ),
 
