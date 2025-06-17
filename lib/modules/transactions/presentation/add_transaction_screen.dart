@@ -60,8 +60,11 @@ class AddTransactionsScreenState extends State<AddTransactionsScreen> {
     }
   }
 
-  void _handleAccountActions(ExpenseBloc bloc) {
-    // Account management methods
+  void _handleAccountPickerActions({
+    required ExpenseBloc bloc,
+    required String selectedAccountId,
+    required void Function(String accountId) onAccountSelected,
+  }) {
     void onAccountSaved(AccountModel account, bool isEdit) {
       if (isEdit) {
         bloc.add(UpdateAccountEvent(account));
@@ -93,59 +96,10 @@ class AddTransactionsScreenState extends State<AddTransactionsScreen> {
       );
     }
 
-    // Show account picker
     TransactionScreenLogic.showAccountPicker(
       context: context,
-      selectedAccountId: _controller.selectedAccountId,
-      onAccountSelected: (accountId) {
-        setState(() => _controller.updateAccount(accountId));
-      },
-      onAddNewAccount: onAddNewAccount,
-      onEditAccount: onEditAccount,
-      onDeleteAccount: onDeleteAccount,
-    );
-  }
-
-  void _handleToAccountActions(ExpenseBloc bloc) {
-    // Account management methods
-    void onAccountSaved(AccountModel account, bool isEdit) {
-      if (isEdit) {
-        bloc.add(UpdateAccountEvent(account));
-      } else {
-        bloc.add(AddAccountEvent(account));
-      }
-    }
-
-    void onEditAccount(AccountModel account) {
-      TransactionScreenLogic.showAccountForm(
-        context: context,
-        onAccountSaved: onAccountSaved,
-        existingAccount: account,
-      );
-    }
-
-    void onDeleteAccount(AccountModel account) {
-      TransactionScreenLogic.showDeleteAccountDialog(
-        context: context,
-        account: account,
-        onDelete: () => bloc.add(DeleteAccountEvent(account)),
-      );
-    }
-
-    void onAddNewAccount() {
-      TransactionScreenLogic.showAccountForm(
-        context: context,
-        onAccountSaved: onAccountSaved,
-      );
-    }
-
-    // Show account picker
-    TransactionScreenLogic.showAccountPicker(
-      context: context,
-      selectedAccountId: _controller.selectedToAccountId,
-      onAccountSelected: (accountId) {
-        setState(() => _controller.updateToAccount(accountId));
-      },
+      selectedAccountId: selectedAccountId,
+      onAccountSelected: onAccountSelected,
       onAddNewAccount: onAddNewAccount,
       onEditAccount: onEditAccount,
       onDeleteAccount: onDeleteAccount,
@@ -220,10 +174,20 @@ class AddTransactionsScreenState extends State<AddTransactionsScreen> {
                   TransactionFormFields(
                     controller: _controller,
                     accounts: state.accounts,
-                    onAccountPickerTap: () =>
-                        _handleAccountActions(context.read<ExpenseBloc>()),
-                    onToAccountPickerTap: () =>
-                        _handleToAccountActions(context.read<ExpenseBloc>()),
+                    onAccountPickerTap: () => _handleAccountPickerActions(
+                      bloc: context.read<ExpenseBloc>(),
+                      selectedAccountId: _controller.selectedAccountId,
+                      onAccountSelected: (accountId) {
+                        setState(() => _controller.updateAccount(accountId));
+                      },
+                    ),
+                    onToAccountPickerTap: () => _handleAccountPickerActions(
+                      bloc: context.read<ExpenseBloc>(),
+                      selectedAccountId: _controller.selectedToAccountId,
+                      onAccountSelected: (accountId) {
+                        setState(() => _controller.updateToAccount(accountId));
+                      },
+                    ),
                     onCategoryPickerTap: () =>
                         _handleCategoryActions(context.read<ExpenseBloc>()),
                   ),

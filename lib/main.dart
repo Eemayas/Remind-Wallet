@@ -25,6 +25,7 @@ import 'package:remind_wallet/constant.dart';
 import 'package:remind_wallet/extras/firebase_all_options.dart';
 import 'package:remind_wallet/modules/account/presentation/account_list_screen.dart';
 import 'package:remind_wallet/modules/catergory/presentation/category_list_screen.dart';
+import 'package:remind_wallet/modules/dashboard/presentation/dashboard_screen.dart';
 import 'package:remind_wallet/modules/transactions/presentation/add_transaction_screen.dart';
 // import 'package:remind_wallet/modules/transactions/presentation/add_transaction_screen copy.dart';
 import 'package:remind_wallet/theme/theme.dart';
@@ -77,8 +78,9 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.darkTheme(),
       home: BlocProvider(
         create: (context) => di.sl<ExpenseBloc>()..add(LoadExpenseDataEvent()),
+        child: DashboardScreen(),
         // child: CategoryListScreen(),
-        child: AddTransactionsScreen(),
+        // child: AddTransactionsScreen(),
         // child: AccountListScreen(),
       ),
 

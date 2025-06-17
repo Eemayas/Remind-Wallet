@@ -110,6 +110,8 @@ class Transaction extends Equatable {
     );
   }
 
+  DateTime get parsedDateTime => DateTime.parse(date);
+
   static String _typeToString(TransactionType type) {
     switch (type) {
       case TransactionType.income:
